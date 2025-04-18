@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using MushroomForum.Models;
 
 namespace MushroomForum.Data
 {
@@ -9,5 +11,6 @@ namespace MushroomForum.Data
             : base(options)
         {
         }
+        public DbSet<ForumThread> ForumThreads { get; set; }
     }
 }
