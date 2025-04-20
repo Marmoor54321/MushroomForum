@@ -48,7 +48,7 @@ namespace MushroomForum.Controllers
         // GET: ForumThreads/Create
         public IActionResult Create()
         {
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 

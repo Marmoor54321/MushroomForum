@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
+using MushroomForum.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,12 +12,55 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+})
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
+builder.Services.AddRazorPages();
 
+var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    // Upewnij się, że baza danych jest utworzona
+    await dbContext.Database.MigrateAsync();
+
+    // Sprawdź, czy istnieją użytkownicy i wątki
+    var user = await userManager.Users.FirstOrDefaultAsync();
+    var forumThread = await dbContext.ForumThreads.FirstOrDefaultAsync();
+
+    if (user != null && forumThread != null)
+    {
+        // Sprawdź, czy przykładowy post już istnieje, aby uniknąć duplikatów
+        if (!await dbContext.Posts.AnyAsync(p => p.Title == "Test Post"))
+        {
+            var newPost = new Post
+            {
+                Title = "Test Post",
+                Description = "This is a test post created programmatically.",
+                ForumThreadId = forumThread.ForumThreadId,
+                IdentityUserId = user.Id
+            };
+
+            dbContext.Posts.Add(newPost);
+            await dbContext.SaveChangesAsync();
+            Console.WriteLine("Przykładowy post został utworzony.");
+        }
+    }
+    else
+    {
+        Console.WriteLine("Nie można utworzyć posta: brak użytkownika lub wątku w bazie danych.");
+    }
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -34,6 +78,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
