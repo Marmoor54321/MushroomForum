@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
@@ -52,7 +53,8 @@ namespace MushroomForum.Controllers
         // GET: Posts/Create
         public IActionResult Create()
         {
-            ViewData["ForumThreads"] = _context.ForumThreads.ToList();
+            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "Title");
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
@@ -63,17 +65,13 @@ namespace MushroomForum.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(post.IdentityUserId))
-                {
-                    post.IdentityUserId = _userManager.GetUserId(User);
-                }
-
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["ForumThreads"] = _context.ForumThreads.ToList();
+            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "ForumThreadId", post.ForumThreadId);
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", post.IdentityUserId);
             return View(post);
         }
 
