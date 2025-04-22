@@ -20,3 +20,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+.nav-button-green {
+    color: #28a745 !important;
+    border: 1px solid #28a745;
+    border-radius: 4px;
+    padding: 4px 8px;
+    text-decoration: none;
+}
