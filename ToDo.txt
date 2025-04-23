@@ -1,17 +1,21 @@
+#-Lepiej zrobić na koniec
+
 -Api do rozpoznawania grzybów
--Dokończyć system ról np. Admin, user 
+-Dokończyć system ról np. Admin, user I razem z tym panel admina? Może potem oddzielne widoki np. ForumThreads dla user i dla adminów
 -Autentykacja stron dla np. adminów, użytkowników
--_layout stron, nowy header, może stopka.  
--Zbudować stronę główną dla wątków i postów. 
+-_layout stron, nowy header, może stopka.  #
+-Zbudować stronę główną dla wątków i postów. #
 -Nowa strona logowania i rejestracji.
--Tabela Categories dla wątków
+-Tabela Categories dla wątków DONE
 
 
+* - Nie jestem przekonany/a
+% - zrobione
 Funkcjonalności:
-1. Rejestracja swojego konta
-2. Zalogowanie się na swoje konto
-3. Osiągnięcia użytkownika z poziomem doświadczenia *
-4. Ranking użytkowników *
+1. Rejestracja swojego konta %
+2. Zalogowanie się na swoje konto %
+3. Osiągnięcia użytkownika z poziomem doświadczenia 
+4. Ranking użytkowników 
 5. Wyszukiwanie w aplikacji, np. użytkowników, postów
 6. Filtracja wyników wyszukiwania
 7. Dodawanie i przeglądanie filmów
@@ -32,7 +36,7 @@ Funkcjonalności:
 22.Dodawanie grzybiarzy do znajomych
 23.Możliwość tworzenia grup i wspólne planowanie wypraw
 24.Wyzwania grzybiarza dzienne lub sezonowe *
-25.Quizy i testy wiedzy o grzybach (Kto będzie tworzyć te quizy? Imo za dużo zachodu na jedną funkcjonalność)
+25.Quizy i testy wiedzy o grzybach (Kto będzie tworzyć te quizy? Imo za dużo zachodu na jedną funkcjonalność) *
 26.Przegląd giełdy grzybowej i cen na skupach (Może po prostu oferty sprzedaży grzybów?)
 27.Zestawienie statystyk zbiorów
 28. System powiadomień (np. nowe wpisy, wiadomości, zmiany na giełdzie)

@@ -11,6 +11,7 @@ namespace MushroomForum.Data
             : base(options)
         {
         }
+        //DbSet rejestruje i tworzy tabelę w bazie danych o nazwie ForumThreads, Posts itd.
         public DbSet<ForumThread> ForumThreads { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
