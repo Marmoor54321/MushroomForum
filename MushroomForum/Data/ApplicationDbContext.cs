@@ -13,6 +13,7 @@ namespace MushroomForum.Data
         }
         public DbSet<ForumThread> ForumThreads { get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,7 +40,10 @@ namespace MushroomForum.Data
                 .HasOne(p => p.ForumThread)
                 .WithMany()
                 .HasForeignKey(p => p.ForumThreadId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.SetNull);
+
+
+
         }
     }
 }

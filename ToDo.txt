@@ -1,0 +1,42 @@
+-Api do rozpoznawania grzybów
+-Dokończyć system ról np. Admin, user 
+-Autentykacja stron dla np. adminów, użytkowników
+-_layout stron, nowy header, może stopka.  
+-Zbudować stronę główną dla wątków i postów. 
+-Nowa strona logowania i rejestracji.
+-Tabela Categories dla wątków
+
+
+Funkcjonalności:
+1. Rejestracja swojego konta
+2. Zalogowanie się na swoje konto
+3. Osiągnięcia użytkownika z poziomem doświadczenia *
+4. Ranking użytkowników *
+5. Wyszukiwanie w aplikacji, np. użytkowników, postów
+6. Filtracja wyników wyszukiwania
+7. Dodawanie i przeglądanie filmów
+8. Dodawanie i przeglądanie zdjęć
+9. Dodawanie i przeglądanie wpisów tekstowych
+10. Dziennik grzybiarza - notatki, wnioski itp.
+11.Możliwość udostępnienia treści notatnika
+12.Udostępnianie znalezisk w mediach społecznościowych na innych platformach
+13.Dodawanie na mapie punktów z grzybobrania
+14.Integracja z GPS – prowadzenie do zaznaczonych punktów
+15.Możliwość oceniania i recenzowania miejsc grzybobrania
+16. Lista ulubionych miejsc i grzybów
+17.Tryb offline – możliwość zapisania mapy i poradników na telefonie
+18.Encyklopedia grzybów do przeglądania
+19.Kalendarz sezonów grzybowych dla różnych regionów
+20.Fora dyskusyjne o różnych tematach grzybiarskich
+21.Czatowanie z grzybiarzami
+22.Dodawanie grzybiarzy do znajomych
+23.Możliwość tworzenia grup i wspólne planowanie wypraw
+24.Wyzwania grzybiarza dzienne lub sezonowe *
+25.Quizy i testy wiedzy o grzybach (Kto będzie tworzyć te quizy? Imo za dużo zachodu na jedną funkcjonalność)
+26.Przegląd giełdy grzybowej i cen na skupach (Może po prostu oferty sprzedaży grzybów?)
+27.Zestawienie statystyk zbiorów
+28. System powiadomień (np. nowe wpisy, wiadomości, zmiany na giełdzie)
+29.Tryb nocny (wygląd aplikacji)
+30.Codzienna prezentacja wybranego gatunku grzyba z ciekawostkami
+31.Rozpoznawanie grzybów ze zdjęcia za pomocą API. (Może coś jeszcze znajdę w tym API)
+32.
