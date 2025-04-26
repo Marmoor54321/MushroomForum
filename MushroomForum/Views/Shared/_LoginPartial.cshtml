@@ -2,7 +2,12 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 @{
-    var greetings = new[] { ", niezły z Ciebie fungi ;D", " teraz jest pora na grzybora!", ", dobrze, że jesteś <3" };
+    var greetings = new[] { "niezły z Ciebie fungi ;D", "pora na grzybobranie!", "dobrze, że jesteś <3", "wiesz co u Agatki?",
+    "uważaj na czarcie kręgi!!!", "kanie zarezerwowane?", "co na słuchawkach? Kanie?", "uważaj na cordycepsy D:", 
+    "wykręcasz, czy obcinasz?", "Żwirek kręci z Muchomorkiem!", "jedz grzyby będziesz wielki", "idziemy na grzyby?",
+    "jesteś zagrzebisty :P", "tutaj żdnych nie ma...", "lepszy rydz niż nic ;)", "największe grzyby to były w Japonii w 45",
+    "potrzebny Ci power-up?", "zaczyna się sezon", "gdzie jeden grzyb, tam i drugi", "im dalej w las, tym więcej grzybów",
+    "prawdziwy grzybiarz nigdy nie zdradza swoich „miejscówek”"};
     var random = new Random();
     var selectedGreeting = greetings[random.Next(greetings.Length)];
 }
