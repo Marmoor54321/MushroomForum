@@ -20,6 +20,30 @@ html {
 body {
     margin-bottom: 60px;
 }
+/*Przyciski na stronie*/
+.button-green {
+    color: #FFFFFF !important;
+    border-radius: 4px;
+    padding: 4px 8px;
+    text-decoration: none;
+    background-color: #85D68F;
+    margin-right: 2px;
+    margin-left: 2px;
+    border: none;
+    outline: none;
+}
+
+    .button-green:hover {
+        color: #FFFFFF !important;
+        text-decoration: none;
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+        transition: box-shadow 0.3s ease;
+        margin-right: 2px;
+        margin-left: 2px;
+        border: none;
+        outline: none;
+    }
+/*Navbar modyfikacje*/
 .nav-link-white {
     color: white !important;
     font-weight: bold;
@@ -34,15 +58,21 @@ body {
         margin-left: 2px;
     }
 
+.navbar-custom {
+    background-color: #85D68F;
+    border-bottom: 2px solid #76C67F;
+    border-top: 2px solid #76C67F;
+}
 .nav-button-green {
     color: #FFFFFF !important;
-    border-radius: 2px;
+    border-radius: 4px;
     padding: 4px 8px;
     text-decoration: none;
     background-color: #76C67F;
     margin-right: 2px;
     margin-left: 2px;
 }
+
     .nav-button-green:hover {
         color: #FFFFFF !important;
         text-decoration: none;
@@ -51,12 +81,6 @@ body {
         margin-right: 2px;
         margin-left: 2px;
     }
-.navbar-custom {
-    background-color: #85D68F;
-    border-bottom: 2px solid #76C67F;
-    border-top: 2px solid #76C67F;
-}
-
 
 /*Banner na górze strony*/
 .banner {
