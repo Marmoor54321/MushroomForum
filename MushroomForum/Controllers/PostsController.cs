@@ -89,7 +89,8 @@ namespace MushroomForum.Controllers
                 return NotFound();
             }
 
-            ViewData["ForumThreads"] = _context.ForumThreads.ToList();
+            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "Title");
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "UserName");
             return View(post);
         }
 
@@ -124,7 +125,8 @@ namespace MushroomForum.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["ForumThreads"] = _context.ForumThreads.ToList();
+            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "ForumThreadId", post.ForumThreadId);
+            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", post.IdentityUserId);
             return View(post);
         }
 

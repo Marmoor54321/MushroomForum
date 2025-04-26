@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace MushroomForum.Models
@@ -14,5 +15,8 @@ namespace MushroomForum.Models
         public IdentityUser User { get; set; }
         //FK
         public string IdentityUserId { get; set; }
+        public Category? Category { get; set; }
+        
+        public int? CategoryId { get; set; }
     }
 }
