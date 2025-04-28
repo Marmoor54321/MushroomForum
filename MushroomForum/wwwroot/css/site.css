@@ -151,3 +151,29 @@ body {
         font-size: 5vw;
     }
 }
+
+/*strona g³ówna*/
+.content-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.left-column {
+    flex: 1;
+    padding-right: 20px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.right-column {
+    flex: 1;
+    background-color: #fafafa; 
+    padding: 10px;
+    border-radius: 8px;
+}
+    .right-column img {
+        max-width: 100%;
+        height: auto;
+    }
