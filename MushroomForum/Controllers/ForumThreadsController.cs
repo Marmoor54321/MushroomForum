@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,7 @@ using MushroomForum.Models;
 
 namespace MushroomForum.Controllers
 {
+    //[Authorize]
     public class ForumThreadsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -46,6 +49,7 @@ namespace MushroomForum.Controllers
         }
 
         // GET: ForumThreads/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "UserName");
@@ -61,6 +65,9 @@ namespace MushroomForum.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                forumThread.IdentityUserId = userId;
+
                 _context.Add(forumThread);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -70,6 +77,7 @@ namespace MushroomForum.Controllers
         }
 
         // GET: ForumThreads/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,6 +89,16 @@ namespace MushroomForum.Controllers
             if (forumThread == null)
             {
                 return NotFound();
+            }
+
+            if (forumThread == null)
+            {
+                return NotFound();
+            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (forumThread.IdentityUserId != userId)
+            {
+                return Forbid(); //zabrania edycji jeśli użytkownik chce edytować na innym koncie
             }
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", forumThread.IdentityUserId);
             return View(forumThread);
@@ -123,6 +141,7 @@ namespace MushroomForum.Controllers
         }
 
         // GET: ForumThreads/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -138,6 +157,11 @@ namespace MushroomForum.Controllers
                 return NotFound();
             }
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (forumThread.IdentityUserId != userId)
+            {
+                return Forbid();//zabrania usunięcia jeśli użytkownik chce edytować na innym koncie
+            }
             return View(forumThread);
         }
 
