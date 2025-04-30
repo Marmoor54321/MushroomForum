@@ -1,8 +1,19 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<link href="~/css/site.css" rel="stylesheet" />
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Jedyne takie forum dla grzybiarzy!</h1>
+    <div class="content-container">
+        <div class="left-column">
+            <p>Dowiedz się jak korzystać z aplikacji: <a href="link.do.samouczka.com">tutaj znajdziesz wszystkie informacje :)</a>.</p>
+            <h3>Ciekawostka o grzybach:</h3>
+            <p>@ViewData["Ciekawostka"]</p>
+        </div>
+        <div class="right-column">
+            <h3>Mem dnia:</h3>
+            <img src="@ViewData["Mem"]" alt="Mem o grzybach :D" />
+        </div>
+    </div>
 </div>
