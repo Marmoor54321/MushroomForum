@@ -20,21 +20,19 @@ namespace MushroomForum.Data
         {
             base.OnModelCreating(modelBuilder);
 
-           
+
             modelBuilder.Entity<ForumThread>()
                 .HasOne(ft => ft.User)
-                .WithMany() 
+                .WithMany()
                 .HasForeignKey(ft => ft.IdentityUserId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
+                .OnDelete(DeleteBehavior.SetNull);
 
 
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.User)
-                .WithMany() 
+                .WithMany()
                 .HasForeignKey(p => p.IdentityUserId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
+                .OnDelete(DeleteBehavior.SetNull);
 
 
             modelBuilder.Entity<Post>()

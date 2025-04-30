@@ -12,9 +12,9 @@ namespace MushroomForum.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         //Navigation property
         [ValidateNever]
-        public IdentityUser User { get; set; }
+        public IdentityUser? User { get; set; }
         //FK
-        public string IdentityUserId { get; set; }
+        public string? IdentityUserId { get; set; }
         public Category? Category { get; set; }
         
         public int? CategoryId { get; set; }
