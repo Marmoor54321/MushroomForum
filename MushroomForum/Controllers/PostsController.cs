@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MushroomForum.Controllers
@@ -54,7 +55,6 @@ namespace MushroomForum.Controllers
         public IActionResult Create()
         {
             ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "Title");
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
@@ -65,13 +65,15 @@ namespace MushroomForum.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                post.IdentityUserId = userId;
+
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
             ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "ForumThreadId", post.ForumThreadId);
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", post.IdentityUserId);
             return View(post);
         }
 

@@ -52,7 +52,6 @@ namespace MushroomForum.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
@@ -72,7 +71,6 @@ namespace MushroomForum.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", forumThread.IdentityUserId);
             return View(forumThread);
         }
 
