@@ -1,25 +1,29 @@
-html {
-  font-size: 14px;
+ï»¿html {
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
     margin-bottom: 60px;
+    background-color: #f5f5f5;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
 /*Przyciski na stronie*/
 .button-green {
     color: #FFFFFF !important;
@@ -27,43 +31,35 @@ body {
     padding: 4px 8px;
     text-decoration: none;
     background-color: #85D68F;
-    margin-right: 2px;
-    margin-left: 2px;
-    margin-top: 2px;
-    margin-bottom: 2px;
+    margin: 2px;
     border: none;
     outline: none;
     display: inline-block;
+    padding: 8px 16px;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
     .button-green:hover {
         color: #FFFFFF !important;
         text-decoration: none;
         box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
-        transition: box-shadow 0.3s ease;
-        margin-right: 2px;
-        margin-left: 2px;
-        margin-top: 2px;
-        margin-bottom: 2px;
-        border: none;
-        outline: none;
-        display: inline-block;
+        transform: scale(1.05);
     }
+
 /*Navbar modyfikacje*/
 .nav-link-white {
     color: white !important;
     font-weight: bold;
     text-decoration: none;
+    margin: 2px;
+    transition: text-shadow 0.3s ease, transform 0.2s ease;
 }
+
     .nav-link-white:hover {
         color: #FFFFFF !important;
         text-decoration: none;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        transition: box-shadow 0.3s ease;
-        margin-right: 2px;
-        margin-left: 2px;
-        margin-top: 2px;
-        margin-bottom: 2px;
+        transform: scale(1.05);
     }
 
 .navbar-custom {
@@ -71,92 +67,33 @@ body {
     border-bottom: 2px solid #76C67F;
     border-top: 2px solid #76C67F;
 }
+
 .nav-button-green {
     color: #FFFFFF !important;
     border-radius: 4px;
     padding: 4px 8px;
     text-decoration: none;
     background-color: #76C67F;
-    margin-right: 2px;
-    margin-left: 2px;
-    margin-top: 2px;
-    margin-bottom: 2px;
+    margin: 2px;
     outline: none;
     border: none;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    padding: 8px 16px;
 }
 
     .nav-button-green:hover {
         color: #FFFFFF !important;
         text-decoration: none;
         box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
-        transition: box-shadow 0.3s ease;
-        margin-right: 2px;
-        margin-left: 2px;
-        margin-top: 2px;
-        margin-bottom: 2px;
-        outline: none;
+        transform: scale(1.05);
     }
 
-/*Banner na górze strony*/
-.banner {
-    width: 100%;
-    height: 2.5cm;
-    background-color: #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-}
-
-    .banner img {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        min-height: 100%;
-        min-width: 100%;
-        object-fit: cover;
-    }
-
-.banner-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white; /* kolor tekstu */
-    font-size: 2.5vw; /* skaluj¹ca siê wielkoœæ napisu */
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7); /* cieñ dla czytelnoœci */
-    white-space: nowrap; /* bez ³amania wiersza */
-}
-
-/* RESPONSYWNOŒÆ */
-@media (max-width: 768px) {
-    .banner {
-        height: 1.5cm;
-    }
-
-    .banner-text {
-        font-size: 4vw;
-    }
-}
-
-@media (max-width: 480px) {
-    .banner {
-        height: 1cm;
-    }
-
-    .banner-text {
-        font-size: 5vw;
-    }
-}
-
-/*strona g³ówna*/
+/*strona gÅ‚Ã³wna*/
 .content-container {
     display: flex;
     justify-content: space-between;
     padding: 20px;
+    margin-bottom: 2rem;
 }
 
 .left-column {
@@ -165,15 +102,123 @@ body {
     background-color: white;
     padding: 10px;
     border-radius: 8px;
+    margin-right: 10px;
 }
 
 .right-column {
     flex: 1;
-    background-color: #fafafa; 
+    background-color: #fafafa;
     padding: 10px;
     border-radius: 8px;
+    margin-left: 10px;
 }
+
     .right-column img {
         max-width: 100%;
         height: auto;
+        border-radius: 8px;
     }
+
+.welcome-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+    .welcome-card h1 {
+        color: #76C67F;
+        margin-top: 0;
+        font-size: 2.5rem;
+    }
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.feature-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    text-align: center;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    min-height: 300px; 
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+    .feature-card:hover {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+    }
+
+    .feature-card h3 {
+        color: #76C67F;
+        margin-top: 0;
+    }
+
+    .feature-card a {
+        margin-top: 0.75rem;
+        display: inline-block;
+    }
+
+    .feature-card p {
+        flex: 1;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card a.button-green {
+        margin-top: 0.75rem;
+        align-self: center;
+    }
+
+/* ResponsywnoÅ›Ä‡ dla nowych elementÃ³w */
+@media (max-width: 768px) {
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-card {
+        min-height: 250px;
+    }
+
+    .content-container {
+        flex-direction: column;
+        padding: 6px 12px;
+    }
+
+    .left-column, .right-column {
+        margin: 0 0 15px 0;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .feature-card {
+        padding: 1rem;
+        min-height: 200px;
+    }
+
+    .welcome-card {
+        padding: 1rem;
+    }
+
+    .welcome-card h1 {
+        font-size: 1.8rem;
+    }
+
+    .content-container {
+        padding: 10px;
+    }
+}

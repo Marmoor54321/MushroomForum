@@ -1,19 +1,39 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Strona główna";
 }
-<link href="~/css/site.css" rel="stylesheet" />
 
-<div class="text-center">
+<div class="welcome-card">
     <h1 class="display-4">Jedyne takie forum dla grzybiarzy!</h1>
-    <div class="content-container">
-        <div class="left-column">
-            <p>Dowiedz się jak korzystać z aplikacji: <a href="link.do.samouczka.com">tutaj znajdziesz wszystkie informacje :)</a>.</p>
-            <h3>Ciekawostka o grzybach:</h3>
-            <p>@ViewData["Ciekawostka"]</p>
-        </div>
-        <div class="right-column">
-            <h3>Mem dnia:</h3>
-            <img src="@ViewData["Mem"]" alt="Mem o grzybach :D" />
-        </div>
+    <p>Dołącz do największej w Polsce społeczności pasjonatów grzybobrania. Dziel się swoimi zbiorami, identyfikuj nieznane gatunki, wymieniaj się wiedzą i doświadczeniem.</p>
+    <p>Niezależnie czy jesteś doświadczonym grzybiarzem czy dopiero zaczynasz swoją przygodę z grzybobraniem, znajdziesz tu przydatne informacje i przyjaznych ludzi gotowych do pomocy.</p>
+</div>
+
+<div class="content-container">
+    <div class="left-column">
+        <p>Dowiedz się jak korzystać z aplikacji: <a href="link.do.samouczka.com" class="button-green">tutaj znajdziesz wszystkie informacje :)</a></p>
+        <h3>Ciekawostka o grzybach:</h3>
+        <p>@ViewData["Ciekawostka"]</p>
+    </div>
+    <div class="right-column">
+        <h3>Mem dnia:</h3>
+        <img src="@ViewData["Mem"]" alt="Mem o grzybach :D" />
+    </div>
+</div>
+
+<div class="features">
+    <div class="feature-card">
+        <h3>Identyfikacja grzybów</h3>
+        <p>Masz wątpliwości co do zebranych grzybów? Zamieść zdjęcie, a doświadczeni grzybiarze pomogą Ci w identyfikacji.</p>
+        <a href="/forum/identyfikacja" class="button-green">Sprawdź dział identyfikacji</a>
+    </div>
+    <div class="feature-card">
+        <h3>Atlasy i przewodniki</h3>
+        <p>Skorzystaj z naszych atlasów grzybów, map miejsc grzybobrania i sezonowych przewodników.</p>
+        <a href="/forum/atlas" class="button-green">Przejdź do atlasów</a>
+    </div>
+    <div class="feature-card">
+        <h3>Spotkania i wyprawy</h3>
+        <p>Dołącz do organizowanych wypraw na grzyby i spotkaj pasjonatów z Twojej okolicy.</p>
+        <a href="/forum/wyprawy" class="button-green">Zobacz zaplanowane wyprawy</a>
     </div>
 </div>

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,17 +10,9 @@
 </head>
 <body>
     <header>
-        @* Widok bannera na stronie *@
-        <div class="banner">
-            <img src="/images/baner.png" alt="Baner forum z napisem MushroomForum" />
-            <div class="banner-text">
-                MushroomForum
-            </div>
-        </div>
-
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light navbar-custom mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"></a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">🍄 MushroomForum</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -28,19 +20,18 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link nav-link-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link nav-link-white" asp-area="" asp-controller="Home" asp-action="Index">Strona główna</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link nav-link-white" asp-area="" asp-controller="ForumThreads" asp-action="Index">Forum</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link-white" asp-area="" asp-controller="ForumThreads" asp-action="Index">Threads</a>
+                            <a class="nav-link nav-link-white" asp-area="" asp-controller="Posts" asp-action="Index">Posty</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link-white" asp-area="" asp-controller="Posts" asp-action="Index">Posts</a>
+                            <a class="nav-link nav-link-white" asp-area="" asp-controller="Home" asp-action="Privacy">Prywatność</a>
                         </li>
                     </ul>
-
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -51,10 +42,9 @@
             @RenderBody()
         </main>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - MushroomForum - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - MushroomForum - <a asp-area="" asp-controller="Home" asp-action="Privacy">Prywatność</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
