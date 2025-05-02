@@ -1,47 +1,89 @@
-﻿@model IEnumerable<MushroomForum.Models.ForumThread>
-
+﻿@model MushroomForum.ViewModels.ForumThreadsIndexViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Forum";
 }
 
-<h1>Index</h1>
+<div class="forum-threads-container">
+    <h1 class="forum-title">Forum</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ForumThreadId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ForumThreadId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ForumThreadId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="mb-3">
+            <a asp-action="Create" class="button-green">Dodaj nowy wątek</a>
+        </div>
+    }
+    <form asp-action="Index" method="get" class="filter-form mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="sortOrder" class="form-label">Sortuj według daty</label>
+                <select name="sortOrder" id="sortOrder" class="form-select" onchange="this.form.submit()">
+                    <option value="newest" selected="@(Model.SortOrder == "newest")">Najnowsze</option>
+                    <option value="oldest" selected="@(Model.SortOrder == "oldest")">Najstarsze</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="categoryId" class="form-label">Kategoria</label>
+                <select name="categoryId" id="categoryId" class="form-select" onchange="this.form.submit()">
+                    <option value="">Wszystkie kategorie</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.CategoryId" selected="@(Model.SelectedCategoryId == category.CategoryId)">@category.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="pageSize" class="form-label">Wątków na stronę</label>
+                <select name="pageSize" id="pageSize" class="form-select" onchange="this.form.submit()">
+                    <option value="5" selected="@(Model.PageSize == 5)">5</option>
+                    <option value="10" selected="@(Model.PageSize == 10)">10</option>
+                    <option value="20" selected="@(Model.PageSize == 20)">20</option>
+                </select>
+            </div>
+        </div>
+        <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+    </form>
+
+    @if (Model.Threads.Any())
+    {
+        <div class="thread-list">
+            <div class="thread-list-header">
+                <div class="thread-column-title">Nazwa wątku</div>
+                <div class="thread-column-author">Autor</div>
+                <div class="thread-column-category">Kategoria</div>
+                <div class="thread-column-date">Data utworzenia</div>
+            </div>
+            @foreach (var thread in Model.Threads)
+            {
+                <div class="thread-list-item">
+                    <div class="thread-column-title">
+                        <a asp-action="Details" asp-route-id="@thread.ForumThreadId" class="thread-title">@thread.Title</a>
+                    </div>
+                    <div class="thread-column-author">@(thread.User?.UserName ?? "Anonim")</div>
+                    <div class="thread-column-category">@(thread.Category?.Name ?? "Brak kategorii")</div>
+                    <div class="thread-column-date">@thread.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
+                </div>
+            }
+        </div>
+
+        <nav aria-label="Paginacja wątków">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-sortOrder="@Model.SortOrder" asp-route-categoryId="@Model.SelectedCategoryId" asp-route-pageSize="@Model.PageSize">Poprzednia</a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-sortOrder="@Model.SortOrder" asp-route-categoryId="@Model.SelectedCategoryId" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-sortOrder="@Model.SortOrder" asp-route-categoryId="@Model.SelectedCategoryId" asp-route-pageSize="@Model.PageSize">Następna</a>
+                </li>
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <p>Brak wątków do wyświetlenia.</p>
+    }
+</div>

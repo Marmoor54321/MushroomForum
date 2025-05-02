@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
+using MushroomForum.ViewModels;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace MushroomForum.Controllers
 {
-    //[Authorize]
     public class ForumThreadsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,10 +21,50 @@ namespace MushroomForum.Controllers
         }
 
         // GET: ForumThreads
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber, string sortOrder, int? categoryId, int? pageSize)
         {
-            var applicationDbContext = _context.ForumThreads.Include(f => f.User);
-            return View(await applicationDbContext.ToListAsync());
+            int currentPage = pageNumber ?? 1;
+            int currentPageSize = pageSize ?? 10;
+            sortOrder = string.IsNullOrEmpty(sortOrder) ? "newest" : sortOrder;
+
+            var threadsQuery = _context.ForumThreads
+                .Include(f => f.User)
+                .Include(f => f.Category)
+                .AsQueryable();
+
+            if (categoryId.HasValue && categoryId > 0)
+            {
+                threadsQuery = threadsQuery.Where(t => t.CategoryId == categoryId);
+            }
+
+            threadsQuery = sortOrder switch
+            {
+                "oldest" => threadsQuery.OrderBy(t => t.CreatedAt),
+                _ => threadsQuery.OrderByDescending(t => t.CreatedAt)
+            };
+
+            int totalThreads = await threadsQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalThreads / (double)currentPageSize);
+            var threads = await threadsQuery
+                .Skip((currentPage - 1) * currentPageSize)
+                .Take(currentPageSize)
+                .ToListAsync();
+
+            var categories = await _context.Categories.ToListAsync();
+
+            var viewModel = new ForumThreadsIndexViewModel
+            {
+                Threads = threads,
+                Categories = categories,
+                SelectedCategoryId = categoryId,
+                SortOrder = sortOrder,
+                PageNumber = currentPage,
+                PageSize = currentPageSize,
+                TotalPages = totalPages,
+                TotalThreads = totalThreads
+            };
+
+            return View(viewModel);
         }
 
         // GET: ForumThreads/Details/5
@@ -39,6 +77,7 @@ namespace MushroomForum.Controllers
 
             var forumThread = await _context.ForumThreads
                 .Include(f => f.User)
+                .Include(f => f.Category)
                 .FirstOrDefaultAsync(m => m.ForumThreadId == id);
             if (forumThread == null)
             {
@@ -52,25 +91,27 @@ namespace MushroomForum.Controllers
         [Authorize]
         public IActionResult Create()
         {
+            ViewData["Categories"] = new SelectList(_context.Categories, "CategoryId", "Name");
             return View();
         }
 
         // POST: ForumThreads/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ForumThreadId,Title,CreatedAt,IdentityUserId")] ForumThread forumThread)
+        [Authorize]
+        public async Task<IActionResult> Create([Bind("ForumThreadId,Title,CategoryId")] ForumThread forumThread)
         {
             if (ModelState.IsValid)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 forumThread.IdentityUserId = userId;
+                forumThread.CreatedAt = DateTime.Now;
 
                 _context.Add(forumThread);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["Categories"] = new SelectList(_context.Categories, "CategoryId", "Name", forumThread.CategoryId);
             return View(forumThread);
         }
 
@@ -89,25 +130,20 @@ namespace MushroomForum.Controllers
                 return NotFound();
             }
 
-            if (forumThread == null)
-            {
-                return NotFound();
-            }
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (forumThread.IdentityUserId != userId)
             {
-                return Forbid(); //zabrania edycji jeśli użytkownik chce edytować na innym koncie
+                return Forbid();
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", forumThread.IdentityUserId);
+            ViewData["Categories"] = new SelectList(_context.Categories, "CategoryId", "Name", forumThread.CategoryId);
             return View(forumThread);
         }
 
         // POST: ForumThreads/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ForumThreadId,Title,CreatedAt,IdentityUserId")] ForumThread forumThread)
+        [Authorize]
+        public async Task<IActionResult> Edit(int id, [Bind("ForumThreadId,Title,CreatedAt,IdentityUserId,CategoryId")] ForumThread forumThread)
         {
             if (id != forumThread.ForumThreadId)
             {
@@ -118,6 +154,11 @@ namespace MushroomForum.Controllers
             {
                 try
                 {
+                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    if (forumThread.IdentityUserId != userId)
+                    {
+                        return Forbid();
+                    }
                     _context.Update(forumThread);
                     await _context.SaveChangesAsync();
                 }
@@ -134,7 +175,7 @@ namespace MushroomForum.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", forumThread.IdentityUserId);
+            ViewData["Categories"] = new SelectList(_context.Categories, "CategoryId", "Name", forumThread.CategoryId);
             return View(forumThread);
         }
 
@@ -149,6 +190,7 @@ namespace MushroomForum.Controllers
 
             var forumThread = await _context.ForumThreads
                 .Include(f => f.User)
+                .Include(f => f.Category)
                 .FirstOrDefaultAsync(m => m.ForumThreadId == id);
             if (forumThread == null)
             {
@@ -158,7 +200,7 @@ namespace MushroomForum.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (forumThread.IdentityUserId != userId)
             {
-                return Forbid();//zabrania usunięcia jeśli użytkownik chce edytować na innym koncie
+                return Forbid();
             }
             return View(forumThread);
         }
@@ -166,6 +208,7 @@ namespace MushroomForum.Controllers
         // POST: ForumThreads/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var forumThread = await _context.ForumThreads.FindAsync(id);
