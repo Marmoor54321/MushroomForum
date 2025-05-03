@@ -43,4 +43,4 @@ Funkcjonalności:
 29.Tryb nocny (wygląd aplikacji)
 30.Codzienna prezentacja wybranego gatunku grzyba z ciekawostkami
 31.Rozpoznawanie grzybów ze zdjęcia za pomocą API. (Może coś jeszcze znajdę w tym API)
-32.
+32.Edytowanie swojego konta
