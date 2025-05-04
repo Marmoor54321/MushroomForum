@@ -19,7 +19,7 @@ namespace MushroomForum.Controllers
         public PostsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
-            _userManager = userManager;
+            _userManager = userManager; //na razie nie używane
         }
 
         // GET: Posts
@@ -71,7 +71,6 @@ namespace MushroomForum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Description,ForumThreadId")] Post post, IFormFile mediaFile)
         {
-            // Usuń błędy walidacji dla mediaFile, ponieważ jest opcjonalne
             if (mediaFile == null || mediaFile.Length == 0)
             {
                 ModelState.Remove("mediaFile");
@@ -115,101 +114,6 @@ namespace MushroomForum.Controllers
             _context.Add(post);
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
-        }
-
-// GET: Posts/Edit/5
-public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var post = await _context.Posts.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "Title");
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "UserName");
-            return View(post);
-        }
-
-        // POST: Posts/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,Description,ForumThreadId,IdentityUserId")] Post post)
-        {
-            if (id != post.PostId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PostExists(post.PostId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-
-            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "ForumThreadId", post.ForumThreadId);
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", post.IdentityUserId);
-            return View(post);
-        }
-
-        // GET: Posts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var post = await _context.Posts
-                .Include(p => p.ForumThread)
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.PostId == id);
-
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            return View(post);
-        }
-
-        // POST: Posts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var post = await _context.Posts.FindAsync(id);
-            if (post != null)
-            {
-                _context.Posts.Remove(post);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool PostExists(int id)
-        {
-            return _context.Posts.Any(e => e.PostId == id);
         }
     }
 }

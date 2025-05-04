@@ -24,7 +24,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.Configure<IISServerOptions>(options =>
 {
-    options.MaxRequestBodySize = 100 * 1024 * 1024; //100 MB
+    options.MaxRequestBodySize = 100 * 1024 * 1024; //500 mb
 });
 
 var app = builder.Build();
