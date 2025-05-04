@@ -15,6 +15,7 @@ namespace MushroomForum.Data
         public DbSet<ForumThread> ForumThreads { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Media> Media { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

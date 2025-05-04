@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -52,33 +53,72 @@ namespace MushroomForum.Controllers
         }
 
         // GET: Posts/Create
-        public IActionResult Create()
+        [Authorize]
+        public IActionResult Create(int forumThreadId)
         {
-            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "Title");
-            return View();
+            if (forumThreadId <= 0 || !_context.ForumThreads.Any(t => t.ForumThreadId == forumThreadId))
+            {
+                return NotFound("Nie znaleziono wątku.");
+            }
+
+            ViewData["ForumThreadId"] = forumThreadId;
+            return View(new Post());
         }
 
         // POST: Posts/Create
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PostId,Title,Description,ForumThreadId,IdentityUserId")] Post post)
+        public async Task<IActionResult> Create([Bind("Description,ForumThreadId")] Post post, IFormFile mediaFile)
         {
-            if (ModelState.IsValid)
+            // Usuń błędy walidacji dla mediaFile, ponieważ jest opcjonalne
+            if (mediaFile == null || mediaFile.Length == 0)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                post.IdentityUserId = userId;
-
-                _context.Add(post);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.Remove("mediaFile");
             }
 
-            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "ForumThreadId", post.ForumThreadId);
-            return View(post);
+            if (!ModelState.IsValid || post.ForumThreadId <= 0 || !_context.ForumThreads.Any(t => t.ForumThreadId == post.ForumThreadId))
+            {
+                if (post.ForumThreadId <= 0 || !_context.ForumThreads.Any(t => t.ForumThreadId == post.ForumThreadId))
+                {
+                    ModelState.AddModelError("ForumThreadId", "Nieprawidłowy identyfikator wątku.");
+                }
+                ViewData["ForumThreadId"] = post.ForumThreadId;
+                return View(post);
+            }
+
+            post.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            post.CreatedAt = DateTime.Now;
+
+            if (mediaFile != null && mediaFile.Length > 0)
+            {
+                var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+                if (!Directory.Exists(uploadsDir))
+                {
+                    Directory.CreateDirectory(uploadsDir);
+                }
+
+                var fileName = Guid.NewGuid() + Path.GetExtension(mediaFile.FileName);
+                var filePath = Path.Combine(uploadsDir, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await mediaFile.CopyToAsync(stream);
+                }
+
+                post.Media.Add(new Media
+                {
+                    Url = "/uploads/" + fileName,
+                    Type = mediaFile.ContentType.StartsWith("image") ? "image" : "video"
+                });
+            }
+
+            _context.Add(post);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
         }
 
-        // GET: Posts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+// GET: Posts/Edit/5
+public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {

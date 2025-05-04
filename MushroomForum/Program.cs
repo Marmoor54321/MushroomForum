@@ -22,6 +22,11 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddRazorPages();
 
+builder.Services.Configure<IISServerOptions>(options =>
+{
+    options.MaxRequestBodySize = 100 * 1024 * 1024; //100 MB
+});
+
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
@@ -43,6 +48,7 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

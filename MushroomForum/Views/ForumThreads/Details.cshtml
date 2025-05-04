@@ -1,36 +1,79 @@
-﻿@model MushroomForum.Models.ForumThread
-
+﻿@model MushroomForum.ViewModels.ThreadDetailsViewModel
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = Model.Thread.Title;
 }
 
-<h1>Details</h1>
+<div class="thread-details-container">
+	<h1 class="forum-title">@Model.Thread.Title</h1>
+	<div class="thread-info">
+		<p><strong>Opis:</strong> @Model.Thread.Description</p>
+		<p><strong>Autor:</strong> @(Model.Thread.User?.UserName ?? "Anonim")</p>
+		<p><strong>Kategoria:</strong> @(Model.Thread.Category?.Name ?? "Brak kategorii")</p>
+		<p><strong>Data utworzenia:</strong> @Model.Thread.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+	</div>
 
-<div>
-    <h4>ForumThread</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ForumThreadId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+	@if (User.Identity.IsAuthenticated)
+	{
+		<div class="mb-3">
+			<a asp-controller="Posts" asp-action="Create" asp-route-forumThreadId="@Model.Thread.ForumThreadId" class="button-green">Dodaj nowy post</a>
+		</div>
+	}
+
+	@if (Model.Posts.Any())
+	{
+		<div class="post-list">
+			@foreach (var post in Model.Posts)
+			{
+				<div class="post-item">
+					<div class="post-content">
+						<p>@post.Description</p>
+						@if (post.Media.Any())
+						{
+							<div class="post-media">
+								@foreach (var media in post.Media)
+								{
+									@if (media.Type == "image")
+									{
+										<img src="@media.Url" alt="Media" />
+									}
+									else if (media.Type == "video")
+									{
+										<video controls>
+											<source src="@media.Url" type="video/mp4">
+											Twoja przeglądarka nie obsługuje wideo.
+										</video>
+									}
+								}
+							</div>
+						}
+					</div>
+					<div class="post-meta">
+						<p><strong>Autor:</strong> @(post.User?.UserName ?? "Anonim")</p>
+						<p><strong>Data:</strong> @post.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+					</div>
+				</div>
+			}
+		</div>
+
+		<nav aria-label="Paginacja postów">
+			<ul class="pagination justify-content-center">
+				<li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
+					<a class="page-link" asp-action="Details" asp-route-id="@Model.Thread.ForumThreadId" asp-route-pageNumber="@(Model.PageNumber - 1)">Poprzednia</a>
+				</li>
+				@for (int i = 1; i <= Model.TotalPages; i++)
+				{
+					<li class="page-item @(i == Model.PageNumber ? "active" : "")">
+						<a class="page-link" asp-action="Details" asp-route-id="@Model.Thread.ForumThreadId" asp-route-pageNumber="@i">@i</a>
+					</li>
+				}
+				<li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
+					<a class="page-link" asp-action="Details" asp-route-id="@Model.Thread.ForumThreadId" asp-route-pageNumber="@(Model.PageNumber + 1)">Następna</a>
+				</li>
+			</ul>
+		</nav>
+	}
+	else
+	{
+		<p>Brak postów w tym wątku.</p>
+	}
 </div>

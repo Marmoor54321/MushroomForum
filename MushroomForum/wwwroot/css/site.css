@@ -1,7 +1,6 @@
 ﻿:root {
     --primary-green: #1dbb1d;
     --secondary-green: #1ad813;
-    /*#76C67F STARY KOLOR*/
 }
 
 html {
@@ -202,33 +201,33 @@ body {
 
 .thread-list {
     margin-bottom: 2rem;
-    overflow-x: auto; 
-    -webkit-overflow-scrolling: touch; 
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .thread-list-header {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr; 
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     background-color: #f5f5f5;
     border-radius: 8px;
     padding: 0.75rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    min-width: 600px; 
+    min-width: 600px;
 }
 
 .thread-list-item {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr; 
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     background-color: #fafafa;
     border-radius: 8px;
     padding: 0.75rem;
     margin-bottom: 0.5rem;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: box-shadow 0.3s ease, transform 0.2s ease;
-    align-items: center; 
-    min-width: 600px; 
+    align-items: center;
+    min-width: 600px;
 }
 
     .thread-list-item:hover {
@@ -241,7 +240,7 @@ body {
     padding-right: 0.5rem;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
 }
 
     .thread-column-title a {
@@ -262,7 +261,7 @@ body {
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Obcinanie długich tekstów */
+    text-overflow: ellipsis;
 }
 
 .filter-form {
@@ -296,6 +295,60 @@ body {
     margin-bottom: 2rem;
 }
 
+.thread-info {
+    background-color: #fafafa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.post-list {
+    margin-bottom: 2rem;
+}
+
+.post-item {
+    background-color: #fafafa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+    .post-item:hover {
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transform: translateY(-3px);
+    }
+
+.post-content {
+    margin-bottom: 0.5rem;
+}
+
+    .post-content p {
+        margin: 0 0 0.5rem 0;
+    }
+
+.post-media {
+    margin-top: 0.5rem;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+    .post-media img,
+    .post-media video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+    }
+
+.post-meta {
+    font-size: 0.9rem;
+    color: #666;
+    text-align: right;
+}
+
 .create-thread-container {
     background-color: white;
     border-radius: 8px;
@@ -314,9 +367,9 @@ body {
 
     .thread-list-header,
     .thread-list-item {
-        grid-template-columns: 2fr 1fr 1fr 1fr; 
+        grid-template-columns: 2fr 1fr 1fr 1fr;
         padding: 0.5rem;
-        min-width: 500px; 
+        min-width: 500px;
     }
 
     .thread-column-title {
@@ -326,6 +379,14 @@ body {
     .thread-column-author,
     .thread-column-category,
     .thread-column-date {
+        font-size: 0.8rem;
+    }
+
+    .post-item {
+        padding: 0.75rem;
+    }
+
+    .post-meta {
         font-size: 0.8rem;
     }
 
@@ -367,7 +428,7 @@ body {
     .thread-list-item {
         grid-template-columns: 2fr 1fr 1fr 1fr;
         padding: 0.4rem;
-        min-width: 400px; 
+        min-width: 400px;
     }
 
     .thread-column-title {
@@ -377,6 +438,14 @@ body {
     .thread-column-author,
     .thread-column-category,
     .thread-column-date {
+        font-size: 0.75rem;
+    }
+
+    .post-item {
+        padding: 0.5rem;
+    }
+
+    .post-meta {
         font-size: 0.75rem;
     }
 

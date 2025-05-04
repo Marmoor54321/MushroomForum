@@ -68,23 +68,40 @@ namespace MushroomForum.Controllers
         }
 
         // GET: ForumThreads/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, int pageNumber = 1)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var forumThread = await _context.ForumThreads
-                .Include(f => f.User)
-                .Include(f => f.Category)
-                .FirstOrDefaultAsync(m => m.ForumThreadId == id);
-            if (forumThread == null)
-            {
-                return NotFound();
-            }
+            var thread = await _context.ForumThreads
+                .Include(t => t.User)
+                .Include(t => t.Category)
+                .FirstOrDefaultAsync(t => t.ForumThreadId == id);
 
-            return View(forumThread);
+            if (thread == null) return NotFound();
+
+            int pageSize = 10;
+            var posts = await _context.Posts
+                .Where(p => p.ForumThreadId == id)
+                .Include(p => p.User)
+                .Include(p => p.Media)
+                .OrderBy(p => p.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            int totalPosts = await _context.Posts.CountAsync(p => p.ForumThreadId == id);
+            int totalPages = (int)Math.Ceiling(totalPosts / (double)pageSize);
+
+            var viewModel = new ThreadDetailsViewModel
+            {
+                Thread = thread,
+                Posts = posts,
+                PageNumber = pageNumber,
+                TotalPages = totalPages,
+                TotalPosts = totalPosts
+            };
+
+            return View(viewModel);
         }
 
         // GET: ForumThreads/Create
@@ -99,7 +116,7 @@ namespace MushroomForum.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("ForumThreadId,Title,CategoryId")] ForumThread forumThread)
+        public async Task<IActionResult> Create([Bind("ForumThreadId,Title,CategoryId,Description")] ForumThread forumThread)
         {
             if (ModelState.IsValid)
             {
@@ -175,7 +192,7 @@ namespace MushroomForum.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Categories"] = new SelectList(_context.Categories, "CategoryId", "Name", forumThread.CategoryId);
+            ViewData["Categories"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", forumThread.CategoryId);
             return View(forumThread);
         }
 
