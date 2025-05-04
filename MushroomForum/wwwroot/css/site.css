@@ -1,4 +1,10 @@
-﻿html {
+﻿:root {
+    --primary-green: #1dbb1d;
+    --secondary-green: #1ad813;
+    /*#76C67F STARY KOLOR*/
+}
+
+html {
     font-size: 14px;
 }
 
@@ -30,7 +36,7 @@ body {
     border-radius: 4px;
     padding: 8px 16px;
     text-decoration: none;
-    background-color: #85D68F;
+    background-color: var(--primary-green);
     margin: 2px;
     border: none;
     outline: none;
@@ -62,9 +68,9 @@ body {
     }
 
 .navbar-custom {
-    background-color: #85D68F;
-    border-bottom: 2px solid #76C67F;
-    border-top: 2px solid #76C67F;
+    background-color: var(--primary-green);
+    border-bottom: 2px solid var(--primary-green);
+    border-top: 2px solid var(--primary-green);
 }
 
 .nav-button-green {
@@ -72,7 +78,7 @@ body {
     border-radius: 4px;
     padding: 8px 16px;
     text-decoration: none;
-    background-color: #76C67F;
+    background-color: var(--secondary-green);
     margin: 2px;
     outline: none;
     border: none;
@@ -136,7 +142,7 @@ body {
     }
 
     .welcome-card h1 {
-        color: #76C67F;
+        color: var(--primary-green);
         margin-top: 0;
         font-size: 2.5rem;
     }
@@ -167,7 +173,7 @@ body {
     }
 
     .feature-card h3 {
-        color: #76C67F;
+        color: var(--primary-green);
         margin-top: 0;
     }
 
@@ -190,7 +196,7 @@ body {
 }
 
 .forum-title {
-    color: #76C67F;
+    color: var(--primary-green);
     margin-bottom: 1.5rem;
 }
 
@@ -244,7 +250,7 @@ body {
     }
 
         .thread-column-title a:hover {
-            color: #76C67F;
+            color: var(--primary-green);
             text-decoration: underline;
         }
 
@@ -253,7 +259,7 @@ body {
 .thread-column-date {
     font-size: 0.9rem;
     padding-right: 0.5rem;
-    text-align: center; /* Wyrównanie do środka */
+    text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; /* Obcinanie długich tekstów */
@@ -267,14 +273,14 @@ body {
 }
 
 .pagination .page-link {
-    color: #76C67F;
+    color: var(--primary-green);
     border-radius: 4px;
     margin: 0 2px;
 }
 
 .pagination .page-item.active .page-link {
-    background-color: #85D68F;
-    border-color: #85D68F;
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
     color: white;
 }
 

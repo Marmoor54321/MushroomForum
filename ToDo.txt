@@ -9,7 +9,6 @@
 -Tabela Categories dla wątków DONE
 
 MM:
--Zmienić kolor nagłówka i przycisków, bo ten zielony jest brzydki. Przez to trzeba będzie zmieniać kolory czcionek.
 -Naprawić header-Na telefonie źle się skaluje. Tekst ma różne czcionki i kolory.
 -Stworzyć profil użytkownika
 
