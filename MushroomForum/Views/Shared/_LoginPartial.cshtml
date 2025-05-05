@@ -20,7 +20,12 @@
             <a class="nav-link nav-link-white" asp-controller="MushroomNotes" asp-action="Index">Notatnik</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+            <a class="nav-link nav-link-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                Konto
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark">
                 @User.Identity?.Name, @selectedGreeting
             </a>
         </li>
