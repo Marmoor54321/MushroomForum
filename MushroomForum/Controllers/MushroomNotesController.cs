@@ -64,6 +64,7 @@ namespace MushroomForum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MushroomNotes mushroomNotes, IFormFile Photo)
         {
+            mushroomNotes.CreateDate = DateTime.Now;
             if (ModelState.IsValid)
             {
                 mushroomNotes.CreateDate = DateTime.Now;
@@ -82,6 +83,10 @@ namespace MushroomForum.Controllers
                     }
 
                     mushroomNotes.PhotoUrl = "/uploads/" + fileName;
+                }
+                else
+                {
+                    mushroomNotes.PhotoUrl = null;
                 }
 
                 _context.Add(mushroomNotes);

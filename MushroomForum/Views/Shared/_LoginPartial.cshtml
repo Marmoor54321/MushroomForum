@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+
 @{
     var greetings = new[] { "niezły z Ciebie fungi ;D", "pora na grzybobranie!", "dobrze, że jesteś <3", "wiesz co u Agatki?",
     "uważaj na czarcie kręgi!!!", "kanie zarezerwowane?", "co na słuchawkach? Kanie?", "uważaj na cordycepsy D:", 
@@ -12,14 +13,17 @@
     var selectedGreeting = greetings[random.Next(greetings.Length)];
 }
 <ul class="navbar-nav">
+
 @if (SignInManager.IsSignedIn(User))
 {
+        <li class="nav-item">
+            <a class="nav-link nav-link-white" asp-controller="MushroomNotes" asp-action="Index">Notatnik</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
                 @User.Identity?.Name, @selectedGreeting
             </a>
         </li>
-
     <li class="nav-item">
         <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button type="submit" class="nav-link nav-button-green">Wyloguj się</button>
