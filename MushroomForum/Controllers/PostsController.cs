@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MushroomForum.Controllers
@@ -17,7 +19,7 @@ namespace MushroomForum.Controllers
         public PostsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
-            _userManager = userManager;
+            _userManager = userManager; //na razie nie używane
         }
 
         // GET: Posts
@@ -51,123 +53,67 @@ namespace MushroomForum.Controllers
         }
 
         // GET: Posts/Create
-        public IActionResult Create()
+        [Authorize]
+        public IActionResult Create(int forumThreadId)
         {
-            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "Title");
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "UserName");
-            return View();
+            if (forumThreadId <= 0 || !_context.ForumThreads.Any(t => t.ForumThreadId == forumThreadId))
+            {
+                return NotFound("Nie znaleziono wątku.");
+            }
+
+            ViewData["ForumThreadId"] = forumThreadId;
+            return View(new Post());
         }
 
         // POST: Posts/Create
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PostId,Title,Description,ForumThreadId,IdentityUserId")] Post post)
+        public async Task<IActionResult> Create([Bind("Description,ForumThreadId")] Post post, IFormFile mediaFile)
         {
-            if (ModelState.IsValid)
+            if (mediaFile == null || mediaFile.Length == 0)
             {
-                _context.Add(post);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.Remove("mediaFile");
             }
 
-            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "ForumThreadId", post.ForumThreadId);
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", post.IdentityUserId);
-            return View(post);
-        }
-
-        // GET: Posts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+            if (!ModelState.IsValid || post.ForumThreadId <= 0 || !_context.ForumThreads.Any(t => t.ForumThreadId == post.ForumThreadId))
             {
-                return NotFound();
-            }
-
-            var post = await _context.Posts.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "Title");
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "UserName");
-            return View(post);
-        }
-
-        // POST: Posts/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PostId,Title,Description,ForumThreadId,IdentityUserId")] Post post)
-        {
-            if (id != post.PostId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                if (post.ForumThreadId <= 0 || !_context.ForumThreads.Any(t => t.ForumThreadId == post.ForumThreadId))
                 {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError("ForumThreadId", "Nieprawidłowy identyfikator wątku.");
                 }
-                catch (DbUpdateConcurrencyException)
+                ViewData["ForumThreadId"] = post.ForumThreadId;
+                return View(post);
+            }
+
+            post.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            post.CreatedAt = DateTime.Now;
+
+            if (mediaFile != null && mediaFile.Length > 0)
+            {
+                var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+                if (!Directory.Exists(uploadsDir))
                 {
-                    if (!PostExists(post.PostId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    Directory.CreateDirectory(uploadsDir);
                 }
-                return RedirectToAction(nameof(Index));
+
+                var fileName = Guid.NewGuid() + Path.GetExtension(mediaFile.FileName);
+                var filePath = Path.Combine(uploadsDir, fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await mediaFile.CopyToAsync(stream);
+                }
+
+                post.Media.Add(new Media
+                {
+                    Url = "/uploads/" + fileName,
+                    Type = mediaFile.ContentType.StartsWith("image") ? "image" : "video"
+                });
             }
 
-            ViewData["ForumThreadId"] = new SelectList(_context.ForumThreads, "ForumThreadId", "ForumThreadId", post.ForumThreadId);
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", post.IdentityUserId);
-            return View(post);
-        }
-
-        // GET: Posts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var post = await _context.Posts
-                .Include(p => p.ForumThread)
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.PostId == id);
-
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            return View(post);
-        }
-
-        // POST: Posts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var post = await _context.Posts.FindAsync(id);
-            if (post != null)
-            {
-                _context.Posts.Remove(post);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool PostExists(int id)
-        {
-            return _context.Posts.Any(e => e.PostId == id);
+            _context.Add(post);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
         }
     }
 }

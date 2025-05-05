@@ -15,26 +15,25 @@ namespace MushroomForum.Data
         public DbSet<ForumThread> ForumThreads { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Media> Media { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-           
+
             modelBuilder.Entity<ForumThread>()
                 .HasOne(ft => ft.User)
-                .WithMany() 
+                .WithMany()
                 .HasForeignKey(ft => ft.IdentityUserId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
+                .OnDelete(DeleteBehavior.SetNull);
 
 
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.User)
-                .WithMany() 
+                .WithMany()
                 .HasForeignKey(p => p.IdentityUserId)
-                .OnDelete(DeleteBehavior.SetNull)
-                .IsRequired(false);
+                .OnDelete(DeleteBehavior.SetNull);
 
 
             modelBuilder.Entity<Post>()

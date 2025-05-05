@@ -3,11 +3,14 @@
 -Api do rozpoznawania grzybów
 -Dokończyć system ról np. Admin, user I razem z tym panel admina? Może potem oddzielne widoki np. ForumThreads dla user i dla adminów
 -Autentykacja stron dla np. adminów, użytkowników
--_layout stron, nowy header, może stopka.  #
--Zbudować stronę główną dla wątków i postów. #
--Nowa strona logowania i rejestracji.
+-_layout stron, nowy header, może stopka.  DONE?-Brzydkie ale jest MM
+-Zbudować stronę główną dla wątków i postów. DONE
+-Nowa strona logowania i rejestracji. DONE
 -Tabela Categories dla wątków DONE
 
+MM:
+-Naprawić header-Na telefonie źle się skaluje. Tekst ma różne czcionki i kolory.
+-Stworzyć profil użytkownika
 
 * - Nie jestem przekonany/a
 % - zrobione

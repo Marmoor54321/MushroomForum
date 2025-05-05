@@ -7,14 +7,15 @@ namespace MushroomForum.Models
     public class Post
     {
         public int PostId { get; set; }
-        [MaxLength(64)]
-        public string Title { get; set; }
         [MaxLength(512)]
         public string Description { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public ForumThread? ForumThread { get; set; }
         public int? ForumThreadId { get; set; }
         public IdentityUser? User { get; set; }
         public string? IdentityUserId { get; set; }
+        [AllowNull]
+        public ICollection<Media> Media { get; set; } = new List<Media>();
 
     }
 }
