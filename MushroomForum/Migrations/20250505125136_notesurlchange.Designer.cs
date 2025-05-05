@@ -12,8 +12,8 @@ using MushroomForum.Data;
 namespace MushroomForum.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250504194937_MediaCreate")]
-    partial class MediaCreate
+    [Migration("20250505125136_notesurlchange")]
+    partial class notesurlchange
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -306,6 +306,33 @@ namespace MushroomForum.Migrations
                     b.HasIndex("IdentityUserId");
 
                     b.ToTable("ForumThreads");
+                });
+
+            modelBuilder.Entity("MushroomForum.Models.MushroomNotes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MushroomNotes");
                 });
 
             modelBuilder.Entity("MushroomForum.Models.Post", b =>

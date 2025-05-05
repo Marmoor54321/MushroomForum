@@ -12,6 +12,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using QuestPDF.Drawing;
+using MushroomForum.Migrations;
 
 namespace MushroomForum.Controllers
 {
@@ -62,26 +63,38 @@ namespace MushroomForum.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MushroomNotes mushroomNotes, IFormFile Photo)
+        public async Task<IActionResult> Create(MushroomNotes mushroomNotes, IFormFile PhotoUrl)
         {
+            mushroomNotes.CreateDate = DateTime.Now;
             if (ModelState.IsValid)
             {
+                foreach (var modelState in ModelState)
+                {
+                    foreach (var error in modelState.Value.Errors)
+                    {
+                        Console.WriteLine($"Error in {modelState.Key}: {error.ErrorMessage}");
+                    }
+                }
                 mushroomNotes.CreateDate = DateTime.Now;
 
-                if (Photo != null && Photo.Length > 0)
+                if (PhotoUrl != null && PhotoUrl.Length > 0)
                 {
                     var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
                     Directory.CreateDirectory(uploadsPath);
 
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Photo.FileName);
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(PhotoUrl.FileName);
                     var filePath = Path.Combine(uploadsPath, fileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        await Photo.CopyToAsync(stream);
+                        await PhotoUrl.CopyToAsync(stream);
                     }
 
                     mushroomNotes.PhotoUrl = "/uploads/" + fileName;
+                }
+                else
+                {
+                    mushroomNotes.PhotoUrl = null;
                 }
 
                 _context.Add(mushroomNotes);
@@ -204,12 +217,27 @@ namespace MushroomForum.Controllers
                                 col.Item().Image(path, ImageScaling.FitWidth);
                         }
                     });
+
                 });
             });
 
             var pdf = document.GeneratePdf();
             return File(pdf, "application/pdf", "notatka.pdf");
         }
+        public async Task<IActionResult> Test()
+        {
+            var note = new MushroomNotes
+            {
+                Title = "Testowa",
+                Content = "Z kontrolera",
+                CreateDate = DateTime.Now
+            };
+
+            _context.Add(note);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
 
     }
 }
