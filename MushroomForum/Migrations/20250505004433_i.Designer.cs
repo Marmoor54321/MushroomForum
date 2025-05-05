@@ -12,8 +12,8 @@ using MushroomForum.Data;
 namespace MushroomForum.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250504194937_MediaCreate")]
-    partial class MediaCreate
+    [Migration("20250505004433_i")]
+    partial class i
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
