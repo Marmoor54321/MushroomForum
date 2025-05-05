@@ -12,6 +12,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using QuestPDF.Drawing;
+using MushroomForum.Migrations;
 
 namespace MushroomForum.Controllers
 {
@@ -67,6 +68,13 @@ namespace MushroomForum.Controllers
             mushroomNotes.CreateDate = DateTime.Now;
             if (ModelState.IsValid)
             {
+                foreach (var modelState in ModelState)
+                {
+                    foreach (var error in modelState.Value.Errors)
+                    {
+                        Console.WriteLine($"Error in {modelState.Key}: {error.ErrorMessage}");
+                    }
+                }
                 mushroomNotes.CreateDate = DateTime.Now;
 
                 if (PhotoUrl != null && PhotoUrl.Length > 0)
@@ -215,6 +223,20 @@ namespace MushroomForum.Controllers
             var pdf = document.GeneratePdf();
             return File(pdf, "application/pdf", "notatka.pdf");
         }
+        public async Task<IActionResult> Test()
+        {
+            var note = new MushroomNotes
+            {
+                Title = "Testowa",
+                Content = "Z kontrolera",
+                CreateDate = DateTime.Now
+            };
+
+            _context.Add(note);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
 
     }
 }
