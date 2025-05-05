@@ -23,15 +23,12 @@
                         <h5 class="card-title">@item.Title</h5>
                         <p class="card-text">@item.Content</p>
                     </div>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            ...
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edit</a></li>
-                            <li><a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Details</a></li>
-                            <li><a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to delete this note?');">Delete</a></li>
-                        </ul>
+                    <div>
+                        <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edytuj</a>
+                        <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.Id">Szczegóły</a>
+                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Are you sure you want to delete this note?');">Usuń</a>
+                        <!-- Przycisk pobierania PDF -->
+                        <a class="btn btn-success btn-sm" asp-action="DownloadPdf" asp-route-id="@item.Id">Pobierz PDF</a>
                     </div>
                 </div>
                 @if (!string.IsNullOrEmpty(item.PhotoUrl))

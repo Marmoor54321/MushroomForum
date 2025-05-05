@@ -217,6 +217,7 @@ namespace MushroomForum.Controllers
                                 col.Item().Image(path, ImageScaling.FitWidth);
                         }
                     });
+
                 });
             });
 
