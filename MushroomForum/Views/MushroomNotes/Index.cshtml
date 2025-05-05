@@ -9,7 +9,10 @@
 <p>
     <a asp-action="Create" class="button-green">Stwórz notatkę</a>
 </p>
-
+@if (Model == null || !Model.Any())
+{
+    <p>Brak notatek do wyświetlenia.</p>
+}
 <div class="note-list">
     @foreach (var item in Model)
     {

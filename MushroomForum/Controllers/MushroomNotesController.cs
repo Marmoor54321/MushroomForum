@@ -62,24 +62,24 @@ namespace MushroomForum.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MushroomNotes mushroomNotes, IFormFile Photo)
+        public async Task<IActionResult> Create(MushroomNotes mushroomNotes, IFormFile PhotoUrl)
         {
             mushroomNotes.CreateDate = DateTime.Now;
             if (ModelState.IsValid)
             {
                 mushroomNotes.CreateDate = DateTime.Now;
 
-                if (Photo != null && Photo.Length > 0)
+                if (PhotoUrl != null && PhotoUrl.Length > 0)
                 {
                     var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
                     Directory.CreateDirectory(uploadsPath);
 
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Photo.FileName);
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(PhotoUrl.FileName);
                     var filePath = Path.Combine(uploadsPath, fileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        await Photo.CopyToAsync(stream);
+                        await PhotoUrl.CopyToAsync(stream);
                     }
 
                     mushroomNotes.PhotoUrl = "/uploads/" + fileName;
