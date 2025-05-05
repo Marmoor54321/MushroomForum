@@ -50,6 +50,13 @@ body {
         transform: scale(1.05);
     }
 
+.nav-pills .nav-link {
+    color: black;
+}
+.nav-pills .nav-link.active {
+    background-color: var(--primary-green);
+    color: white;
+}
 /* Navbar modyfikacje */
 .nav-link-white {
     color: white !important;
