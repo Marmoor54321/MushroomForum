@@ -131,5 +131,67 @@ namespace MushroomForum.Controllers
             ViewData["Categories"] = new SelectList(_context.Categories, "CategoryId", "Name", forumThread.CategoryId);
             return View(forumThread);
         }
+
+        // POST: ForumThreads/Like
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Like(int threadId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var thread = await _context.ForumThreads.FirstOrDefaultAsync(t => t.ForumThreadId == threadId);
+
+            if (thread == null)
+            {
+                return NotFound("Wątek nie został znaleziony.");
+            }
+
+            var existingLike = await _context.ThreadLikes
+                .FirstOrDefaultAsync(tl => tl.IdentityUserId == userId && tl.ForumThreadId == threadId);
+
+            if (existingLike != null)
+            {
+                return RedirectToAction("Details", new { id = threadId });
+            }
+
+            var like = new ThreadLike
+            {
+                IdentityUserId = userId,
+                ForumThreadId = threadId
+            };
+
+            _context.ThreadLikes.Add(like);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = threadId });
+        }
+
+        // POST: ForumThreads/Unlike
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Unlike(int threadId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var thread = await _context.ForumThreads.FirstOrDefaultAsync(t => t.ForumThreadId == threadId);
+
+            if (thread == null)
+            {
+                return NotFound("Wątek nie został znaleziony.");
+            }
+
+            var like = await _context.ThreadLikes
+                .FirstOrDefaultAsync(tl => tl.IdentityUserId == userId && tl.ForumThreadId == threadId);
+
+            if (like == null)
+            {
+                return RedirectToAction("Details", new { id = threadId });
+            }
+
+            _context.ThreadLikes.Remove(like);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = threadId });
+        }
     }
 }

@@ -10,6 +10,14 @@
 		<p><strong>Autor:</strong> @(Model.Thread.User?.UserName ?? "Anonim")</p>
 		<p><strong>Kategoria:</strong> @(Model.Thread.Category?.Name ?? "Brak kategorii")</p>
 		<p><strong>Data utworzenia:</strong> @Model.Thread.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+		<form asp-action="Like" asp-controller="ForumThreads" method="post">
+    <input type="hidden" name="threadId" value="@Model.Thread.ForumThreadId" />
+    <button type="submit">Polub wątek</button>
+</form>
+<form asp-action="Unlike" asp-controller="ForumThreads" method="post">
+    <input type="hidden" name="threadId" value="@Model.Thread.ForumThreadId" />
+    <button type="submit">Cofnij polubienie wątku</button>
+</form>
 	</div>
 
 	@if (User.Identity.IsAuthenticated)
