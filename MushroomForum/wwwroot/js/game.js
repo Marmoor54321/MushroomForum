@@ -13,39 +13,50 @@ let player = {
 // Prędkość ruchu
 const speed = tileSize;
 
-// Funkcja rysująca klocka
+// Obrazek ludzika
+const playerImage = new Image();
+playerImage.src = "/js/textures/player.png"; // podaj ścieżkę do obrazka
+
+// Funkcja rysująca ludzika
 function drawPlayer() {
-    ctx.fillStyle = "blue"; // Kolor klocka
-    ctx.fillRect(player.x, player.y, tileSize, tileSize); // Rysowanie klocka
+    if (playerImage.complete) {
+        ctx.drawImage(playerImage, player.x, player.y, tileSize, tileSize);
+    } else {
+        // Jeżeli obrazek jeszcze się nie załadował, rysujemy niebieski kwadrat
+        ctx.fillStyle = "blue";
+        ctx.fillRect(player.x, player.y, tileSize, tileSize);
+    }
 }
 
 // Funkcja rysująca planszę
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Czyści planszę
-    drawPlayer(); // Rysuje klocka
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawPlayer();
 }
 
 // Funkcja obsługująca ruchy gracza
 function movePlayer(e) {
     switch (e.key) {
         case "ArrowUp":
-            if (player.y > 0) player.y -= speed; // Ruch w górę
+            if (player.y > 0) player.y -= speed;
             break;
         case "ArrowDown":
-            if (player.y < canvas.height - tileSize) player.y += speed; // Ruch w dół
+            if (player.y < canvas.height - tileSize) player.y += speed;
             break;
         case "ArrowLeft":
-            if (player.x > 0) player.x -= speed; // Ruch w lewo
+            if (player.x > 0) player.x -= speed;
             break;
         case "ArrowRight":
-            if (player.x < canvas.width - tileSize) player.x += speed; // Ruch w prawo
+            if (player.x < canvas.width - tileSize) player.x += speed;
             break;
     }
-    draw(); // Po ruchu rysujemy planszę na nowo
+    draw();
 }
 
 // Nasłuchiwanie na strzałki
 document.addEventListener("keydown", movePlayer);
 
-// Inicjalizacja gry
-draw();
+// Po załadowaniu obrazka narysuj planszę
+playerImage.onload = () => {
+    draw();
+};
