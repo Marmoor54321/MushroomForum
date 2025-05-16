@@ -1,26 +1,41 @@
 ﻿const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-
-// Rozmiar klocka
 const tileSize = 40;
 
-// Pozycja klocka (gracza)
-let player = {
-    x: 0,
-    y: 0
-};
+const maze = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+    [1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 1, 1, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+];
 
-// Prędkość ruchu
-const speed = tileSize;
-
-// Obrazek ludzika
+// Pozycja gracza w indeksach planszy
+let player = { x: 1, y: 1 };
 const playerImage = new Image();
-playerImage.src = "/js/textures/player.png"; // podaj ścieżkę do obrazka
+playerImage.src = "/js/textures/player.png";
+function drawMaze() {
+    for (let y = 0; y < maze.length; y++) {
+        for (let x = 0; x < maze[y].length; x++) {
+            if (maze[y][x] === 1) {
+                ctx.fillStyle = "black";
+                ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+            } else {
+                ctx.fillStyle = "white";
+                ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+            }
+        }
+    }
+}
 
-// Funkcja rysująca ludzika
 function drawPlayer() {
     if (playerImage.complete) {
-        ctx.drawImage(playerImage, player.x, player.y, tileSize, tileSize);
+        ctx.drawImage(playerImage, player.x * tileSize, player.y * tileSize, tileSize, tileSize);
     } else {
         // Jeżeli obrazek jeszcze się nie załadował, rysujemy niebieski kwadrat
         ctx.fillStyle = "blue";
@@ -28,35 +43,39 @@ function drawPlayer() {
     }
 }
 
-// Funkcja rysująca planszę
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawMaze();
     drawPlayer();
 }
 
-// Funkcja obsługująca ruchy gracza
 function movePlayer(e) {
+    let newX = player.x;
+    let newY = player.y;
+
     switch (e.key) {
         case "ArrowUp":
-            if (player.y > 0) player.y -= speed;
+            newY--;
             break;
         case "ArrowDown":
-            if (player.y < canvas.height - tileSize) player.y += speed;
+            newY++;
             break;
         case "ArrowLeft":
-            if (player.x > 0) player.x -= speed;
+            newX--;
             break;
         case "ArrowRight":
-            if (player.x < canvas.width - tileSize) player.x += speed;
+            newX++;
             break;
     }
+
+    // Sprawdzenie czy można iść (czy pole jest puste)
+    if (maze[newY] && maze[newY][newX] === 0) {
+        player.x = newX;
+        player.y = newY;
+    }
+
     draw();
 }
 
-// Nasłuchiwanie na strzałki
 document.addEventListener("keydown", movePlayer);
 
-// Po załadowaniu obrazka narysuj planszę
-playerImage.onload = () => {
-    draw();
-};
+draw();
