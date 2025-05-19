@@ -505,3 +505,34 @@ body {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
     white-space: nowrap;
 }
+
+/*lista rozwijana*/
+.note-item {
+    max-width: 100% !important;
+}
+
+    .note-item .card-body {
+        width: 100%;
+        background: #f8f9fa;
+        padding: 0.5rem 1rem;
+    }
+
+    .note-item .card-title {
+        flex-grow: 1;
+        margin-bottom: 0;
+    }
+
+    .note-item .dropdown-toggle {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: 30px;
+        height: 30px;
+        font-size: 24px;
+        line-height: 1;
+        color: #000; /* możesz zmienić na inny */
+    }
+.dropdown-toggle::after {
+    display: none !important;
+}
