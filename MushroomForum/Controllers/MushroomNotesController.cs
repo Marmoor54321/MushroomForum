@@ -65,18 +65,12 @@ namespace MushroomForum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MushroomNotes mushroomNotes, IFormFile PhotoUrl)
         {
+            ModelState.Remove("PhotoUrl");
+
             mushroomNotes.CreateDate = DateTime.Now;
+
             if (ModelState.IsValid)
             {
-                foreach (var modelState in ModelState)
-                {
-                    foreach (var error in modelState.Value.Errors)
-                    {
-                        Console.WriteLine($"Error in {modelState.Key}: {error.ErrorMessage}");
-                    }
-                }
-                mushroomNotes.CreateDate = DateTime.Now;
-
                 if (PhotoUrl != null && PhotoUrl.Length > 0)
                 {
                     var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
@@ -92,15 +86,12 @@ namespace MushroomForum.Controllers
 
                     mushroomNotes.PhotoUrl = "/uploads/" + fileName;
                 }
-                else
-                {
-                    mushroomNotes.PhotoUrl = null;
-                }
 
                 _context.Add(mushroomNotes);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(mushroomNotes);
         }
 
