@@ -1,10 +1,38 @@
 ﻿@page
 @model MushroomForum.Pages.Game.GameModel
 @{
-    ViewData["Title"] = "Minigierka: Mushroom Fall";
+    ViewData["Title"] = "Minigierka - Menu Gier";
 }
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden; /* żeby nie było pionowego scrolla */
+    }
 
-<h2>Zagraj w Mushroom Fall</h2>
-<a href="https://www.culinaryschools.org/kids-games/mushroom-fall/" target="_blank" rel="noopener noreferrer">
-    <button>Graj teraz</button>
-</a>
+    #gameFrame {
+        border: none;
+        width: 100vw; /* viewport width - pełna szerokość okna */
+        height: 100vh; /* viewport height - pełna wysokość okna */
+        display: none; /* na start ukryte */
+    }
+</style>
+
+<div>
+    <button onclick="changeGame('https://www.onlinegames.io/paper-io-2/')">Paper.io</button>
+    <button onclick="changeGame('https://www.onlinegames.io/solitaire/')">Pasjans</button>
+    <button onclick="changeGame('https://www.onlinegames.io/nuts-and-bolts-puzzle/')">Śrubki</button>
+</div>
+
+<div style="margin-top: 20px; max-width: 100%; overflow: hidden;">
+    <iframe id="gameFrame" allowfullscreen></iframe>
+</div>
+
+<script>
+    function changeGame(url) {
+        const iframe = document.getElementById('gameFrame');
+        iframe.src = url;
+        iframe.style.display = 'block';
+    }
+</script>
