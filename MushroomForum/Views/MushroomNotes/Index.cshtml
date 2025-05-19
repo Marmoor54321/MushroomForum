@@ -31,7 +31,7 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton-@item.Id">
                         <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">Edytuj</a></li>
-                        <li><a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Szczegóły</a></li>
+                        @*<li><a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Szczegóły</a></li>*@
                         <li>
                             <!-- Zmieniamy link Usuń na przycisk otwierający modal -->
                             <button type="button" class="dropdown-item btn-delete"
