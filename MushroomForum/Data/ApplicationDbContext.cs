@@ -19,7 +19,7 @@ namespace MushroomForum.Data
         public DbSet<MushroomNotes> MushroomNotes { get; set; }
         public DbSet<ThreadLike> ThreadLikes { get; set; }
         public DbSet<PostLike> PostLikes { get; set; }
-
+        public DbSet<Friend> Friends { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
