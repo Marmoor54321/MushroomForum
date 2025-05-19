@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MushroomForum.Data;
 
@@ -11,9 +12,11 @@ using MushroomForum.Data;
 namespace MushroomForum.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250516222422_notes2")]
+    partial class notes2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +33,9 @@ namespace MushroomForum.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MediaId"));
 
+                    b.Property<int?>("MushroomNoteId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
@@ -44,6 +50,8 @@ namespace MushroomForum.Migrations
                         .HasColumnType("nvarchar(512)");
 
                     b.HasKey("MediaId");
+
+                    b.HasIndex("MushroomNoteId");
 
                     b.HasIndex("PostId");
 
@@ -320,9 +328,6 @@ namespace MushroomForum.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PhotoUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -415,11 +420,17 @@ namespace MushroomForum.Migrations
 
             modelBuilder.Entity("Media", b =>
                 {
+                    b.HasOne("MushroomForum.Models.MushroomNotes", "MushroomNote")
+                        .WithMany("Media")
+                        .HasForeignKey("MushroomNoteId");
+
                     b.HasOne("MushroomForum.Models.Post", "Post")
                         .WithMany("Media")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("MushroomNote");
 
                     b.Navigation("Post");
                 });
@@ -544,6 +555,11 @@ namespace MushroomForum.Migrations
                     b.Navigation("ForumThread");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MushroomForum.Models.MushroomNotes", b =>
+                {
+                    b.Navigation("Media");
                 });
 
             modelBuilder.Entity("MushroomForum.Models.Post", b =>
