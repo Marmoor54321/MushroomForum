@@ -53,6 +53,10 @@ body {
 .nav-pills .nav-link {
     color: black;
 }
+.nav-pills .nav-link-white {
+    color: white !important;
+}
+
 .nav-pills .nav-link.active {
     background-color: var(--primary-green);
     color: white;
@@ -97,6 +101,15 @@ body {
         box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
         transform: scale(1.05);
     }
+.nav-greeting {
+    color: white;
+    font-weight: normal;
+    padding-left: 0.5rem; 
+}
+.navbar-nav .nav-link,
+.navbar-nav .nav-greeting {
+    color: white !important;
+}
 
 /* Strona główna */
 .content-container {
