@@ -124,28 +124,16 @@ namespace MushroomForum.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var post = await _context.Posts.FirstOrDefaultAsync(p => p.PostId == postId);
-
-            if (post == null)
-            {
-                return NotFound("Post nie został znaleziony.");
-            }
+            if (post == null) return NotFound();
 
             var existingLike = await _context.PostLikes
                 .FirstOrDefaultAsync(pl => pl.IdentityUserId == userId && pl.PostId == postId);
 
-            if (existingLike != null)
+            if (existingLike == null)
             {
-                return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
+                _context.PostLikes.Add(new PostLike { IdentityUserId = userId, PostId = postId });
+                await _context.SaveChangesAsync();
             }
-
-            var like = new PostLike
-            {
-                IdentityUserId = userId,
-                PostId = postId
-            };
-
-            _context.PostLikes.Add(like);
-            await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
         }
@@ -158,22 +146,16 @@ namespace MushroomForum.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var post = await _context.Posts.FirstOrDefaultAsync(p => p.PostId == postId);
-
-            if (post == null)
-            {
-                return NotFound("Post nie został znaleziony.");
-            }
+            if (post == null) return NotFound();
 
             var like = await _context.PostLikes
                 .FirstOrDefaultAsync(pl => pl.IdentityUserId == userId && pl.PostId == postId);
 
-            if (like == null)
+            if (like != null)
             {
-                return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
+                _context.PostLikes.Remove(like);
+                await _context.SaveChangesAsync();
             }
-
-            _context.PostLikes.Remove(like);
-            await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
         }

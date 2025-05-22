@@ -47,7 +47,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Media");
+                    b.ToTable("Media", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -266,7 +266,7 @@ namespace MushroomForum.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.ForumThread", b =>
@@ -302,7 +302,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("IdentityUserId");
 
-                    b.ToTable("ForumThreads");
+                    b.ToTable("ForumThreads", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.MushroomNotes", b =>
@@ -329,7 +329,7 @@ namespace MushroomForum.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MushroomNotes");
+                    b.ToTable("MushroomNotes", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.Post", b =>
@@ -360,7 +360,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("IdentityUserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.PostLike", b =>
@@ -385,7 +385,7 @@ namespace MushroomForum.Migrations
                     b.HasIndex("IdentityUserId", "PostId")
                         .IsUnique();
 
-                    b.ToTable("PostLikes");
+                    b.ToTable("PostLikes", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.ThreadLike", b =>
@@ -410,7 +410,7 @@ namespace MushroomForum.Migrations
                     b.HasIndex("IdentityUserId", "ForumThreadId")
                         .IsUnique();
 
-                    b.ToTable("ThreadLikes");
+                    b.ToTable("ThreadLikes", (string)null);
                 });
 
             modelBuilder.Entity("Media", b =>

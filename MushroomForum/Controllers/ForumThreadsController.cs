@@ -92,13 +92,41 @@ namespace MushroomForum.Controllers
             int totalPosts = await _context.Posts.CountAsync(p => p.ForumThreadId == id);
             int totalPages = (int)Math.Ceiling(totalPosts / (double)pageSize);
 
+            int threadLikeCount = await _context.ThreadLikes.CountAsync(tl => tl.ForumThreadId == id);
+            var postIds = posts.Select(p => p.PostId).ToList();
+            var postLikeCounts = await _context.PostLikes
+                .Where(pl => postIds.Contains(pl.PostId))
+                .GroupBy(pl => pl.PostId)
+                .Select(g => new { PostId = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            var postLikeCountDict = postLikeCounts.ToDictionary(x => x.PostId, x => x.Count);
+
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            bool threadLikedByCurrentUser = false;
+            HashSet<int> likedPostIds = new();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                threadLikedByCurrentUser = await _context.ThreadLikes.AnyAsync(tl => tl.ForumThreadId == id && tl.IdentityUserId == userId);
+                likedPostIds = _context.PostLikes
+                    .Where(pl => pl.IdentityUserId == userId && postIds.Contains(pl.PostId))
+                    .Select(pl => pl.PostId)
+                    .ToHashSet();
+            }
+
+
             var viewModel = new ThreadDetailsViewModel
             {
                 Thread = thread,
                 Posts = posts,
                 PageNumber = pageNumber,
                 TotalPages = totalPages,
-                TotalPosts = totalPosts
+                TotalPosts = totalPosts,
+                ThreadLikeCount = threadLikeCount,
+                PostLikeCounts = postLikeCountDict,
+                LikedPostIds = likedPostIds,
+                ThreadLikedByCurrentUser = threadLikedByCurrentUser
             };
 
             return View(viewModel);
