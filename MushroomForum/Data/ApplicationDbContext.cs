@@ -45,9 +45,15 @@ namespace MushroomForum.Data
                 .HasForeignKey(p => p.ForumThreadId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.ParentPost)
+                .WithMany(p => p.Replies)
+                .HasForeignKey(p => p.ParentPostId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ThreadLike>()
-                .HasIndex(tl => new { tl.IdentityUserId, tl.ForumThreadId })
-                .IsUnique();
+                    .HasIndex(tl => new { tl.IdentityUserId, tl.ForumThreadId })
+                    .IsUnique();
 
             modelBuilder.Entity<PostLike>()
                 .HasIndex(pl => new { pl.IdentityUserId, pl.PostId })

@@ -159,5 +159,48 @@ namespace MushroomForum.Controllers
 
             return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
         }
+
+        // GET: Posts/Reply/5
+        public IActionResult Reply(int postId)
+        {
+            var parentPost = _context.Posts
+                .Include(p => p.ForumThread)
+                .FirstOrDefault(p => p.PostId == postId);
+
+            if (parentPost == null)
+                return NotFound();
+
+            var reply = new Post
+            {
+                ForumThreadId = parentPost.ForumThreadId,
+                ParentPostId = parentPost.PostId
+            };
+
+            ViewData["ParentPost"] = parentPost;
+            return View(reply);
+        }
+
+        // POST: Posts/Reply
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reply([Bind("Description,ForumThreadId,ParentPostId")] Post post)
+        {
+            if (!ModelState.IsValid)
+            {
+                var parentPost = _context.Posts
+                    .Include(p => p.ForumThread)
+                    .FirstOrDefault(p => p.PostId == post.ParentPostId);
+                ViewData["ParentPost"] = parentPost;
+                return View(post);
+            }
+
+            post.IdentityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            post.CreatedAt = DateTime.Now;
+
+            _context.Add(post);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
+        }
     }
 }

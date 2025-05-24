@@ -81,9 +81,11 @@ namespace MushroomForum.Controllers
 
             int pageSize = 10;
             var posts = await _context.Posts
-                .Where(p => p.ForumThreadId == id)
+                .Where(p => p.ForumThreadId == id && p.ParentPostId == null)
                 .Include(p => p.User)
                 .Include(p => p.Media)
+                .Include(p => p.Replies)
+                    .ThenInclude(r => r.User)
                 .OrderBy(p => p.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -91,7 +93,6 @@ namespace MushroomForum.Controllers
 
             int totalPosts = await _context.Posts.CountAsync(p => p.ForumThreadId == id);
             int totalPages = (int)Math.Ceiling(totalPosts / (double)pageSize);
-
             int threadLikeCount = await _context.ThreadLikes.CountAsync(tl => tl.ForumThreadId == id);
             var postIds = posts.Select(p => p.PostId).ToList();
             var postLikeCounts = await _context.PostLikes

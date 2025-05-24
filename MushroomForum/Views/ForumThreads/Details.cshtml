@@ -67,6 +67,10 @@
 						<p><strong>Polubienia:</strong> @(Model.PostLikeCounts.TryGetValue(post.PostId, out var count) ? count : 0)</p>
 						@if (User.Identity.IsAuthenticated)
 						{
+							<form asp-action="Reply" asp-controller="Posts" method="get" style="display:inline;">
+								<input type="hidden" name="postId" value="@post.PostId" />
+								<button type="submit">Odpowiedz</button>
+							</form>
 							<form asp-action="Like" asp-controller="Posts" method="post" style="display:inline;">
 								<input type="hidden" name="postId" value="@post.PostId" />
 								<button type="submit" @(Model.LikedPostIds.Contains(post.PostId) ? "disabled" : null)>Polub</button>
@@ -77,6 +81,24 @@
 							</form>
 						}
 					</div>
+					@if (post.Replies != null && post.Replies.Any())
+					{
+						<div class="post-replies" style="margin-left:2em;">
+							@foreach (var reply in post.Replies)
+							{
+								<div class="post-item reply">
+									<div class="post-content">
+										<p>@reply.Description</p>
+									</div>
+									<div class="post-meta">
+										<p><strong>Autor:</strong> @(reply.User?.UserName ?? "Anonim")</p>
+										<p><strong>Data:</strong> @reply.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+									</div>
+								</div>
+							}
+						</div>
+					}
+
 				</div>
 			}
 		</div>
