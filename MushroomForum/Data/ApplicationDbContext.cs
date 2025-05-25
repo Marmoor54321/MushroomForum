@@ -19,11 +19,11 @@ namespace MushroomForum.Data
         public DbSet<MushroomNotes> MushroomNotes { get; set; }
         public DbSet<ThreadLike> ThreadLikes { get; set; }
         public DbSet<PostLike> PostLikes { get; set; }
-
+        public DbSet<FriendRequest> FriendRequests { get; set; }
+        public DbSet<UserFriend> UserFriends { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
 
             modelBuilder.Entity<ForumThread>()
                 .HasOne(ft => ft.User)
@@ -31,13 +31,11 @@ namespace MushroomForum.Data
                 .HasForeignKey(ft => ft.IdentityUserId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.User)
                 .WithMany()
                 .HasForeignKey(p => p.IdentityUserId)
                 .OnDelete(DeleteBehavior.SetNull);
-
 
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.ForumThread)
@@ -64,6 +62,21 @@ namespace MushroomForum.Data
                .WithMany()
                .HasForeignKey(pl => pl.PostId)
                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(fr => fr.Sender)
+                .WithMany()
+                .HasForeignKey(fr => fr.SenderId)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(fr => fr.Receiver)
+                .WithMany()
+                .HasForeignKey(fr => fr.ReceiverId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
+
     }
 }

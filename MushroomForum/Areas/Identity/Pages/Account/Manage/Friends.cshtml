@@ -1,0 +1,85 @@
+﻿@page
+@model MushroomForum.Areas.Identity.Pages.Account.Manage.FriendsModel
+@{
+    ViewData["Title"] = "Znajomi";
+}
+
+<h2>Znajomi</h2>
+
+<hr />
+
+<h4>Wyślij zaproszenie</h4>
+<form method="post" asp-page-handler="SendRequest" class="mb-3">
+    <div class="form-group">
+        <label asp-for="NewFriendUsername">Nazwa użytkownika</label>
+        <input asp-for="NewFriendUsername" class="form-control" placeholder="np. jan.kowalski" />
+        <span asp-validation-for="NewFriendUsername" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Wyślij zaproszenie</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-info">@Model.StatusMessage</div>
+}
+
+<hr />
+
+<h4>Twoi znajomi</h4>
+
+@if (!Model.Friends.Any())
+{
+    <p>Nie masz jeszcze żadnych znajomych.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var friend in Model.Friends)
+        {
+            <li class="list-group-item">@friend.UserName</li>
+        }
+    </ul>
+}
+
+<h4>Otrzymane zaproszenia</h4>
+
+@if (!Model.IncomingRequests.Any())
+{
+    <p>Nie otrzymałeś żadnych zaproszeń.</p>
+}
+else
+{
+    <ul class="list-group mb-3">
+        @foreach (var request in Model.IncomingRequests)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@request.Sender.UserName</span>
+                <form method="post" asp-page-handler="AcceptRequest" asp-route-requestId="@request.Id" class="ms-2">
+                    <button type="submit" class="btn btn-success btn-sm">Akceptuj</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+
+
+<h4>Wysłane zaproszenia</h4>
+
+@if (!Model.SentRequests.Any())
+{
+    <p>Nie wysłałeś żadnych zaproszeń.</p>
+}
+else
+{
+    <ul class="list-group mb-3">
+        @foreach (var request in Model.SentRequests)
+        {
+            <li class="list-group-item">@request.Receiver.UserName --- niezaakceptowane</li>
+        }
+    </ul>
+}
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

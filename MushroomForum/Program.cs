@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
+using MushroomForum.Services;
 using QuestPDF.Infrastructure;
 using System.ComponentModel;
 
@@ -19,6 +20,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<FriendService>();
 
 builder.Services.AddControllersWithViews();
 
