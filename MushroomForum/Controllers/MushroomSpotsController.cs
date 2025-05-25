@@ -35,11 +35,22 @@ namespace MushroomForum.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public IActionResult GetAll()
         {
-            var spots = await _context.MushroomSpots.ToListAsync();
+            var spots = _context.MushroomSpots
+                .Select(s => new {
+                    s.Id,
+                    s.Name,
+                    s.Description,
+                    s.Latitude,
+                    s.Longitude,
+                    s.Rating 
+                })
+                .ToList();
+
             return Json(spots);
         }
+
         [HttpPost]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Edit([FromBody] MushroomSpot updatedSpot)

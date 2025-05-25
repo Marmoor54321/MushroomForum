@@ -15,6 +15,33 @@
             display: flex;
             flex-direction: column;
         }
+
+        .star-rating {
+            direction: rtl;
+            display: flex;
+            justify-content: start;
+        }
+
+            .star-rating input {
+                display: none;
+            }
+
+            .star-rating label {
+                font-size: 1.5em;
+                color: #ccc;
+                cursor: pointer;
+                padding: 0 2px;
+            }
+
+            .star-rating input:checked ~ label {
+                color: gold;
+            }
+
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: gold;
+            }
+
     </style>
 }
 
@@ -36,23 +63,26 @@
                 .then(spots => {
                     spots.forEach(spot => {
                         const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
-                        marker.bindPopup(`
-            <div id="popup-${spot.id}">
-                <b>${spot.name}</b><br>
-                ${spot.description}<br><br>
-        <form onsubmit="deleteSpot(event, ${spot.id})">
-            <button type="submit" class="nav-link nav-button-green">Usuń</button>
-        </form>
-        <button type="button" class="nav-link nav-button-green"
-                onclick="event.stopPropagation(); showEditForm(${spot.id}, '${spot.name}', '${spot.description.replace(/'/g, "\\'")}')">Edytuj
-        </button>
+                        let stars = '★'.repeat(spot.rating) + '☆'.repeat(5 - spot.rating);
 
-            </div>
-        `);
+                        marker.bindPopup(`
+                            <div id="popup-${spot.id}">
+                                <b>${spot.name}</b><br>
+                                ${spot.description}<br><br>
+                                <div>${stars}</div>
+                                <form onsubmit="deleteSpot(event, ${spot.id})">
+                                    <button type="submit" class="nav-link nav-button-green">Usuń</button>
+                                </form>
+                                <button type="button" class="nav-link nav-button-green"
+                                    onclick="event.stopPropagation(); showEditForm(${spot.id}, '${spot.name}', '${spot.description.replace(/'/g, "\\'")}', ${spot.rating})">
+                                    Edytuj
+                                </button>
+                            </div>
+                        `);
                     });
                 });
         }
-        function showEditForm(id, name, description) {
+        function showEditForm(id, name, description, rating = 0) {
             const container = document.getElementById(`popup-${id}`);
             if (!container) return;
 
@@ -63,12 +93,21 @@
                 .replace(/>/g, "&gt;");
 
             container.innerHTML = `
-            <form onsubmit="editSpot(event, ${id})" onclick="event.stopPropagation()">
-                <input type="text" name="name" value="${safeName}" required /><br>
-                <textarea name="description" onclick="event.stopPropagation()">${safeDescription}</textarea><br>
-                        <button class="nav-link nav-button-green" type="submit" onclick="event.stopPropagation()">Zapisz</button>
-            </form>
-        `;
+                <form onsubmit="editSpot(event, ${id})" onclick="event.stopPropagation()">
+                    <input type="text" name="name" value="${safeName}" required /><br>
+                    <textarea name="description">${safeDescription}</textarea><br>
+
+                    <label>Ocena:</label>
+                    <div class="star-rating">
+                        ${[5, 4, 3, 2, 1].map(star => `
+                            <input type="radio" name="rating" value="${star}" id="edit-star-${star}-${id}" ${rating === star ? 'checked' : ''}>
+                            <label for="edit-star-${star}-${id}">★</label>
+                        `).join('')}
+                    </div>
+
+                    <button class="nav-link nav-button-green" type="submit">Zapisz</button>
+                </form>
+            `;
         }
 
         function editSpot(event, id) {
@@ -76,13 +115,17 @@
             const form = event.target;
             const name = form.name.value;
             const description = form.description.value;
+            const rating = parseInt(form.rating.value);
+
 
             fetch('/MushroomSpots/Edit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ id, name, description })
+                body: JSON.stringify({ id, name, description, rating })
+
+
             }).then(res => {
                 if (res.ok) {
                     map.eachLayer(layer => {
@@ -135,6 +178,14 @@
                                 <textarea name="Description" placeholder="Opis"></textarea>
                                 <input type="hidden" name="Latitude" value="${lat}" />
                                 <input type="hidden" name="Longitude" value="${lng}" />
+                                         <label>Ocena:</label>
+                    <div class="star-rating">
+                        <input type="radio" name="Rating" value="5" id="star5"><label for="star5">★</label>
+                        <input type="radio" name="Rating" value="4" id="star4"><label for="star4">★</label>
+                        <input type="radio" name="Rating" value="3" id="star3"><label for="star3">★</label>
+                        <input type="radio" name="Rating" value="2" id="star2"><label for="star2">★</label>
+                        <input type="radio" name="Rating" value="1" id="star1"><label for="star1">★</label>
+                    </div>
                                 <button type="submit">Dodaj</button>
                             </form>`)
                 .openOn(map);

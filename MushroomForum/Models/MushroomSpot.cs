@@ -21,5 +21,7 @@ namespace MushroomForum.Models
         public double Longitude { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public int Rating { get; set; } // od 1 do 5
+
     }
 }
