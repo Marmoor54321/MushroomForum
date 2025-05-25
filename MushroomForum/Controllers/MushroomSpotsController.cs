@@ -40,6 +40,20 @@ namespace MushroomForum.Controllers
             var spots = await _context.MushroomSpots.ToListAsync();
             return Json(spots);
         }
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> Edit([FromBody] MushroomSpot updatedSpot)
+        {
+            var spot = await _context.MushroomSpots.FindAsync(updatedSpot.Id);
+            if (spot == null)
+                return NotFound();
+
+            spot.Name = updatedSpot.Name;
+            spot.Description = updatedSpot.Description;
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
 
         [HttpPost]
         [IgnoreAntiforgeryToken] 

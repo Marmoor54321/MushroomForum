@@ -37,15 +37,66 @@
                     spots.forEach(spot => {
                         const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
                         marker.bindPopup(`
-                            <b>${spot.name}</b><br>
-                            ${spot.description}<br>
-                            <form onsubmit="deleteSpot(event, ${spot.id})">
-                                <button type="submit">🗑 Usuń</button>
-                            </form>
-                        `);
+            <div id="popup-${spot.id}">
+                <b>${spot.name}</b><br>
+                ${spot.description}<br><br>
+        <form onsubmit="deleteSpot(event, ${spot.id})">
+            <button type="submit" class="nav-link nav-button-green">Usuń</button>
+        </form>
+        <button type="button" class="nav-link nav-button-green"
+                onclick="event.stopPropagation(); showEditForm(${spot.id}, '${spot.name}', '${spot.description.replace(/'/g, "\\'")}')">Edytuj
+        </button>
+
+            </div>
+        `);
                     });
                 });
         }
+        function showEditForm(id, name, description) {
+            const container = document.getElementById(`popup-${id}`);
+            if (!container) return;
+
+            const safeName = name.replace(/"/g, '&quot;');
+            const safeDescription = description
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
+            container.innerHTML = `
+            <form onsubmit="editSpot(event, ${id})" onclick="event.stopPropagation()">
+                <input type="text" name="name" value="${safeName}" required /><br>
+                <textarea name="description" onclick="event.stopPropagation()">${safeDescription}</textarea><br>
+                        <button class="nav-link nav-button-green" type="submit" onclick="event.stopPropagation()">Zapisz</button>
+            </form>
+        `;
+        }
+
+        function editSpot(event, id) {
+            event.preventDefault();
+            const form = event.target;
+            const name = form.name.value;
+            const description = form.description.value;
+
+            fetch('/MushroomSpots/Edit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id, name, description })
+            }).then(res => {
+                if (res.ok) {
+                    map.eachLayer(layer => {
+                        if (layer instanceof L.Marker) {
+                            map.removeLayer(layer);
+                        }
+                    });
+                    loadPins();
+                } else {
+                    alert("Nie udało się zaktualizować pinezki.");
+                }
+            });
+        }
+
 
         function deleteSpot(event, id) {
             event.preventDefault();
