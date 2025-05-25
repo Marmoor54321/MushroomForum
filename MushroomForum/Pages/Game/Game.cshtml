@@ -1,0 +1,69 @@
+﻿@page
+@model MushroomForum.Pages.Game.GameModel
+@{
+    ViewData["Title"] = "Minigierka - Menu Gier";
+}
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f2f2f2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+    }
+
+    .game-buttons {
+        margin-top: 30px;
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+        .game-buttons button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .game-buttons button:hover {
+                background-color: #45a049;
+            }
+
+    #gameFrame {
+        border: none;
+        width: 100vw;
+        height: 100vh;
+        display: none;
+    }
+</style>
+
+<div class="game-buttons">
+    <button onclick="changeGame('https://www.onlinegames.io/paper-io-2/')">🧻 Paper.io</button>
+    <button onclick="changeGame('https://www.onlinegames.io/solitaire/')">🃏 Pasjans</button>
+    <button onclick="changeGame('https://www.onlinegames.io/nuts-and-bolts-puzzle/')">🔩 Śrubki</button>
+</div>
+
+<iframe id="gameFrame" allowfullscreen></iframe>
+
+<script>
+    function changeGame(url) {
+        const iframe = document.getElementById('gameFrame');
+        iframe.src = url;
+        iframe.style.display = 'block';
+    }
+</script>
