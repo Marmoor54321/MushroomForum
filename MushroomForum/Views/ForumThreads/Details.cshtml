@@ -10,14 +10,20 @@
 		<p><strong>Autor:</strong> @(Model.Thread.User?.UserName ?? "Anonim")</p>
 		<p><strong>Kategoria:</strong> @(Model.Thread.Category?.Name ?? "Brak kategorii")</p>
 		<p><strong>Data utworzenia:</strong> @Model.Thread.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
-		<form asp-action="Like" asp-controller="ForumThreads" method="post">
-    <input type="hidden" name="threadId" value="@Model.Thread.ForumThreadId" />
-    <button type="submit">Polub wątek</button>
-</form>
-<form asp-action="Unlike" asp-controller="ForumThreads" method="post">
-    <input type="hidden" name="threadId" value="@Model.Thread.ForumThreadId" />
-    <button type="submit">Cofnij polubienie wątku</button>
-</form>
+		<p>
+			<strong>Polubienia wątku:</strong> @Model.ThreadLikeCount
+		</p>
+		@if (User.Identity.IsAuthenticated)
+		{
+			<form asp-action="Like" asp-controller="ForumThreads" method="post" style="display:inline;">
+				<input type="hidden" name="threadId" value="@Model.Thread.ForumThreadId" />
+				<button type="submit" @(Model.ThreadLikedByCurrentUser ? "disabled" : null)>Polub wątek</button>
+			</form>
+			<form asp-action="Unlike" asp-controller="ForumThreads" method="post" style="display:inline;">
+				<input type="hidden" name="threadId" value="@Model.Thread.ForumThreadId" />
+				<button type="submit" @(!Model.ThreadLikedByCurrentUser ? "disabled" : null)>Cofnij polubienie wątku</button>
+			</form>
+		}
 	</div>
 
 	@if (User.Identity.IsAuthenticated)
@@ -58,7 +64,41 @@
 					<div class="post-meta">
 						<p><strong>Autor:</strong> @(post.User?.UserName ?? "Anonim")</p>
 						<p><strong>Data:</strong> @post.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+						<p><strong>Polubienia:</strong> @(Model.PostLikeCounts.TryGetValue(post.PostId, out var count) ? count : 0)</p>
+						@if (User.Identity.IsAuthenticated)
+						{
+							<form asp-action="Reply" asp-controller="Posts" method="get" style="display:inline;">
+								<input type="hidden" name="postId" value="@post.PostId" />
+								<button type="submit">Odpowiedz</button>
+							</form>
+							<form asp-action="Like" asp-controller="Posts" method="post" style="display:inline;">
+								<input type="hidden" name="postId" value="@post.PostId" />
+								<button type="submit" @(Model.LikedPostIds.Contains(post.PostId) ? "disabled" : null)>Polub</button>
+							</form>
+							<form asp-action="Unlike" asp-controller="Posts" method="post" style="display:inline;">
+								<input type="hidden" name="postId" value="@post.PostId" />
+								<button type="submit" @(!Model.LikedPostIds.Contains(post.PostId) ? "disabled" : null)>Cofnij polubienie</button>
+							</form>
+						}
 					</div>
+					@if (post.Replies != null && post.Replies.Any())
+					{
+						<div class="post-replies" style="margin-left:2em;">
+							@foreach (var reply in post.Replies)
+							{
+								<div class="post-item reply">
+									<div class="post-content">
+										<p>@reply.Description</p>
+									</div>
+									<div class="post-meta">
+										<p><strong>Autor:</strong> @(reply.User?.UserName ?? "Anonim")</p>
+										<p><strong>Data:</strong> @reply.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+									</div>
+								</div>
+							}
+						</div>
+					}
+
 				</div>
 			}
 		</div>

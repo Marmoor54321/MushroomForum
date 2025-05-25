@@ -1,0 +1,25 @@
+﻿@model MushroomForum.Models.Post
+@{
+    var parentPost = ViewData["ParentPost"] as MushroomForum.Models.Post;
+    ViewData["Title"] = "Odpowiedz na post";
+}
+
+<h2>Odpowiedz na post</h2>
+<div class="parent-post">
+    <strong>Odpowiadasz na:</strong>
+    <blockquote>
+        @parentPost?.Description
+    </blockquote>
+</div>
+
+<form asp-action="Reply" method="post">
+    <input type="hidden" asp-for="ForumThreadId" />
+    <input type="hidden" asp-for="ParentPostId" />
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Dodaj odpowiedź</button>
+    <a asp-controller="ForumThreads" asp-action="Details" asp-route-id="@Model.ForumThreadId" class="btn btn-secondary">Anuluj</a>
+</form>

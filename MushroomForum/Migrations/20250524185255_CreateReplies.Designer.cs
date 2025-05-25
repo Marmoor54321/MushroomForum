@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MushroomForum.Data;
 
@@ -11,9 +12,11 @@ using MushroomForum.Data;
 namespace MushroomForum.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250524185255_CreateReplies")]
+    partial class CreateReplies
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +50,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Media", (string)null);
+                    b.ToTable("Media");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -266,7 +269,7 @@ namespace MushroomForum.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("MushroomForum.Models.ForumThread", b =>
@@ -302,7 +305,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("IdentityUserId");
 
-                    b.ToTable("ForumThreads", (string)null);
+                    b.ToTable("ForumThreads");
                 });
 
             modelBuilder.Entity("MushroomForum.Models.MushroomNotes", b =>
@@ -329,7 +332,7 @@ namespace MushroomForum.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MushroomNotes", (string)null);
+                    b.ToTable("MushroomNotes");
                 });
 
             modelBuilder.Entity("MushroomForum.Models.Post", b =>
@@ -365,7 +368,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("ParentPostId");
 
-                    b.ToTable("Posts", (string)null);
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("MushroomForum.Models.PostLike", b =>
@@ -390,7 +393,7 @@ namespace MushroomForum.Migrations
                     b.HasIndex("IdentityUserId", "PostId")
                         .IsUnique();
 
-                    b.ToTable("PostLikes", (string)null);
+                    b.ToTable("PostLikes");
                 });
 
             modelBuilder.Entity("MushroomForum.Models.ThreadLike", b =>
@@ -415,7 +418,7 @@ namespace MushroomForum.Migrations
                     b.HasIndex("IdentityUserId", "ForumThreadId")
                         .IsUnique();
 
-                    b.ToTable("ThreadLikes", (string)null);
+                    b.ToTable("ThreadLikes");
                 });
 
             modelBuilder.Entity("Media", b =>
