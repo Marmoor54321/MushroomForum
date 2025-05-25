@@ -17,5 +17,9 @@ namespace MushroomForum.Models
         [AllowNull]
         public ICollection<Media> Media { get; set; } = new List<Media>();
 
+        //Replies
+        public int? ParentPostId { get; set; }
+        public Post? ParentPost { get; set; }
+        public ICollection<Post> Replies { get; set; } = new List<Post>();
     }
 }

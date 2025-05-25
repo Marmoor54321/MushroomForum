@@ -26,7 +26,17 @@ builder.Services.AddRazorPages();
 
 builder.Services.Configure<IISServerOptions>(options =>
 {
-    options.MaxRequestBodySize = 100 * 1024 * 1024; //500 mb
+    options.MaxRequestBodySize = 100 * 1024 * 1024; //100 mb
+});
+
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<MushroomForum.Services.MushroomIdService>();
+
+builder.Services.AddLogging(logging =>
+{
+    logging.AddConsole();
+    logging.AddDebug();
+    logging.SetMinimumLevel(LogLevel.Information); 
 });
 
 var app = builder.Build();
