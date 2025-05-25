@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Miejsca grzybobrania";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 80vh;
+            width: 100%;
+        }
+
+        .leaflet-popup-content form {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+}
+
+<h2>Miejsca grzybobrania</h2>
+<div id="map"></div>
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([52.0, 19.0], 6);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        function loadPins() {
+            fetch('/MushroomSpots/GetAll')
+                .then(res => res.json())
+                .then(spots => {
+                    spots.forEach(spot => {
+                        const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
+                        marker.bindPopup(`<b>${spot.name}</b><br>${spot.description}`);
+                    });
+                });
+        }
+
+        map.on('click', function (e) {
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+
+            const popup = L.popup()
+                .setLatLng(e.latlng)
+                .setContent(`
+                            <form method="post" action="/MushroomSpots/Create">
+                                <input name="Name" placeholder="Nazwa" required />
+                                <textarea name="Description" placeholder="Opis"></textarea>
+                                <input type="hidden" name="Latitude" value="${lat}" />
+                                <input type="hidden" name="Longitude" value="${lng}" />
+                                <button type="submit">Dodaj</button>
+                            </form>`)
+                .openOn(map);
+        });
+
+        loadPins();
+    </script>
+}
