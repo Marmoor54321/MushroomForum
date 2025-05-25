@@ -549,3 +549,14 @@ body {
 .dropdown-toggle::after {
     display: none !important;
 }
+/*Gra*/
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #eef6f0;
+}
+
+canvas {
+    border: 2px solid #333;
+    background-color: #a3d9a5;
+}
