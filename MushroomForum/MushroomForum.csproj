@@ -21,7 +21,6 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="wwwroot\images\" />
-    <Folder Include="wwwroot\js\textures\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
