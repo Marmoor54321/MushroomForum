@@ -118,35 +118,49 @@ namespace MushroomForum.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,PhotoUrl,CreateDate")] MushroomNotes mushroomNotes)
+        public async Task<IActionResult> Edit(int id, MushroomNotes updatedNote, IFormFile? newPhoto)
         {
-            if (id != mushroomNotes.Id)
-            {
+            if (!ModelState.IsValid)
+                return View(updatedNote);
+
+            var existingNote = await _context.MushroomNotes.FindAsync(id);
+            if (existingNote == null)
                 return NotFound();
+
+            // Zaktualizuj tylko edytowalne pola
+            existingNote.Title = updatedNote.Title;
+            existingNote.Content = updatedNote.Content;
+
+            // Obsługa nowego zdjęcia, jeśli użytkownik je dodał
+            if (newPhoto != null && newPhoto.Length > 0)
+            {
+                var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                Directory.CreateDirectory(uploadsPath);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(newPhoto.FileName);
+                var filePath = Path.Combine(uploadsPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await newPhoto.CopyToAsync(stream);
+                }
+
+                // Opcjonalnie: usuń stare zdjęcie z serwera
+                if (!string.IsNullOrEmpty(existingNote.PhotoUrl))
+                {
+                    var oldPath = Path.Combine(_webHostEnvironment.WebRootPath, existingNote.PhotoUrl.TrimStart('/'));
+                    if (System.IO.File.Exists(oldPath))
+                        System.IO.File.Delete(oldPath);
+                }
+
+                existingNote.PhotoUrl = "/uploads/" + fileName;
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(mushroomNotes);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MushroomNotesExists(mushroomNotes.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(mushroomNotes);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
+
 
         // GET: MushroomNotes/Delete/5
         public async Task<IActionResult> Delete(int? id)

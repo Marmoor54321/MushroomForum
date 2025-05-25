@@ -71,21 +71,24 @@
 
     <textarea asp-for="Content" class="form-control note-content" placeholder="Wpisz treść notatki..."></textarea>
     <span asp-validation-for="Content" class="text-danger"></span>
-
+    @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+    {
+        <div class="mt-3">
+            <label>Obecny załącznik:</label><br />
+            <img src="@Model.PhotoUrl" alt="Załączone zdjęcie" class="img-thumbnail mb-2" style="max-height: 150px;" />
+        </div>
+    }
     <div class="note-actions">
-        <!-- Lewa strona: przycisk załącznika -->
         <div class="left-actions">
             <label for="fileInput" class="btn btn-outline-secondary">📁 Załącznik</label>
-            <input type="file" id="fileInput" name="PhotoUrl" class="custom-file-input" />
+            <input type="file" id="fileInput" name="newPhoto" class="custom-file-input" />
         </div>
 
-        <!-- Prawa strona: akcje -->
         <div class="right-actions">
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
     </div>
-
     <input type="hidden" asp-for="CreateDate" />
 </form>
 
