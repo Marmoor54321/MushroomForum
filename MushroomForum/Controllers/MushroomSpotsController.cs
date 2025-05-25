@@ -42,7 +42,8 @@ namespace MushroomForum.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+        [IgnoreAntiforgeryToken] 
+        public async Task<IActionResult> Delete([FromBody] int id)
         {
             var spot = await _context.MushroomSpots.FindAsync(id);
             if (spot == null)
@@ -52,5 +53,7 @@ namespace MushroomForum.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+
     }
 }
+

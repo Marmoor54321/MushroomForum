@@ -36,10 +36,41 @@
                 .then(spots => {
                     spots.forEach(spot => {
                         const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
-                        marker.bindPopup(`<b>${spot.name}</b><br>${spot.description}`);
+                        marker.bindPopup(`
+                            <b>${spot.name}</b><br>
+                            ${spot.description}<br>
+                            <form onsubmit="deleteSpot(event, ${spot.id})">
+                                <button type="submit">🗑 Usuń</button>
+                            </form>
+                        `);
                     });
                 });
         }
+
+        function deleteSpot(event, id) {
+            event.preventDefault();
+            if (confirm("Czy na pewno chcesz usunąć to miejsce?")) {
+                fetch('/MushroomSpots/Delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(id)
+                }).then(res => {
+                    if (res.ok) {
+                        map.eachLayer(layer => {
+                            if (layer instanceof L.Marker) {
+                                map.removeLayer(layer);
+                            }
+                        });
+                        loadPins();
+                    } else {
+                        alert("Nie udało się usunąć pinezki.");
+                    }
+                });
+            }
+        }
+
 
         map.on('click', function (e) {
             const lat = e.latlng.lat;
