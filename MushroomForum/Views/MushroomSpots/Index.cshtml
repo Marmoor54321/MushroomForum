@@ -58,14 +58,31 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
         }).addTo(map);
+        function clearSpotsFromMap() {
+    map.eachLayer(layer => {
+        if ((layer instanceof L.Marker || layer instanceof L.CircleMarker || layer instanceof L.Polyline) &&
+            layer !== userMarker && layer._url === undefined) {
+            map.removeLayer(layer);
+        }
+    });
 
+    if (routeLine) {
+        map.removeLayer(routeLine);
+        routeLine = null;
+    }
+
+    map.closePopup();
+}
         function loadPins() {
-            fetch('/MushroomSpots/GetAll')
+            const url = `/MushroomSpots/GetAll?ts=${Date.now()}`; // dodanie znacznika czasu
+
+            fetch(url)
                 .then(res => res.json())
                 .then(spots => {
                     spots.forEach(spot => {
                         const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
-                        let stars = '★'.repeat(spot.rating) + '☆'.repeat(5 - spot.rating);
+                        let rating = parseInt(spot.rating) || 0;
+                        let stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
 
                         marker.bindPopup(`
                             <div id="popup-${spot.id}">
@@ -84,6 +101,7 @@
                     });
                 });
         }
+
         function showEditForm(id, name, description, rating = 0) {
             const container = document.getElementById(`popup-${id}`);
             if (!container) return;
@@ -130,18 +148,17 @@
 
             }).then(res => {
                 if (res.ok) {
-                    map.eachLayer(layer => {
-                        if (layer instanceof L.Marker && layer !== userMarker) {
-                            map.removeLayer(layer);
-                        }
-                    });
-                    loadPins();
-                } else {
+                    clearSpotsFromMap();
+                    setTimeout(() => {
+                        loadPins();
+                        map.closePopup();
+                    }, 300);
+                }
+                 else {
                     alert("Nie udało się zaktualizować pinezki.");
                 }
             });
         }
-
 
         function deleteSpot(event, id) {
             event.preventDefault();
@@ -154,13 +171,13 @@
                     body: JSON.stringify(id)
                 }).then(res => {
                     if (res.ok) {
-                        map.eachLayer(layer => {
-                            if (layer instanceof L.Marker && layer !== userMarker) {
-                                map.removeLayer(layer);
-                            }
-                        });
-                        loadPins();
-                    } else {
+                        clearSpotsFromMap();
+                        setTimeout(() => {
+                            loadPins();
+                            map.closePopup();
+                        }, 300); 
+                    }
+                     else {
                         alert("Nie udało się usunąć pinezki.");
                     }
                 });
@@ -171,9 +188,8 @@
                 alert("Nie udało się uzyskać lokalizacji użytkownika.");
                 return;
             }
+            const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${orsApiKey}`;
 
-            const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${orsApiKey}`;
-            @*const url = `https://api.openrouteservice.org/v2/directions/driving-car/json?api_key=${orsApiKey}`;*@
 
             fetch(url, {
                 method: 'POST',
@@ -182,26 +198,30 @@
                 },
                 body: JSON.stringify({
                     coordinates: [
-                        [userLocation[1], userLocation[0]], 
-                        [destLng, destLat]                  
+                        [userLocation[1], userLocation[0]], // lng, lat
+                        [destLng, destLat] // lng, lat
                     ]
                 })
             })
-                .then(res => res.json())
-                .then(data => {
-                    if (routeLine) {
-                        map.removeLayer(routeLine);
-                    }
+            .then(res => {
+                if (!res.ok) throw new Error("Błąd odpowiedzi z serwera");
+                return res.json();
+            })
+            .then(data => {
+                if (routeLine) {
+                    map.removeLayer(routeLine);
+                }
 
-                    const routeCoords = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
-                    routeLine = L.polyline(routeCoords, { color: 'blue', weight: 4 }).addTo(map);
-                    map.fitBounds(routeLine.getBounds());
-                })
-                .catch(err => {
-                    console.error("Błąd podczas wyznaczania trasy:", err);
-                    alert("Nie udało się wyznaczyć trasy.");
-                });
+                const routeCoords = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]); // API -> Leaflet
+                routeLine = L.polyline(routeCoords, { color: 'blue', weight: 4 }).addTo(map);
+                map.fitBounds(routeLine.getBounds());
+            })
+            .catch(err => {
+                console.error("Błąd podczas wyznaczania trasy:", err);
+                alert("Nie udało się wyznaczyć trasy.");
+            });
         }
+
 
         map.on('click', function (e) {
             const lat = e.latlng.lat;

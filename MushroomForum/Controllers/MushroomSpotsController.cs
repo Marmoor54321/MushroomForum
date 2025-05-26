@@ -61,6 +61,7 @@ namespace MushroomForum.Controllers
 
             spot.Name = updatedSpot.Name;
             spot.Description = updatedSpot.Description;
+            spot.Rating = updatedSpot.Rating;
 
             await _context.SaveChangesAsync();
             return Ok();
