@@ -111,6 +111,18 @@ body {
     color: white !important;
 }
 
+.navbar-brand {/*żeby MushroomForum się nie przesuwało*/
+    white-space: nowrap; 
+    flex-shrink: 0; 
+}
+.navbar .navbar-brand {
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-right: 1rem;
+}
+
+
+
 /* Strona główna */
 .content-container {
     display: flex;
@@ -549,6 +561,20 @@ body {
 .dropdown-toggle::after {
     display: none !important;
 }
+/*Listy rozwijane navbara*/
+.navbar-custom .dropdown-menu {
+    background-color: #4CAF50;
+}
+
+    .navbar-custom .dropdown-menu .dropdown-item {
+        color: #FFFFFF;
+    }
+
+        .navbar-custom .dropdown-menu .dropdown-item:hover,
+        .navbar-custom .dropdown-menu .dropdown-item:focus {
+            background-color: #3e8e41;
+            color: #000;
+        }
 /*Gra*/
 body {
     font-family: Arial, sans-serif;
