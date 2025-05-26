@@ -52,6 +52,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         const map = L.map('map').setView([52.0, 19.0], 6);
+        let userMarker = null;
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -129,7 +130,7 @@
             }).then(res => {
                 if (res.ok) {
                     map.eachLayer(layer => {
-                        if (layer instanceof L.Marker) {
+                        if (layer instanceof L.Marker && layer !== userMarker) {
                             map.removeLayer(layer);
                         }
                     });
@@ -153,7 +154,7 @@
                 }).then(res => {
                     if (res.ok) {
                         map.eachLayer(layer => {
-                            if (layer instanceof L.Marker) {
+                            if (layer instanceof L.Marker && layer !== userMarker) {
                                 map.removeLayer(layer);
                             }
                         });
@@ -190,7 +191,30 @@
                             </form>`)
                 .openOn(map);
         });
-
         loadPins();
+        // Geolokalizacja użytkownika – niebieska kropka
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                userMarker = L.circleMarker([lat, lng], {
+                    radius: 6,
+                    fillColor: "#007bff",
+                    color: "#fff",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.9
+                }).addTo(map).bindPopup("Tu jesteś!");
+
+
+                map.setView([lat, lng], 10);
+            }, function (error) {
+                console.warn("Nie udało się uzyskać lokalizacji użytkownika:", error.message);
+            });
+        } else {
+            alert("Twoja przeglądarka nie wspiera geolokalizacji.");
+        }
     </script>
+
 }
