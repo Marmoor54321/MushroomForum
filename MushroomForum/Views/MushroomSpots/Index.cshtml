@@ -46,12 +46,16 @@
 }
 
 <h2>Miejsca grzybobrania</h2>
+<button  class="nav-link nav-button-green" onclick="exportMapToPDF()" style="position: absolute; top: 10px; left: 10px; z-index: 1000;">
+    Zapisz mapę jako PDF
+</button>
 <div id="map"></div>
 
 @section Scripts {
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <script>
         const map = L.map('map').setView([52.0, 19.0], 6);
@@ -61,7 +65,10 @@
         const orsApiKey = "";
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
+            attribution: '© OpenStreetMap contributors',
+            crossOrigin: true 
         }).addTo(map);
+
         function clearSpotsFromMap() {
     map.eachLayer(layer => {
         if ((layer instanceof L.Marker || layer instanceof L.CircleMarker || layer instanceof L.Polyline) &&
@@ -267,6 +274,29 @@
             // Leaflet oczekuje [lat, lng], więc jest dobrze
             return points;
         }
+        function exportMapToPDF() {
+            html2canvas(document.getElementById("map"), { useCORS: true })
+                .then(canvas => {
+                const base64image = canvas.toDataURL("image/png");
+
+                fetch("/MushroomSpots/ExportToPdf", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ base64Image: base64image })
+                })
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = "mapa.pdf";
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                    });
+            });
+        }
+
         map.on('click', function (e) {
             const lat = e.latlng.lat;
             const lng = e.latlng.lng;

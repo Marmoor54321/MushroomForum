@@ -3,6 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
+using System.IO;
+using System;
+using QuestPDF.Helpers;
 
 namespace MushroomForum.Controllers
 {
@@ -78,6 +83,53 @@ namespace MushroomForum.Controllers
             _context.MushroomSpots.Remove(spot);
             await _context.SaveChangesAsync();
             return Ok();
+        }
+        [HttpPost]
+        [Authorize] 
+        [IgnoreAntiforgeryToken]
+        public IActionResult ExportToPdf([FromBody] ImageRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Base64Image))
+                return BadRequest("Brak obrazu");
+
+            try
+            {
+                // usuń nagłówek "data:image/png;base64,"
+                var base64 = request.Base64Image.Split(',')[1];
+                byte[] imageBytes = Convert.FromBase64String(base64);
+
+                var pdfBytes = CreatePdf(imageBytes);
+                return File(pdfBytes, "application/pdf", "mapa_grzybobranie.pdf");
+            }
+            catch
+            {
+                return StatusCode(500, "Błąd generowania PDF");
+            }
+        }
+
+        private byte[] CreatePdf(byte[] imageBytes)
+        {
+            var document = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4.Landscape());
+                    page.Margin(20);
+                    page.DefaultTextStyle(x => x.FontSize(16));
+
+                    page.Content()
+                        .Image(imageBytes);
+                });
+            });
+
+            using var stream = new MemoryStream();
+            document.GeneratePdf(stream);
+            return stream.ToArray();
+        }
+
+        public class ImageRequest
+        {
+            public string Base64Image { get; set; }
         }
 
     }
