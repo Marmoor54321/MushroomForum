@@ -53,7 +53,8 @@
     <script>
         const map = L.map('map').setView([52.0, 19.0], 6);
         let userMarker = null;
-
+        let routeLine = null;
+        const orsApiKey = "";
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
         }).addTo(map);
@@ -76,8 +77,8 @@
                                 </form>
                                 <button type="button" class="nav-link nav-button-green"
                                     onclick="event.stopPropagation(); showEditForm(${spot.id}, '${spot.name}', '${spot.description.replace(/'/g, "\\'")}', ${spot.rating})">
-                                    Edytuj
-                                </button>
+                                    Edytuj</button>
+                                <button class="nav-link nav-button-green" onclick="drawRoute(${spot.latitude}, ${spot.longitude})">Wyznacz trasę</button>
                             </div>
                         `);
                     });
@@ -165,7 +166,42 @@
                 });
             }
         }
+        function drawRoute(destLat, destLng) {
+            if (!userLocation) {
+                alert("Nie udało się uzyskać lokalizacji użytkownika.");
+                return;
+            }
 
+            const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${orsApiKey}`;
+            @*const url = `https://api.openrouteservice.org/v2/directions/driving-car/json?api_key=${orsApiKey}`;*@
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    coordinates: [
+                        [userLocation[1], userLocation[0]], 
+                        [destLng, destLat]                  
+                    ]
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (routeLine) {
+                        map.removeLayer(routeLine);
+                    }
+
+                    const routeCoords = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                    routeLine = L.polyline(routeCoords, { color: 'blue', weight: 4 }).addTo(map);
+                    map.fitBounds(routeLine.getBounds());
+                })
+                .catch(err => {
+                    console.error("Błąd podczas wyznaczania trasy:", err);
+                    alert("Nie udało się wyznaczyć trasy.");
+                });
+        }
 
         map.on('click', function (e) {
             const lat = e.latlng.lat;
@@ -197,7 +233,10 @@
             navigator.geolocation.getCurrentPosition(function (position) {
                 const lat = position.coords.latitude;
                 const lng = position.coords.longitude;
-
+                userLocation = [lat, lng];
+                if (userMarker) {
+                    map.removeLayer(userMarker);
+                }
                 userMarker = L.circleMarker([lat, lng], {
                     radius: 6,
                     fillColor: "#007bff",
