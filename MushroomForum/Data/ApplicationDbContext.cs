@@ -17,6 +17,7 @@ namespace MushroomForum.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Media> Media { get; set; }
         public DbSet<MushroomNotes> MushroomNotes { get; set; }
+        public DbSet<MushroomSpot> MushroomSpots { get; set; }
         public DbSet<ThreadLike> ThreadLikes { get; set; }
         public DbSet<PostLike> PostLikes { get; set; }
 

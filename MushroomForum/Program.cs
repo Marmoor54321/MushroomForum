@@ -4,9 +4,15 @@ using MushroomForum.Data;
 using MushroomForum.Models;
 using QuestPDF.Infrastructure;
 using System.ComponentModel;
-
+using System.Globalization;
+//generowanie PDF
 var builder = WebApplication.CreateBuilder(args);
 QuestPDF.Settings.License = LicenseType.Community;
+//poprawne działanie koordynatów mapy
+var cultureInfo = new System.Globalization.CultureInfo("en-US");
+cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

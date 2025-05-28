@@ -14,5 +14,6 @@ namespace MushroomForum.Models
         public string Content { get; set; }
         public string ? PhotoUrl { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;
+
     }
 }

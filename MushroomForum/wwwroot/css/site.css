@@ -53,6 +53,10 @@ body {
 .nav-pills .nav-link {
     color: black;
 }
+.nav-pills .nav-link-white {
+    color: white !important;
+}
+
 .nav-pills .nav-link.active {
     background-color: var(--primary-green);
     color: white;
@@ -97,6 +101,27 @@ body {
         box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
         transform: scale(1.05);
     }
+.nav-greeting {
+    color: white;
+    font-weight: normal;
+    padding-left: 0.5rem; 
+}
+.navbar-nav .nav-link,
+.navbar-nav .nav-greeting {
+    color: white !important;
+}
+
+.navbar-brand {/*żeby MushroomForum się nie przesuwało*/
+    white-space: nowrap; 
+    flex-shrink: 0; 
+}
+.navbar .navbar-brand {
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-right: 1rem;
+}
+
+
 
 /* Strona główna */
 .content-container {
@@ -504,4 +529,60 @@ body {
     font-weight: bold;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
     white-space: nowrap;
+}
+
+/*lista rozwijana*/
+.note-item {
+    max-width: 100% !important;
+}
+
+    .note-item .card-body {
+        width: 100%;
+        background: #f8f9fa;
+        padding: 0.5rem 1rem;
+    }
+
+    .note-item .card-title {
+        flex-grow: 1;
+        margin-bottom: 0;
+    }
+
+    .note-item .dropdown-toggle {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: 30px;
+        height: 30px;
+        font-size: 24px;
+        line-height: 1;
+        color: #000; /* możesz zmienić na inny */
+    }
+.dropdown-toggle::after {
+    display: none !important;
+}
+/*Listy rozwijane navbara*/
+.navbar-custom .dropdown-menu {
+    background-color: #4CAF50;
+}
+
+    .navbar-custom .dropdown-menu .dropdown-item {
+        color: #FFFFFF;
+    }
+
+        .navbar-custom .dropdown-menu .dropdown-item:hover,
+        .navbar-custom .dropdown-menu .dropdown-item:focus {
+            background-color: #3e8e41;
+            color: #000;
+        }
+/*Gra*/
+body {
+    font-family: Arial, sans-serif;
+    text-align: left;
+    background: #eef6f0;
+}
+
+canvas {
+    border: 2px solid #333;
+    background-color: #a3d9a5;
 }
