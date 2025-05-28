@@ -62,7 +62,7 @@
         let userMarker = null;
         let routeLine = null;
         let userLocation = null;
-        const orsApiKey = "5b3ce3597851110001cf6248843a17b059764995a3762d781119fede";
+        const orsApiKey = "";
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors',
@@ -163,7 +163,7 @@
                     setTimeout(() => {
                         loadPins();
                         map.closePopup();
-                    }, 300);
+                    }, 30);
                 }
                  else {
                     alert("Nie udało się zaktualizować pinezki.");
@@ -186,7 +186,7 @@
                         setTimeout(() => {
                             loadPins();
                             map.closePopup();
-                        }, 300); 
+                        }, 30); 
                     }
                      else {
                         alert("Nie udało się usunąć pinezki.");
@@ -296,7 +296,7 @@
                         a.remove();
                     });
             });
-            }, 500);
+            }, 50);
         }
 
         map.on('click', function (e) {
