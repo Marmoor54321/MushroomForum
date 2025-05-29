@@ -17,6 +17,7 @@ namespace MushroomForum.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Media> Media { get; set; }
         public DbSet<MushroomNotes> MushroomNotes { get; set; }
+        public DbSet<MushroomSpot> MushroomSpots { get; set; }
         public DbSet<ThreadLike> ThreadLikes { get; set; }
         public DbSet<PostLike> PostLikes { get; set; }
         public DbSet<FriendRequest> FriendRequests { get; set; }
@@ -43,9 +44,15 @@ namespace MushroomForum.Data
                 .HasForeignKey(p => p.ForumThreadId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.ParentPost)
+                .WithMany(p => p.Replies)
+                .HasForeignKey(p => p.ParentPostId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ThreadLike>()
-                .HasIndex(tl => new { tl.IdentityUserId, tl.ForumThreadId })
-                .IsUnique();
+                    .HasIndex(tl => new { tl.IdentityUserId, tl.ForumThreadId })
+                    .IsUnique();
 
             modelBuilder.Entity<PostLike>()
                 .HasIndex(pl => new { pl.IdentityUserId, pl.PostId })

@@ -1,0 +1,36 @@
+﻿@using System.Linq
+@{
+    ViewData["Title"] = "Identify Mushroom";
+}
+
+<h2>Identify Mushroom</h2>
+
+<form asp-action="Index" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="image" class="form-label">Select mushroom photo:</label>
+        <input type="file" name="image" id="image" class="form-control" accept="image/*" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Identify</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
+}
+
+@if (Model.Success)
+{
+    <h4 class="mt-4">Results:</h4>
+    <ul>
+        @foreach (var suggestion in Model.Suggestions)
+        {
+            <li>
+                <strong>@suggestion.Name</strong> - @($"{suggestion.Probability:P0}")
+                @if (!string.IsNullOrWhiteSpace(suggestion.Description))
+                {
+                    <div>@suggestion.Description</div>
+                }
+            </li>
+        }
+    </ul>
+}

@@ -27,7 +27,7 @@ Funkcjonalności:
 10. Dziennik grzybiarza - notatki, wnioski itp.
 11.Możliwość udostępnienia treści notatnika
 12.Udostępnianie znalezisk w mediach społecznościowych na innych platformach
-13.Dodawanie na mapie punktów z grzybobrania
+13.Dodawanie na mapie punktów z grzybobrania %
 14.Integracja z GPS – prowadzenie do zaznaczonych punktów
 15.Możliwość oceniania i recenzowania miejsc grzybobrania
 16. Lista ulubionych miejsc i grzybów

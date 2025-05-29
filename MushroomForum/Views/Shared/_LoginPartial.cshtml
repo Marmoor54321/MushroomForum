@@ -6,9 +6,9 @@
     var greetings = new[] { "niezły z Ciebie fungi ;D", "pora na grzybobranie!", "dobrze, że jesteś <3", "wiesz co u Agatki?",
     "uważaj na czarcie kręgi!!!", "kanie zarezerwowane?", "co na słuchawkach? Kanie?", "uważaj na cordycepsy D:", 
     "wykręcasz, czy obcinasz?", "Żwirek kręci z Muchomorkiem!", "jedz grzyby będziesz wielki", "idziemy na grzyby?",
-    "jesteś zagrzebisty :P", "tutaj żdnych nie ma...", "lepszy rydz niż nic ;)", "największe grzyby to były w Japonii w 45",
+    "jesteś zagrzybisty :P", "tutaj żdnych nie ma...", "lepszy rydz niż nic ;)",
     "potrzebny Ci power-up?", "zaczyna się sezon", "gdzie jeden grzyb, tam i drugi", "im dalej w las, tym więcej grzybów",
-    "prawdziwy grzybiarz nigdy nie zdradza swoich „miejscówek”"};
+    "nigdy nie zdradzaj swoich miejscówek"};
     var random = new Random();
     var selectedGreeting = greetings[random.Next(greetings.Length)];
 }
@@ -16,19 +16,6 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-        <li class="nav-item">
-            <a class="nav-link nav-link-white" asp-controller="MushroomNotes" asp-action="Index">Notatnik</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link nav-link-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                Konto
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark">
-                @User.Identity?.Name, @selectedGreeting
-            </a>
-        </li>
     <li class="nav-item">
         <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button type="submit" class="nav-link nav-button-green">Wyloguj się</button>

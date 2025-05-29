@@ -1,0 +1,355 @@
+﻿@{
+    ViewData["Title"] = "Miejsca grzybobrania";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 80vh;
+            width: 100%;
+        }
+
+        .leaflet-popup-content form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .star-rating {
+            direction: rtl;
+            display: flex;
+            justify-content: start;
+        }
+
+            .star-rating input {
+                display: none;
+            }
+
+            .star-rating label {
+                font-size: 1.5em;
+                color: #ccc;
+                cursor: pointer;
+                padding: 0 2px;
+            }
+
+            .star-rating input:checked ~ label {
+                color: gold;
+            }
+
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: gold;
+            }
+
+    </style>
+}
+
+<h2>Miejsca grzybobrania</h2>
+<button  class="nav-link nav-button-green" onclick="exportMapToPDF()" style="position: absolute; top: 10px; left: 10px; z-index: 1000;">
+    Zapisz mapę jako PDF
+</button>
+<div id="map"></div>
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        const map = L.map('map').setView([52.0, 19.0], 6);
+        let userMarker = null;
+        let routeLine = null;
+        let userLocation = null;
+        const orsApiKey = "5b3ce3597851110001cf6248843a17b059764995a3762d781119fede";
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors',
+            crossOrigin: true 
+        }).addTo(map);
+
+        function clearSpotsFromMap() {
+    map.eachLayer(layer => {
+        if ((layer instanceof L.Marker || layer instanceof L.CircleMarker || layer instanceof L.Polyline) &&
+            layer !== userMarker && layer._url === undefined) {
+            map.removeLayer(layer);
+        }
+    });
+
+    if (routeLine) {
+        map.removeLayer(routeLine);
+        routeLine = null;
+    }
+
+    map.closePopup();
+}
+        function loadPins() {
+            const url = `/MushroomSpots/GetAll?ts=${Date.now()}`; // dodanie znacznika czasu
+
+            fetch(url)
+                .then(res => res.json())
+                .then(spots => {
+                    spots.forEach(spot => {
+                        const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
+                        let rating = parseInt(spot.rating) || 0;
+                        let stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+
+                        marker.bindPopup(`
+                            <div id="popup-${spot.id}">
+                                <b>${spot.name}</b><br>
+                                ${spot.description}<br><br>
+                                <div>${stars}</div>
+                                <form onsubmit="deleteSpot(event, ${spot.id})">
+                                    <button type="submit" class="nav-link nav-button-green">Usuń</button>
+                                </form>
+                                <button type="button" class="nav-link nav-button-green"
+                                    onclick="event.stopPropagation(); showEditForm(${spot.id}, '${spot.name}', '${spot.description.replace(/'/g, "\\'")}', ${spot.rating})">
+                                    Edytuj</button>
+                                       <button class="nav-link nav-button-green" onclick="drawRoute(${spot.longitude}, ${spot.latitude})">Wyznacz trasę</button>
+                            </div>
+                        `);
+                    });
+                });
+        }
+
+        function showEditForm(id, name, description, rating = 0) {
+            const container = document.getElementById(`popup-${id}`);
+            if (!container) return;
+
+            const safeName = name.replace(/"/g, '&quot;');
+            const safeDescription = description
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
+            container.innerHTML = `
+                <form onsubmit="editSpot(event, ${id})" onclick="event.stopPropagation()">
+                    <input type="text" name="name" value="${safeName}" required /><br>
+                    <textarea name="description">${safeDescription}</textarea><br>
+
+                    <label>Ocena:</label>
+                    <div class="star-rating">
+                        ${[5, 4, 3, 2, 1].map(star => `
+                            <input type="radio" name="rating" value="${star}" id="edit-star-${star}-${id}" ${rating === star ? 'checked' : ''}>
+                            <label for="edit-star-${star}-${id}">★</label>
+                        `).join('')}
+                    </div>
+
+                    <button class="nav-link nav-button-green" type="submit">Zapisz</button>
+                </form>
+            `;
+        }
+
+        function editSpot(event, id) {
+            event.preventDefault();
+            const form = event.target;
+            const name = form.name.value;
+            const description = form.description.value;
+            const rating = parseInt(form.rating.value);
+
+
+            fetch('/MushroomSpots/Edit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id, name, description, rating })
+
+
+            }).then(res => {
+                if (res.ok) {
+                    clearSpotsFromMap();
+                    setTimeout(() => {
+                        loadPins();
+                        map.closePopup();
+                    }, 300);
+                }
+                 else {
+                    alert("Nie udało się zaktualizować pinezki.");
+                }
+            });
+        }
+
+        function deleteSpot(event, id) {
+            event.preventDefault();
+            if (confirm("Czy na pewno chcesz usunąć to miejsce?")) {
+                fetch('/MushroomSpots/Delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(id)
+                }).then(res => {
+                    if (res.ok) {
+                        clearSpotsFromMap();
+                        setTimeout(() => {
+                            loadPins();
+                            map.closePopup();
+                        }, 300); 
+                    }
+                     else {
+                        alert("Nie udało się usunąć pinezki.");
+                    }
+                });
+            }
+        }
+        function drawRoute(destLng, destLat) {
+            if (!userLocation) {
+                alert("Nieznana lokalizacja użytkownika.");
+                return;
+            }
+
+            const url = "https://api.openrouteservice.org/v2/directions/driving-car";
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + orsApiKey
+                },
+                body: JSON.stringify({
+                    coordinates: [
+                        [userLocation[1], userLocation[0]],  // [lng, lat] użytkownika
+                        [destLng, destLat]                   // [lng, lat celu]
+                    ],
+                    instructions: false,
+                    geometry: true
+                })
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error("Błąd odpowiedzi z serwera: " + res.status);
+                    return res.json();
+                })
+                .then(data => {
+                    if (!data.routes || !data.routes[0] || !data.routes[0].geometry) {
+                        console.error("Błędna odpowiedź z ORS:", data);
+                        alert("Nie udało się wyznaczyć trasy – odpowiedź serwera była niepoprawna.");
+                        return;
+                    }
+
+                    const decodedCoords = decodePolyline(data.routes[0].geometry);
+
+                    if (routeLine) {
+                        map.removeLayer(routeLine);
+                    }
+
+                    routeLine = L.polyline(decodedCoords, { color: 'blue', weight: 4 }).addTo(map);
+                    map.fitBounds(routeLine.getBounds());
+                })
+                .catch(err => {
+                    console.error("Błąd podczas wyznaczania trasy:", err);
+                    alert("Nie udało się wyznaczyć trasy.");
+                });
+        }
+
+
+        function decodePolyline(encoded) {
+            let points = [];
+            let index = 0, len = encoded.length;
+            let lat = 0, lng = 0;
+
+            while (index < len) {
+                let b, shift = 0, result = 0;
+                do {
+                    b = encoded.charCodeAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+                let dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                lat += dlat;
+
+                shift = 0;
+                result = 0;
+                do {
+                    b = encoded.charCodeAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+                let dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+                lng += dlng;
+
+                points.push([lat / 1e5, lng / 1e5]);
+            }
+            // Leaflet oczekuje [lat, lng], więc jest dobrze
+            return points;
+        }
+        function exportMapToPDF() {
+            setTimeout(() => {
+            html2canvas(document.getElementById("map"), { useCORS: true })
+                .then(canvas => {
+                const base64image = canvas.toDataURL("image/png");
+
+                fetch("/MushroomSpots/ExportToPdf", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ base64Image: base64image })
+                })
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = "mapa.pdf";
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                    });
+            });
+            }, 500);
+        }
+
+        map.on('click', function (e) {
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+
+            const popup = L.popup()
+                .setLatLng(e.latlng)
+                .setContent(`
+                            <form method="post" action="/MushroomSpots/Create">
+                                <input name="Name" placeholder="Nazwa" required />
+                                <textarea name="Description" placeholder="Opis"></textarea>
+                                <input type="hidden" name="Latitude" value="${lat}" />
+                                <input type="hidden" name="Longitude" value="${lng}" />
+                                         <label>Ocena:</label>
+                    <div class="star-rating">
+                        <input type="radio" name="Rating" value="5" id="star5"><label for="star5">★</label>
+                        <input type="radio" name="Rating" value="4" id="star4"><label for="star4">★</label>
+                        <input type="radio" name="Rating" value="3" id="star3"><label for="star3">★</label>
+                        <input type="radio" name="Rating" value="2" id="star2"><label for="star2">★</label>
+                        <input type="radio" name="Rating" value="1" id="star1"><label for="star1">★</label>
+                    </div>
+                                <button type="submit">Dodaj</button>
+                            </form>`)
+                .openOn(map);
+        });
+        loadPins();
+        // Geolokalizacja użytkownika – niebieska kropka
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                userLocation = [lat, lng];
+                if (userMarker) {
+                    map.removeLayer(userMarker);
+                }
+                userMarker = L.circleMarker([lat, lng], {
+                    radius: 6,
+                    fillColor: "#007bff",
+                    color: "#fff",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.9
+                }).addTo(map).bindPopup("Tu jesteś!");
+
+
+                map.setView([lat, lng], 10);
+            }, function (error) {
+                console.warn("Nie udało się uzyskać lokalizacji użytkownika:", error.message);
+            });
+        } else {
+            alert("Twoja przeglądarka nie wspiera geolokalizacji.");
+        }
+    </script>
+
+}

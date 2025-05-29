@@ -4,46 +4,100 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+@section Styles {
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
 
-<h4>MushroomNotes</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhotoUrl" class="control-label"></label>
-                <input asp-for="PhotoUrl" class="form-control" />
-                <span asp-validation-for="PhotoUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreateDate" class="control-label"></label>
-                <input asp-for="CreateDate" class="form-control" />
-                <span asp-validation-for="CreateDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        /* Zakładamy, że navbar zajmuje około 100px */
+        .note-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 100px);
+            padding: 1rem 2rem;
+            box-sizing: border-box;
+        }
+
+        .note-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .note-content {
+            flex-grow: 1;
+            resize: none;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            min-height: 150px;
+            max-height: 180px; /* krótsze pole tekstowe */
+        }
+
+        .note-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .left-actions label {
+            margin-bottom: 0;
+        }
+
+        .custom-file-input {
+            display: none;
+        }
+
+        .right-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Zapobiega przesuwaniu */
+        form {
+            overflow: hidden;
+        }
+    </style>
+}
+
+<form asp-action="Edit" enctype="multipart/form-data" class="note-container" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+    <input type="hidden" asp-for="Id" />
+
+    <input asp-for="Title" placeholder="Tytuł notatki" class="form-control note-title" />
+    <span asp-validation-for="Title" class="text-danger"></span>
+
+    <textarea asp-for="Content" class="form-control note-content" placeholder="Wpisz treść notatki..."></textarea>
+    <span asp-validation-for="Content" class="text-danger"></span>
+    @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+    {
+        <div class="mt-3">
+            <label>Obecny załącznik:</label><br />
+            <img src="@Model.PhotoUrl" alt="Załączone zdjęcie" class="img-thumbnail mb-2" style="max-height: 150px;" />
+        </div>
+    }
+    <div class="note-actions">
+        <div class="left-actions">
+            <label for="fileInput" class="btn btn-outline-secondary">📁 Załącznik</label>
+            <input type="file" id="fileInput" name="newPhoto" class="custom-file-input" />
+        </div>
+
+        <div class="right-actions">
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <input type="hidden" asp-for="CreateDate" />
+</form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        // Kliknięcie etykiety otwiera input file
+        document.querySelector('label[for="fileInput"]')?.addEventListener('click', function () {
+            document.getElementById('fileInput')?.click();
+        });
+    </script>
 }

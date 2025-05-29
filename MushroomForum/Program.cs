@@ -5,9 +5,15 @@ using MushroomForum.Models;
 using MushroomForum.Services;
 using QuestPDF.Infrastructure;
 using System.ComponentModel;
-
+using System.Globalization;
+//generowanie PDF
 var builder = WebApplication.CreateBuilder(args);
 QuestPDF.Settings.License = LicenseType.Community;
+//poprawne działanie koordynatów mapy
+var cultureInfo = new System.Globalization.CultureInfo("en-US");
+cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -29,7 +35,17 @@ builder.Services.AddRazorPages();
 
 builder.Services.Configure<IISServerOptions>(options =>
 {
-    options.MaxRequestBodySize = 100 * 1024 * 1024; //500 mb
+    options.MaxRequestBodySize = 100 * 1024 * 1024; //100 mb
+});
+
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<MushroomForum.Services.MushroomIdService>();
+
+builder.Services.AddLogging(logging =>
+{
+    logging.AddConsole();
+    logging.AddDebug();
+    logging.SetMinimumLevel(LogLevel.Information); 
 });
 
 var app = builder.Build();
