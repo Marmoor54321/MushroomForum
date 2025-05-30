@@ -22,6 +22,8 @@ namespace MushroomForum.Data
         public DbSet<PostLike> PostLikes { get; set; }
         public DbSet<FriendRequest> FriendRequests { get; set; }
         public DbSet<UserFriend> UserFriends { get; set; }
+        public DbSet<UserBlock> UserBlocks { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -75,7 +77,7 @@ namespace MushroomForum.Data
                 .WithMany()
                 .HasForeignKey(fr => fr.SenderId)
                 .OnDelete(DeleteBehavior.NoAction);
-            
+
 
             modelBuilder.Entity<FriendRequest>()
                 .HasOne(fr => fr.Receiver)
@@ -83,6 +85,18 @@ namespace MushroomForum.Data
                 .HasForeignKey(fr => fr.ReceiverId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<UserBlock>()
+                .HasOne(ub => ub.Blocker)
+                .WithMany()
+                .HasForeignKey(ub => ub.BlockerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserBlock>()
+                .HasOne(ub => ub.Blocked)
+                .WithMany()
+                .HasForeignKey(ub => ub.BlockedId)
+                .OnDelete(DeleteBehavior.Restrict);
+   
         }
 
     }

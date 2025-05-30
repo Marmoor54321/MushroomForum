@@ -39,6 +39,8 @@ namespace MushroomForum.Services
                 ReceiverId = receiverId
             };
 
+
+
             _context.FriendRequests.Add(request);
             await _context.SaveChangesAsync();
         }

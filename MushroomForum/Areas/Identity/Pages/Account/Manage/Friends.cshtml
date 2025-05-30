@@ -34,11 +34,22 @@
 else
 {
     <ul class="list-group">
-        @foreach (var friend in Model.Friends)
-        {
-            <li class="list-group-item">@friend.UserName</li>
-        }
-    </ul>
+@foreach (var friend in Model.Friends)
+{
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        @friend.UserName
+        <form method="post" asp-page-handler="RemoveFriend" class="m-0 p-0">
+            <input type="hidden" name="friendId" value="@friend.Id" />
+            <button type="submit" class="btn btn-sm btn-danger">Usuń</button>
+        </form>
+        <form method="post" asp-page-handler="BlockUser" class="d-inline ms-2">
+            <input type="hidden" name="userId" value="@friend.Id" />
+            <button type="submit" class="btn btn-sm btn btn-dark">Zablokuj</button>
+        </form>
+    </li>
+}
+</ul>
+
 }
 
 <h4>Otrzymane zaproszenia</h4>
@@ -54,13 +65,24 @@ else
         {
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <span>@request.Sender.UserName</span>
-                <form method="post" asp-page-handler="AcceptRequest" asp-route-requestId="@request.Id" class="ms-2">
-                    <button type="submit" class="btn btn-success btn-sm">Akceptuj</button>
-                </form>
+                <div class="btn-group">
+                    <form method="post" asp-page-handler="AcceptRequest" asp-route-requestId="@request.Id" class="me-1">
+                        <button type="submit" class="btn btn-success btn-sm">Akceptuj</button>
+                    </form>
+                    <form method="post" asp-page-handler="RejectRequest" asp-route-requestId="@request.Id">
+                        <button type="submit" class="btn btn-danger btn-sm">Odrzuć</button>
+                    </form>
+
+                    <form method="post" asp-page-handler="BlockUser" class="me-1">
+                        <input type="hidden" name="userId" value="@request.Sender.Id" />
+                        <button type="submit" class="btn btn-sm btn btn-dark">Zablokuj</button>
+                    </form>
+                </div>
             </li>
         }
     </ul>
 }
+
 
 
 <h4>Wysłane zaproszenia</h4>
@@ -74,7 +96,12 @@ else
     <ul class="list-group mb-3">
         @foreach (var request in Model.SentRequests)
         {
-            <li class="list-group-item">@request.Receiver.UserName --- niezaakceptowane</li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @request.Receiver.UserName
+                <form method="post" asp-page-handler="CancelRequest" asp-route-requestId="@request.Id" class="ms-2">
+                    <button type="submit" class="btn btn-sm btn-warning">Cofnij</button>
+                </form>
+            </li>
         }
     </ul>
 }

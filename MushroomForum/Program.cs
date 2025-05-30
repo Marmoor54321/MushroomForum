@@ -48,6 +48,8 @@ builder.Services.AddLogging(logging =>
     logging.SetMinimumLevel(LogLevel.Information); 
 });
 
+
+
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
