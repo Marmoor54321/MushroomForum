@@ -11,6 +11,18 @@
             width: 100%;
         }
 
+        #map-container {
+            width: 600px;
+            height: 300px;
+            position: center;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+
         .leaflet-popup-content form {
             display: flex;
             flex-direction: column;
@@ -49,7 +61,23 @@
 <button  class="nav-link nav-button-green" onclick="exportMapToPDF()" style="position: absolute; top: 10px; left: 10px; z-index: 1000;">
     Zapisz mapę jako PDF
 </button>
-<div id="map"></div>
+<div style="display: flex; height: 100vh;">
+    <div style="width: 30%; padding: 10px; overflow-y: auto;">
+        <input type="text" id="filter" placeholder="Filtruj po opisie lub ocenie" />
+        <ul id="placeList"></ul>
+    </div>
+<div id="map-container" style="position: relative;">
+    <div id="map"></div>
+    @*<div id="legend" style="position: absolute; bottom: 20px; left: 10px; background: white; padding: 10px; z-index: 1000; border-radius: 5px;">
+        <b>Legenda:</b>
+        <ul style="margin: 0; padding-left: 20px;">
+            <li>★ - Ocena miejsca</li>
+            <li>🔵 - Trasa do punktu</li>
+            <li>📍 - Miejsce grzybobrania</li>
+        </ul>
+    </div>*@
+
+</div>
 
 @section Scripts {
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -59,6 +87,7 @@
 
     <script>
         const map = L.map('map').setView([52.0, 19.0], 6);
+
         let userMarker = null;
         let routeLine = null;
         let userLocation = null;
@@ -91,7 +120,10 @@
                 .then(res => res.json())
                 .then(spots => {
                     spots.forEach(spot => {
-                        const marker = L.marker([spot.latitude, spot.longitude]).addTo(map);
+                        const marker = L.marker([spot.latitude, spot.longitude])
+                            .bindTooltip(spot.name, { permanent: true, direction: 'top', offset: [0, -10] })
+                            .addTo(map);
+
                         let rating = parseInt(spot.rating) || 0;
                         let stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
 
@@ -235,7 +267,7 @@
                     }
 
                     routeLine = L.polyline(decodedCoords, { color: 'blue', weight: 4 }).addTo(map);
-                    map.fitBounds(routeLine.getBounds());
+                    //map.fitBounds(routeLine.getBounds());
                 })
                 .catch(err => {
                     console.error("Błąd podczas wyznaczania trasy:", err);
@@ -276,7 +308,7 @@
         }
         function exportMapToPDF() {
             setTimeout(() => {
-            html2canvas(document.getElementById("map"), { useCORS: true })
+            html2canvas(document.getElementById("map-container"), { useCORS: true })
                 .then(canvas => {
                 const base64image = canvas.toDataURL("image/png");
 
@@ -306,12 +338,12 @@
             const popup = L.popup()
                 .setLatLng(e.latlng)
                 .setContent(`
-                            <form method="post" action="/MushroomSpots/Create">
-                                <input name="Name" placeholder="Nazwa" required />
-                                <textarea name="Description" placeholder="Opis"></textarea>
-                                <input type="hidden" name="Latitude" value="${lat}" />
-                                <input type="hidden" name="Longitude" value="${lng}" />
-                                         <label>Ocena:</label>
+                <form method="post" action="/MushroomSpots/Create">
+                    <input name="Name" placeholder="Nazwa" required />
+                    <textarea name="Description" placeholder="Opis"></textarea>
+                    <input type="hidden" name="Latitude" value="${lat}" />
+                    <input type="hidden" name="Longitude" value="${lng}" />
+                    <label>Ocena:</label>
                     <div class="star-rating">
                         <input type="radio" name="Rating" value="5" id="star5"><label for="star5">★</label>
                         <input type="radio" name="Rating" value="4" id="star4"><label for="star4">★</label>
@@ -319,8 +351,9 @@
                         <input type="radio" name="Rating" value="2" id="star2"><label for="star2">★</label>
                         <input type="radio" name="Rating" value="1" id="star1"><label for="star1">★</label>
                     </div>
-                                <button type="submit">Dodaj</button>
-                            </form>`)
+                    <button type="submit" class="nav-link nav-button-green">Dodaj</button>
+                </form>
+            `)
                 .openOn(map);
         });
         loadPins();
