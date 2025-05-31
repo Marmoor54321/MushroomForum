@@ -7,6 +7,9 @@ using System.ComponentModel;
 using System.Globalization;
 //generowanie PDF
 var builder = WebApplication.CreateBuilder(args);
+//ciekawostki 
+builder.Services.AddSingleton<MushroomForum.Services.CiekawostkiService>();
+//pobieranie pdf wymaga licencji
 QuestPDF.Settings.License = LicenseType.Community;
 //poprawne działanie koordynatów mapy
 var cultureInfo = new System.Globalization.CultureInfo("en-US");
@@ -56,6 +59,9 @@ using (var scope = app.Services.CreateScope())
     await dbContext.Database.MigrateAsync();
     await SeedDataAsync(dbContext, userManager, roleManager);
 }
+
+
+
 //wywołanie quizu
 using (var scope = app.Services.CreateScope())
 {
