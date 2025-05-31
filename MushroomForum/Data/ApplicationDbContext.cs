@@ -76,5 +76,68 @@ namespace MushroomForum.Data
                .HasForeignKey(pl => pl.PostId)
                .OnDelete(DeleteBehavior.Cascade);
         }
+        public static void Seed(ApplicationDbContext context)
+        {
+            if (!context.Quizzes.Any())
+            {
+                var quiz = new Quiz
+                {
+                    Tytul = "Testowy quiz o grzybach",
+                    Questions = new List<Question>
+            {
+                new Question
+                {
+                    Tresc = "Jakiego koloru jest muchomor czerwony?",
+                    Answers = new List<Answer>
+                    {
+                        new Answer { Tresc = "Czerwony", CzyPoprawna = true },
+                        new Answer { Tresc = "Zielony", CzyPoprawna = false },
+                        new Answer { Tresc = "Niebieski", CzyPoprawna = false }
+                    }
+                },
+                new Question
+                {
+                    Tresc = "Czy boczniak jest jadalny?",
+                    Answers = new List<Answer>
+                    {
+                        new Answer { Tresc = "Tak", CzyPoprawna = true },
+                        new Answer { Tresc = "Nie", CzyPoprawna = false }
+                    }
+                },
+                new Question
+                {
+                    Tresc = "Jak nazywa się trujący grzyb znany jako muchomor zielonawy?",
+                    Answers = new List<Answer>
+                    {
+                        new Answer { Tresc = "Muchomor sromotnikowy", CzyPoprawna = true },
+                        new Answer { Tresc = "Borowik", CzyPoprawna = false }
+                    }
+                },
+                new Question
+                {
+                    Tresc = "Czy kania jest grzybem jadalnym?",
+                    Answers = new List<Answer>
+                    {
+                        new Answer { Tresc = "Tak", CzyPoprawna = true },
+                        new Answer { Tresc = "Nie", CzyPoprawna = false }
+                    }
+                },
+                new Question
+                {
+                    Tresc = "Który z grzybów jest trujący?",
+                    Answers = new List<Answer>
+                    {
+                        new Answer { Tresc = "Pieczarka", CzyPoprawna = false },
+                        new Answer { Tresc = "Gąska zielonka", CzyPoprawna = true }
+                    }
+                }
+            }
+                };
+
+                context.Quizzes.Add(quiz);
+                context.SaveChanges();
+            }
+        }
+
     }
 }

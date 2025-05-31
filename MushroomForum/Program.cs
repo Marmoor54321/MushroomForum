@@ -56,6 +56,13 @@ using (var scope = app.Services.CreateScope())
     await dbContext.Database.MigrateAsync();
     await SeedDataAsync(dbContext, userManager, roleManager);
 }
+//wywołanie quizu
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    ApplicationDbContext.Seed(context);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
