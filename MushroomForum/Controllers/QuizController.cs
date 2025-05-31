@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MushroomForum.Controllers
@@ -48,10 +49,7 @@ namespace MushroomForum.Controllers
             if (quiz == null)
                 return NotFound();
 
-            // Liczymy punkty za poprawne odpowiedzi
             int score = 0;
-
-            // selectedAnswers zawiera Id odpowiedzi wybranych przez użytkownika
             var correctAnswerIds = quiz.Questions
                 .SelectMany(q => q.Answers)
                 .Where(a => a.CzyPoprawna)
@@ -64,7 +62,6 @@ namespace MushroomForum.Controllers
                     score++;
             }
 
-            // Dodaj punkty do UserExperience
             var userId = _userManager.GetUserId(User);
             var userExp = await _context.UserExperiences.FirstOrDefaultAsync(u => u.UserId == userId);
             if (userExp == null)
@@ -73,14 +70,41 @@ namespace MushroomForum.Controllers
                 _context.UserExperiences.Add(userExp);
             }
             userExp.Doswiadczenie += score;
-
             await _context.SaveChangesAsync();
 
             ViewBag.Score = score;
             ViewBag.TotalQuestions = quiz.Questions.Count;
             ViewBag.QuizId = quiz.Id;
+            ViewBag.CurrentPoints = userExp.Doswiadczenie;  // <-- dodaj tę linię!
 
             return View("Result");
         }
+
+        public async Task<IActionResult> Results(int quizId, int score, int totalQuestions)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            int currentPoints = 0;
+
+            if (userId != null)
+            {
+                var userExp = await _context.UserExperiences
+                    .FirstOrDefaultAsync(u => u.UserId == userId);
+
+                if (userExp != null)
+                {
+                    currentPoints = userExp.Doswiadczenie;  // Użyj odpowiedniej właściwości
+                }
+            }
+
+            ViewBag.Score = score;
+            ViewBag.TotalQuestions = totalQuestions;
+            ViewBag.QuizId = quizId;
+            ViewBag.CurrentPoints = currentPoints;
+
+            return View("Result");
+        }
+
+
     }
 }
