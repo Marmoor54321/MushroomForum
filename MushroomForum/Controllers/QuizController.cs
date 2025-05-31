@@ -104,7 +104,23 @@ namespace MushroomForum.Controllers
 
             return View("Result");
         }
+        public async Task<IActionResult> Ranking()
+        {
+            // Pobierz użytkowników wraz z punktami i ich nazwami
+            var ranking = await _context.UserExperiences
+                .OrderByDescending(u => u.Doswiadczenie)
+                .Include(u => u.User)  // jeśli UserExperience ma nawigację do IdentityUser
+                .ToListAsync();
+            var users = await _context.Users.ToListAsync();
 
+            var rankingWithNames = ranking.Select(u => new RankingViewModel
+            {
+                UserName = users.FirstOrDefault(user => user.Id == u.UserId)?.UserName ?? "Nieznany",
+                Points = u.Doswiadczenie
+            }).ToList();
+
+            return View(rankingWithNames);
+        }
 
     }
 }

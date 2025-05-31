@@ -1,0 +1,27 @@
+﻿@model List<MushroomForum.Models.RankingViewModel>
+
+@{
+    ViewData["Title"] = "Ranking użytkowników";
+}
+
+<h2>Ranking użytkowników</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Miejsce</th>
+            <th>Nazwa użytkownika</th>
+            <th>Punkty</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <td>@(i + 1)</td>
+                <td>@Model[i].UserName</td>
+                <td>@Model[i].Points</td>
+            </tr>
+        }
+    </tbody>
+</table>
