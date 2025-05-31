@@ -87,17 +87,22 @@
 
     <script>
         const map = L.map('map').setView([52.0, 19.0], 6);
-
+        const places = [];
         let userMarker = null;
         let routeLine = null;
         let userLocation = null;
-        const orsApiKey = "";
+            const orsApiKey = "";
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap contributors',
             crossOrigin: true 
         }).addTo(map);
-
+            const markers = [];
+            places.forEach((place, index) => {
+                const marker = L.marker([place.lat, place.lng]).addTo(map)
+                    .bindPopup(`<strong>${place.name}</strong><br>${place.description}<br>Ocena: ${place.rating}`);
+                markers.push(marker);
+            });
         function clearSpotsFromMap() {
     map.eachLayer(layer => {
         if ((layer instanceof L.Marker || layer instanceof L.CircleMarker || layer instanceof L.Polyline) &&
@@ -142,6 +147,7 @@
                             </div>
                         `);
                     });
+                        updatePlaceList(spots);
                 });
         }
 
@@ -306,6 +312,57 @@
             // Leaflet oczekuje [lat, lng], więc jest dobrze
             return points;
         }
+            function updatePlaceList(spots) {
+                const list = document.getElementById("placeList");
+                const filter = document.getElementById("filter").value.toLowerCase();
+                list.innerHTML = "";
+
+                spots
+                    .filter(s =>
+                        s.name.toLowerCase().includes(filter) ||
+                        s.description.toLowerCase().includes(filter) ||
+                        (s.rating && s.rating.toString().includes(filter))
+                    )
+                    .forEach(s => {
+                        const li = document.createElement("li");
+                        li.style.marginBottom = "10px";
+                        li.innerHTML = `
+                            <strong>${s.name}</strong><br>
+                            ${s.description}<br>
+                            Ocena: ${'★'.repeat(s.rating || 0)}${'☆'.repeat(5 - (s.rating || 0))}
+                            <br><button onclick="map.setView([${s.latitude}, ${s.longitude}], 14)" class="nav-link nav-button-green">Pokaż na mapie</button>
+                        `;
+                        list.appendChild(li);
+                    });
+            }
+
+
+            function renderList(filter = '') {
+                const list = document.getElementById('placeList');
+                list.innerHTML = '';
+
+                places.forEach((place, i) => {
+                    const match = place.description.toLowerCase().includes(filter) ||
+                        place.rating.toString().includes(filter);
+                    if (!filter || match) {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<strong>${place.name}</strong> (${place.rating})<br><small>${place.description}</small>`;
+                        li.style.cursor = 'pointer';
+                        li.style.marginBottom = '10px';
+                        li.onclick = () => {
+                            map.setView([place.lat, place.lng], 15);
+                            markers[i].openPopup();
+                            markers[i].setZIndexOffset(1000); // Podbij marker
+                        };
+                        list.appendChild(li);
+                    }
+                });
+            }
+            document.getElementById('filter').addEventListener('input', e => {
+                renderList(e.target.value.toLowerCase());
+            });
+
+            renderList();
         function exportMapToPDF() {
             setTimeout(() => {
             html2canvas(document.getElementById("map-container"), { useCORS: true })
@@ -330,6 +387,11 @@
             });
             }, 50);
         }
+            document.getElementById("filter").addEventListener("input", () => {
+                fetch(`/MushroomSpots/GetAll?ts=${Date.now()}`)
+                    .then(res => res.json())
+                    .then(spots => updatePlaceList(spots));
+            });
 
         map.on('click', function (e) {
             const lat = e.latlng.lat;
