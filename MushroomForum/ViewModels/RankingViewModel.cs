@@ -1,4 +1,4 @@
-﻿namespace MushroomForum.Models
+﻿namespace MushroomForum.ViewModels
 {
     public class RankingViewModel
     {

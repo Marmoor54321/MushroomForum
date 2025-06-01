@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
+using MushroomForum.ViewModels;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
