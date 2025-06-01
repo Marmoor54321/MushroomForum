@@ -24,6 +24,7 @@ namespace MushroomForum.Data
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<UserExperience> UserExperiences { get; set; }
+        public DbSet<Ciekawostka> Ciekawostki { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

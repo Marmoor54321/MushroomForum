@@ -6,16 +6,17 @@
     <h1 class="display-4">Jedyne takie forum dla grzybiarzy!</h1>
     <p>Dołącz do największej w Polsce społeczności pasjonatów grzybobrania. Dziel się swoimi zbiorami, identyfikuj nieznane gatunki, wymieniaj się wiedzą i doświadczeniem.</p>
     <p>Niezależnie czy jesteś doświadczonym grzybiarzem czy dopiero zaczynasz swoją przygodę z grzybobraniem, znajdziesz tu przydatne informacje i przyjaznych ludzi gotowych do pomocy.</p>
+    <p>Dowiedz się jak korzystać z aplikacji: <a href="link.do.samouczka.com" class="button-green">tutaj znajdziesz wszystkie informacje :)</a></p>
 </div>
 
 <div class="content-container">
     <div class="left-column">
-        <p>Dowiedz się jak korzystać z aplikacji: <a href="link.do.samouczka.com" class="button-green">tutaj znajdziesz wszystkie informacje :)</a></p>
-        <h3>Ciekawostka o grzybach:</h3>
+        <h3 class="small-header">Czy wiedziałeś, że...? Ciekawostki o grzybach i grzybobraniu:</h3>
         <p>@ViewData["Ciekawostka"]</p>
+        <img src="@ViewData["CiekawostkaImg"]" alt="Zdjęcie do ciekawostki" style="max-width: 100%;" />
     </div>
     <div class="right-column">
-        <h3>Mem dnia:</h3>
+        <h3 class ="small-header">Memy nadesłane przez użytkowników ;D</h3>
         <img src="@ViewData["Mem"]" alt="Mem o grzybach :D" />
     </div>
 </div>
