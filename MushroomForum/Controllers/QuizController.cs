@@ -22,6 +22,12 @@ namespace MushroomForum.Controllers
             _context = context;
             _userManager = userManager;
         }
+        public async Task<IActionResult> Index()
+        {
+            var quizzes = await _context.Quizzes.ToListAsync();
+            return View(quizzes);
+        }
+
 
         // GET: /Quiz/Take/1
         public async Task<IActionResult> Take(int id)

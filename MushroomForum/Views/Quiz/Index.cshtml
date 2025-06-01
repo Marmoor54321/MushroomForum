@@ -1,0 +1,12 @@
+﻿@model List<MushroomForum.Models.Quiz>
+
+<h2>Dostępne quizy</h2>
+
+<ul>
+    @foreach (var quiz in Model)
+    {
+        <li>
+            <a asp-controller="Quiz" asp-action="Take" asp-route-id="@quiz.Id">@quiz.Tytul</a>
+        </li>
+    }
+</ul>
