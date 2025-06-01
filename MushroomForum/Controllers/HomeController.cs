@@ -32,7 +32,8 @@ namespace MushroomForum.Controllers
             var random = new Random();
             var losowyMem = memy[random.Next(memy.Count)];
 
-            ViewData["Ciekawostka"] = ciekawostkaNaDzien;
+            ViewData["Ciekawostka"] = ciekawostkaNaDzien.Tresc;
+            ViewData["CiekawostkaImg"] = ciekawostkaNaDzien.Url;
             ViewData["Mem"] = losowyMem;
             return View();
         }
