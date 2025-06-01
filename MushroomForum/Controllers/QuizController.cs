@@ -128,6 +128,46 @@ namespace MushroomForum.Controllers
 
             return View(rankingWithNames);
         }
+        public async Task<IActionResult> YourRanking()
+        {
+            var userId = _userManager.GetUserId(User);
+
+            if (userId == null)
+            {
+                return Challenge();
+            }
+
+            var ranking = await _context.UserExperiences
+                .OrderByDescending(u => u.Doswiadczenie)
+                .Include(u => u.User)
+                .ToListAsync();
+
+            var rankingWithNames = ranking.Select(u => new RankingViewModel
+            {
+                UserName = u.User?.UserName ?? "Nieznany",
+                Points = u.Doswiadczenie,
+                UserId = u.UserId  // musisz dodać UserId do RankingViewModel, jeśli go nie masz
+            }).ToList();
+
+            int position = rankingWithNames.FindIndex(r => r.UserId == userId) + 1;
+
+            if (position == 0) position = -1;
+
+            var yourRanking = new YourRankingViewModel
+            {
+                Position = position,
+                Points = rankingWithNames.FirstOrDefault(r => r.UserId == userId)?.Points ?? 0
+            };
+
+            var model = new CombinedRankingViewModel
+            {
+                YourRanking = yourRanking,
+                FullRanking = rankingWithNames
+            };
+
+            return View(model);
+        }
+
 
     }
 }

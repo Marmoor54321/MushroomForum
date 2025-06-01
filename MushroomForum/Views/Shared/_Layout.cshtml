@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MushroomForum</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link id="themeStylesheet" rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MushroomForum.styles.css" asp-append-version="true" />
     @RenderSection("Styles", required: false)
 </head>
@@ -68,12 +68,15 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle nav-link-white" href="#" id="ustawieniaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Ustawienia
+                                    Konto
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="ustawieniaDropdown">
                                     <li>
                                         <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Ustawienia konta</a>
                                     </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Quiz" asp-action="YourRanking">Zobacz ranking użytkowników</a>
+                                        </li>
                                     <li>
                                         <button class="dropdown-item" onclick="toggleTheme()">Zmień motyw</button>
                                     </li>
@@ -107,6 +110,26 @@
     var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
     var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
         return new bootstrap.Dropdown(dropdownToggleEl)
+        function toggleTheme() {
+            const link = document.getElementById('themeStylesheet');
+            const currentHref = link.getAttribute('href');
+
+            if (currentHref.includes('site.css')) {
+                link.setAttribute('href', '/css/site2.css');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                link.setAttribute('href', '/css/site.css');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            const link = document.getElementById('themeStylesheet');
+
+            if (savedTheme === 'dark') {
+                link.setAttribute('href', '/css/site2.css');
+            }
     });
 </script>
 
