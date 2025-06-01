@@ -79,26 +79,34 @@ namespace MushroomForum.Data
         }
         public static void Seed(ApplicationDbContext context)
         {
-            if (!context.Quizzes.Any())
+            var existingQuizzes = context.Quizzes
+                .Include(q => q.Questions)
+                    .ThenInclude(q => q.Answers)
+                .ToList();
+
+            if (existingQuizzes.Any())
             {
+                context.Quizzes.RemoveRange(existingQuizzes);
+                context.SaveChanges();
+            }
                 var quiz = new Quiz
                 {
-                    Tytul = "Testowy quiz o grzybach",
+                    Tytul = "Quiz wiedzy o grzybach",
                     Questions = new List<Question>
             {
                 new Question
                 {
-                    Tresc = "Jakiego koloru jest muchomor czerwony?",
+                    Tresc = "Co jest małe i żólte?",
                     Answers = new List<Answer>
                     {
-                        new Answer { Tresc = "Czerwony", CzyPoprawna = true },
-                        new Answer { Tresc = "Zielony", CzyPoprawna = false },
-                        new Answer { Tresc = "Niebieski", CzyPoprawna = false }
+                        new Answer { Tresc = "Kurka", CzyPoprawna = true },
+                        new Answer { Tresc = "Tak", CzyPoprawna = false },
+                        new Answer { Tresc = "Nie", CzyPoprawna = false }
                     }
                 },
                 new Question
                 {
-                    Tresc = "Czy boczniak jest jadalny?",
+                    Tresc = "Czy wszystkie grzyby można zjeść?",
                     Answers = new List<Answer>
                     {
                         new Answer { Tresc = "Tak", CzyPoprawna = true },
@@ -107,16 +115,7 @@ namespace MushroomForum.Data
                 },
                 new Question
                 {
-                    Tresc = "Jak nazywa się trujący grzyb znany jako muchomor zielonawy?",
-                    Answers = new List<Answer>
-                    {
-                        new Answer { Tresc = "Muchomor sromotnikowy", CzyPoprawna = true },
-                        new Answer { Tresc = "Borowik", CzyPoprawna = false }
-                    }
-                },
-                new Question
-                {
-                    Tresc = "Czy kania jest grzybem jadalnym?",
+                    Tresc = "Czy grzyb może spleśnieć?",
                     Answers = new List<Answer>
                     {
                         new Answer { Tresc = "Tak", CzyPoprawna = true },
@@ -125,11 +124,21 @@ namespace MushroomForum.Data
                 },
                 new Question
                 {
-                    Tresc = "Który z grzybów jest trujący?",
+                    Tresc = "Kiedy jest sezon na kanie?",
                     Answers = new List<Answer>
                     {
-                        new Answer { Tresc = "Pieczarka", CzyPoprawna = false },
-                        new Answer { Tresc = "Gąska zielonka", CzyPoprawna = true }
+                        new Answer { Tresc = "od czerwca do listopada", CzyPoprawna = true },
+                        new Answer { Tresc = "od stycznia do maja", CzyPoprawna = false}
+                    }
+                },
+                new Question
+                {
+                    Tresc = "Jakie grzyby są najfajniejsze?",
+                    Answers = new List<Answer>
+                    {
+                        new Answer { Tresc = "Blaszkowe", CzyPoprawna = false },
+                        new Answer { Tresc = "Psylocybinowe", CzyPoprawna = true },
+                        new Answer { Tresc = "Rurkowe", CzyPoprawna = false }
                     }
                 }
             }
@@ -141,4 +150,4 @@ namespace MushroomForum.Data
         }
 
     }
-}
+
