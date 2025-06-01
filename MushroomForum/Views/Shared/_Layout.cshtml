@@ -63,10 +63,21 @@
                                     <li><a class="dropdown-item" asp-page="/Game/Game">Gra</a></li>
                                     <li>
                                         <a class="dropdown-item" asp-controller="Quiz" asp-action="Index">Quizy</a>
-
                                     </li>
                                 </ul>
-
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle nav-link-white" href="#" id="ustawieniaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Ustawienia
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="ustawieniaDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Ustawienia konta</a>
+                                    </li>
+                                    <li>
+                                        <button class="dropdown-item" onclick="toggleTheme()">Zmień motyw</button>
+                                    </li>
+                                </ul>
                             </li>
                         }
                     </ul>
