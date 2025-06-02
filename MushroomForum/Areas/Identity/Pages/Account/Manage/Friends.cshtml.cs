@@ -231,8 +231,77 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
             return RedirectToPage();
         }
 
+        public async Task<IActionResult> OnPostBlockUserAsync(string userId)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null || string.IsNullOrEmpty(userId))
+            {
+                StatusMessage = "Nie mo¿na zablokowaæ u¿ytkownika.";
+                return Page();
+            }
 
-        
+            if (userId == currentUser.Id)
+            {
+                StatusMessage = "Nie mo¿esz zablokowaæ samego siebie.";
+                return Page();
+            }
+
+            // SprawdŸ czy u¿ytkownik ju¿ jest zablokowany
+            var existingBlock = await _context.UserBlocks
+                .FirstOrDefaultAsync(b => b.BlockerId == currentUser.Id && b.BlockedId == userId);
+
+            if (existingBlock != null)
+            {
+                StatusMessage = "U¿ytkownik jest ju¿ zablokowany.";
+                return Page();
+            }
+
+            // Dodaj blokadê
+            var userToBlock = await _userManager.FindByIdAsync(userId);
+            if (userToBlock == null)
+            {
+                StatusMessage = "Nie znaleziono u¿ytkownika do zablokowania.";
+                return Page();
+            }
+
+            var block = new UserBlock
+            {
+                BlockerId = currentUser.Id,
+                BlockedId = userId,
+                BlockedAt = DateTime.UtcNow
+            };
+
+            _context.UserBlocks.Add(block);
+
+            // Usuñ znajomoœæ jeœli istnieje (tutaj wa¿ne: UserFriends, a nie Friends)
+            var friendRelation = await _context.UserFriends
+                .FirstOrDefaultAsync(f =>
+                    (f.UserId == currentUser.Id && f.FriendId == userId) ||
+                    (f.UserId == userId && f.FriendId == currentUser.Id));
+
+            if (friendRelation != null)
+            {
+                _context.UserFriends.Remove(friendRelation);
+            }
+
+            // Usuñ zaproszenia (przychodz¹ce i wys³ane)
+            var friendRequests = await _context.FriendRequests
+                .Where(r => (r.SenderId == currentUser.Id && r.ReceiverId == userId) ||
+                            (r.SenderId == userId && r.ReceiverId == currentUser.Id))
+                .ToListAsync();
+
+            if (friendRequests.Any())
+            {
+                _context.FriendRequests.RemoveRange(friendRequests);
+            }
+
+            await _context.SaveChangesAsync();
+
+            StatusMessage = $"Zablokowano u¿ytkownika {userToBlock.UserName}.";
+            return RedirectToPage();
+        }
+
+
 
 
 
