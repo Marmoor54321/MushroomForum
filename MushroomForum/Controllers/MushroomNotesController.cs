@@ -243,6 +243,5 @@ namespace MushroomForum.Controllers
             return RedirectToAction("Index");
         }
 
-
     }
 }

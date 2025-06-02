@@ -1,30 +1,24 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MushroomForum.Models;
+using MushroomForum.Services;
 
 namespace MushroomForum.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly CiekawostkiService _ciekawostkiService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, CiekawostkiService ciekawostkiService)
         {
             _logger = logger;
+            _ciekawostkiService = ciekawostkiService;
         }
 
         public IActionResult Index()
         {
-            var ciekawostki = new List<string>
-            {
-                "Grzyby to organizmy, które nie s¹ ani roœlinami, ani zwierzêtami!",
-                "W Japonii grzyby shiitake uwa¿ane s¹ za symbol d³ugowiecznoœci.",
-                "Niektóre grzyby maj¹ zdolnoœæ bioluminescencji, œwiec¹ w ciemnoœci!",
-                "Grzyby truj¹ce mog¹ wygl¹daæ podobnie do grzybów jadalnych, wiêc zawsze upewnij siê, ¿e masz pewnoœæ co do ich identyfikacji!"
-            };
-
-            var random = new Random();
-            var losowaCiekawostka = ciekawostki[random.Next(ciekawostki.Count)];
+            var ciekawostkaNaDzien = _ciekawostkiService.GetCiekawostkaNaDzien();
 
             var memy = new List<string>
             {
@@ -34,8 +28,12 @@ namespace MushroomForum.Controllers
                 "/images/mem4.jpg"
             };
 
+
+            var random = new Random();
             var losowyMem = memy[random.Next(memy.Count)];
-            ViewData["Ciekawostka"] = losowaCiekawostka;
+
+            ViewData["Ciekawostka"] = ciekawostkaNaDzien.Tresc;
+            ViewData["CiekawostkaImg"] = ciekawostkaNaDzien.Url;
             ViewData["Mem"] = losowyMem;
             return View();
         }

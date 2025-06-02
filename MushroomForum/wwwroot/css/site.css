@@ -28,7 +28,13 @@ body {
     color: #333;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+/*headery*/
+<style >
+.small-header {
+    font-size: 7px;
+}
 
+</style >
 /* Przyciski na stronie */
 .button-green {
     color: #FFFFFF !important;
