@@ -23,6 +23,7 @@ namespace MushroomForum.Data
         public DbSet<FriendRequest> FriendRequests { get; set; }
         public DbSet<UserFriend> UserFriends { get; set; }
         public DbSet<UserBlock> UserBlocks { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
