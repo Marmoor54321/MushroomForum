@@ -1,7 +1,11 @@
 ﻿:root {
-    --primary-green: #282828;
-    --secondary-green: #404040;
-    --third-green: #686868;
+    --primary-green: #181818;
+    --secondary-green: #303030;
+    --third-green: #202020;
+    --sitebackround: #282828;
+    --sitecolumns: #383838;
+    --textcolor: white;
+    --headertextcolor: white;
 }
 
 html {
@@ -25,9 +29,12 @@ html {
 
 body {
     margin-bottom: 60px;
-    background-color: #f5f5f5;
-    color: #333;
+    background-color: var(--sitebackround);
+    color: var(--textcolor);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+p {
+    color: var(--textcolor);
 }
 /*headery*/
 <style >
@@ -111,7 +118,7 @@ body {
     }
 
 .nav-greeting {
-    color: white;
+    color: var(--textcolor);
     font-weight: normal;
     padding-left: 0.5rem;
 }
@@ -128,6 +135,7 @@ body {
 
 .navbar .navbar-brand {
     white-space: nowrap;
+    color: white !important;
     flex-shrink: 0;
     margin-right: 1rem;
 }
@@ -145,7 +153,7 @@ body {
 .left-column {
     flex: 1;
     padding-right: 20px;
-    background-color: white;
+    background-color: var(--sitecolumns);
     padding: 10px;
     border-radius: 8px;
     margin-right: 10px;
@@ -153,7 +161,7 @@ body {
 
 .right-column {
     flex: 1;
-    background-color: #fafafa;
+    background-color: var(--sitecolumns);
     padding: 10px;
     border-radius: 8px;
     margin-left: 10px;
@@ -166,7 +174,7 @@ body {
     }
 
 .welcome-card {
-    background-color: white;
+    background-color: var(--sitecolumns);
     border-radius: 8px;
     padding: 2rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -175,7 +183,7 @@ body {
 }
 
     .welcome-card.valid {
-        background-color: white;
+        background-color: var(--sitecolumns);
         border-radius: 8px;
         padding: 2rem;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -184,7 +192,7 @@ body {
     }
 
     .welcome-card h1 {
-        color: var(--primary-green);
+        color: var(--headertextcolor);
         margin-top: 0;
         font-size: 2.5rem;
     }
@@ -197,7 +205,7 @@ body {
 }
 
 .feature-card {
-    background-color: white;
+    background-color: var(--sitecolumns);
     border-radius: 8px;
     padding: 1.5rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -215,7 +223,7 @@ body {
     }
 
     .feature-card h3 {
-        color: var(--primary-green);
+        color: var(--headertextcolor);
         margin-top: 0;
     }
 
@@ -230,7 +238,7 @@ body {
     }
 
 .forum-threads-container {
-    background-color: white;
+    background-color: var(--sitecolumns);
     border-radius: 8px;
     padding: 2rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -238,7 +246,7 @@ body {
 }
 
 .forum-title {
-    color: var(--primary-green);
+    color: var(--headertextcolor);
     margin-bottom: 1.5rem;
 }
 
@@ -251,7 +259,7 @@ body {
 .thread-list-header {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
-    background-color: #f5f5f5;
+    background-color: var(--sitecolumns);
     border-radius: 8px;
     padding: 0.75rem;
     font-weight: bold;
@@ -263,7 +271,7 @@ body {
 .thread-list-item {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
-    background-color: #fafafa;
+    background-color: var(--sitecolumns);
     border-radius: 8px;
     padding: 0.75rem;
     margin-bottom: 0.5rem;
@@ -287,12 +295,12 @@ body {
 }
 
     .thread-column-title a {
-        color: #333;
+        color: var(--textcolor);
         text-decoration: none;
     }
 
         .thread-column-title a:hover {
-            color: var(--primary-green);
+            color: var(--headertextcolor);
             text-decoration: underline;
         }
 
@@ -305,33 +313,34 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--textcolor);
 }
 
 .filter-form {
-    background-color: #f5f5f5;
+    background-color: var(--sitecolumns);
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .pagination .page-link {
-    color: var(--primary-green);
+    color: var(--headertextcolor);
     border-radius: 4px;
     margin: 0 2px;
 }
 
 .pagination .page-item.active .page-link {
-    background-color: var(--primary-green);
-    border-color: var(--primary-green);
+    background-color: var(--sitecolumns);
+    border-color: var(--headertextcolor);
     color: white;
 }
 
 .pagination .page-item.disabled .page-link {
-    color: #ccc;
+    color: var(--primary-green);
 }
 
 .thread-details-container {
-    background-color: white;
+    background-color: var(--sitecolumns);
     border-radius: 8px;
     padding: 2rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -339,7 +348,7 @@ body {
 }
 
 .thread-info {
-    background-color: #fafafa;
+    background-color: var(--sitecolumns);
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 1.5rem;
@@ -351,7 +360,7 @@ body {
 }
 
 .post-item {
-    background-color: #fafafa;
+    background-color: var(--sitecolumns);
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 1rem;
@@ -388,12 +397,12 @@ body {
 
 .post-meta {
     font-size: 0.9rem;
-    color: #666;
+    color: var(--primary-green);
     text-align: right;
 }
 
 .create-thread-container {
-    background-color: white;
+    background-color: var(--sitecolumns);
     border-radius: 8px;
     padding: 2rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -423,6 +432,7 @@ body {
     .thread-column-category,
     .thread-column-date {
         font-size: 0.8rem;
+        color: var(--textcolor);
     }
 
     .post-item {
@@ -482,6 +492,7 @@ body {
     .thread-column-category,
     .thread-column-date {
         font-size: 0.75rem;
+        color: var(--textcolor);
     }
 
     .post-item {
@@ -513,7 +524,7 @@ body {
 .banner {
     width: 100%;
     height: 2.5cm;
-    background-color: #ccc;
+    background-color: var(--primary-green);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -550,7 +561,7 @@ body {
 
     .note-item .card-body {
         width: 100%;
-        background: #f8f9fa;
+        background: var(--third-green));
         padding: 0.5rem 1rem;
     }
 
@@ -568,7 +579,7 @@ body {
         height: 30px;
         font-size: 24px;
         line-height: 1;
-        color: #000; /* możesz zmienić na inny */
+        color: var(--textcolor)
     }
 
 .dropdown-toggle::after {
@@ -586,16 +597,74 @@ body {
         .navbar-custom .dropdown-menu .dropdown-item:hover,
         .navbar-custom .dropdown-menu .dropdown-item:focus {
             background-color: var(--third-green);
-            color: #000;
+            color: var(--textcolor)
         }
-/*Gra*/
-body {
-    font-family: Arial, sans-serif;
-    text-align: left;
-    background: #eef6f0;
+
+/*profilowe*/
+.avatar-icon {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+/*notatnik*/
+.note-card {
+    background-color: var(--sitecolumns);
+    max-width: 100%;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-canvas {
-    border: 2px solid #333;
-    background-color: #a3d9a5;
+.note-header {
+    width: 100%;
+    background-color: var(--sitecolumns);
+    color: var(--textcolor);
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+}
+.dropdown-toggle-clean {
+    background-color: var(--sitecolumns);
+    border: none;
+    box-shadow: none;
+    font-size: 24px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    line-height: 1;
+}
+
+    .dropdown-toggle-clean:focus,
+    .dropdown-toggle-clean:active,
+    .dropdown-toggle-clean.show {
+        background-color: var(--sitecolumns) !important;
+        box-shadow: none;
+        outline: none;
+    }
+.dropdown-menu {
+    background-color: var(--third-green);
+    color: var(--textcolor);
+}
+
+    .dropdown-menu .dropdown-item {
+        color: var(--textxolor);
+    }
+
+        .dropdown-menu .dropdown-item:hover,
+        .dropdown-menu .dropdown-item:focus {
+            background-color: var(--secondary-green);
+            color: var(--textcolor);
+        }
+
+.modal-content {
+    background-color: var(--sitecolumns);
+    color: var(--textcolor);
+}
+
+.modal-header, .modal-footer {
+    border-color: rgba(0,0,0,0.1);
+}
+
+.btn-close {
+    filter: invert(0);
 }

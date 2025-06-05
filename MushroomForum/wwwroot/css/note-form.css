@@ -3,7 +3,6 @@
     margin: 0;
 }
 
-/* Zakładamy, że navbar zajmuje około 100px */
 .note-container {
     display: flex;
     flex-direction: column;
