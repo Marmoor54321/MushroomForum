@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
+using MushroomForum.Services;
+using MushroomForum.Services.Service;
 using QuestPDF.Infrastructure;
 using System.ComponentModel;
 using System.Globalization;
@@ -29,6 +31,11 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddScoped<FriendService>();
+builder.Services.AddScoped<AchievementService>();
+builder.Services.AddScoped<LevelUpService>();
+
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddRazorPages();
@@ -47,6 +54,8 @@ builder.Services.AddLogging(logging =>
     logging.AddDebug();
     logging.SetMinimumLevel(LogLevel.Information); 
 });
+
+
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())

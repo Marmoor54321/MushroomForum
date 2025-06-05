@@ -25,11 +25,17 @@ namespace MushroomForum.Data
         public DbSet<Answer> Answers { get; set; }
         public DbSet<UserExperience> UserExperiences { get; set; }
         public DbSet<Ciekawostka> Ciekawostki { get; set; }
+        public DbSet<FriendRequest> FriendRequests { get; set; }
+        public DbSet<UserFriend> UserFriends { get; set; }
+        public DbSet<UserBlock> UserBlocks { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<AchievementType> AchievementTypes { get; set; }
+        public DbSet<UserAchievement> UserAchievements { get; set; }
+        public DbSet<LikeHistory> LikeHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
 
             modelBuilder.Entity<ForumThread>()
                 .HasOne(ft => ft.User)
@@ -37,13 +43,11 @@ namespace MushroomForum.Data
                 .HasForeignKey(ft => ft.IdentityUserId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.User)
                 .WithMany()
                 .HasForeignKey(p => p.IdentityUserId)
                 .OnDelete(DeleteBehavior.SetNull);
-
 
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.ForumThread)
@@ -76,6 +80,32 @@ namespace MushroomForum.Data
                .WithMany()
                .HasForeignKey(pl => pl.PostId)
                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(fr => fr.Sender)
+                .WithMany()
+                .HasForeignKey(fr => fr.SenderId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(fr => fr.Receiver)
+                .WithMany()
+                .HasForeignKey(fr => fr.ReceiverId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserBlock>()
+                .HasOne(ub => ub.Blocker)
+                .WithMany()
+                .HasForeignKey(ub => ub.BlockerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserBlock>()
+                .HasOne(ub => ub.Blocked)
+                .WithMany()
+                .HasForeignKey(ub => ub.BlockedId)
+                .OnDelete(DeleteBehavior.Restrict);
+   
         }
         public static void Seed(ApplicationDbContext context)
         {

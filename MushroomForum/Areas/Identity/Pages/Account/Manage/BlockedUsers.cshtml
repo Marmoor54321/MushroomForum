@@ -1,0 +1,44 @@
+﻿@page
+@model BlockedUsersModel
+
+<h2>Zablokowani użytkownicy</h2>
+
+<form method="post" asp-page-handler="Block" class="mb-4">
+    <div class="form-group">
+        <label for="NewBlockedUsername">Zablokuj użytkownika po nazwie</label>
+        <input asp-for="NewBlockedUsername" class="form-control" id="NewBlockedUsername" placeholder="np. jan.kowalski" />
+        <span asp-validation-for="NewBlockedUsername" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-danger mt-2">Zablokuj</button>
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <div>@error.ErrorMessage</div>
+        }
+    </div>
+}
+
+@if (Model.BlockedUsersList == null || !Model.BlockedUsersList.Any())
+{
+    <p>Nie masz żadnych zablokowanych użytkowników.</p>
+}
+else
+{
+    <ul>
+        @foreach (var user in Model.BlockedUsersList)
+        {
+            <li>
+                @user.UserName
+                <form method="post" asp-page-handler="Unblock" asp-route-userId="@user.Id" style="display:inline;">
+                    <button type="submit" class="btn btn-success" title="Odblokuj" style="margin-left: 10px;">
+                        Odblokuj
+                    </button>
+                </form>
+            </li>
+        }
+    </ul>
+}
