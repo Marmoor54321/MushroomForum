@@ -36,6 +36,83 @@ body {
 p {
     color: var(--textcolor);
 }
+a {
+    color: var(--textcolor);
+    text-decoration: underline;
+}
+
+    a:hover,
+    a:focus {
+        color: var(--textcolor);
+        text-decoration: underline;
+    }
+.link-default {
+    color: var(--textcolor); 
+    text-decoration: none;
+    transition: text-decoration 0.2s ease;
+}
+
+    .link-default:hover {
+        text-decoration: underline;
+    }
+.textcolor {
+    color: var(--textcolor); 
+}
+.table, .table td, .table th {
+    color: var(--textcolor);
+}
+.form-floating {
+    margin-bottom: 1.5rem;
+    background-color: var(--sitecolumns);
+    padding: 0.5rem;
+    border-radius: 6px;
+}
+
+    .form-floating .form-control {
+        border: 2px solid var(--sitecolumns);
+        background-color: var(--sitecolumns);
+        color: var(--textcolor);
+    }
+
+        .form-floating .form-control:focus {
+            border-color: var(--sitecolumns);
+            box-shadow: 0 0 5px var(--sitecolumns);
+            outline: none;
+        }
+
+    .form-floating label {
+        color: var(--textcolor) !important;
+    }
+
+.form-label {
+    color: var(--textcolor) !important;
+}
+
+input.form-control {
+    border: 2px solid var(--sitecolumns);
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+    input.form-control:focus {
+        border-color: var(--sitecolumns);
+        box-shadow: 0 0 5px var(--sitecolumns);
+        outline: none;
+    }
+
+.form-check-input {
+    background-color: var(--sitecolumns);
+    border: 1px solid var(--textcolor);
+}
+
+    .form-check-input:checked {
+        background-color: var(--primary-green);
+        border-color: var(--primary-green);
+    }
+
+.form-check-label {
+    color: var(--textcolor);
+}
 /*headery*/
 <style >
 .small-header {
@@ -63,6 +140,8 @@ p {
         box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
         transform: scale(1.05);
     }
+
+
 
 .nav-pills .nav-link {
     color: black;

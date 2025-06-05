@@ -33,16 +33,92 @@ body {
     color: var(--textcolor);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
 p {
     color: var(--textcolor);
 }
-/*headery*/
-<style >
-.small-header {
-    font-size: 7px;
+
+a {
+    color: var(--textcolor);
+    text-decoration: underline;
 }
 
-</style >
+    a:hover,
+    a:focus {
+        color: var(--textcolor);
+        text-decoration: underline;
+    }
+
+.link-default {
+    color: var(--textcolor);
+    text-decoration: none;
+    transition: text-decoration 0.2s ease;
+}
+
+    .link-default:hover {
+        text-decoration: underline;
+    }
+
+.textcolor {
+    color: var(--textcolor);
+}
+.table, .table td, .table th {
+    color: var(--textcolor);
+}
+.form-floating {
+    margin-bottom: 1.5rem;
+    background-color: var(--sitecolumns);
+    padding: 0.5rem;
+    border-radius: 6px;
+}
+
+    .form-floating .form-control {
+        border: 2px solid var(--sitecolumns);
+        background-color: var(--sitecolumns);
+        color: var(--textcolor);
+    }
+
+        .form-floating .form-control:focus {
+            border-color: var(--sitecolumns);
+            box-shadow: 0 0 5px var(--sitecolumns);
+            outline: none;
+        }
+
+    .form-floating label {
+        color: var(--textcolor) !important;
+    }
+.form-label {
+    color: var(--textcolor) !important;
+}
+input.form-control {
+    border: 2px solid var(--sitecolumns);
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+    input.form-control:focus {
+        border-color: var(--sitecolumns);
+        box-shadow: 0 0 5px var(--sitecolumns);
+        outline: none;
+    }
+.form-check-input {
+    background-color: var(--sitecolumns);
+    border: 1px solid var(--textcolor);
+}
+
+    .form-check-input:checked {
+        background-color: var(--primary-green);
+        border-color: var(--primary-green);
+    }
+
+.form-check-label {
+    color: var(--textcolor);
+}
+
+/*headery*/
+.small-header {
+    font-size: 20px;
+}
 /* Przyciski na stronie */
 .button-green {
     color: #FFFFFF !important;
@@ -63,6 +139,8 @@ p {
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
     transform: scale(1.05);
 }
+
+
 
 .nav-pills .nav-link {
     color: black;
@@ -397,7 +475,7 @@ p {
 
 .post-meta {
     font-size: 0.9rem;
-    color: var(--primary-green);
+    color: var(--textcolor);
     text-align: right;
 }
 
@@ -561,7 +639,7 @@ p {
 
     .note-item .card-body {
         width: 100%;
-        background: var(--third-green));
+        background: var(--third-green);
         padding: 0.5rem 1rem;
     }
 
@@ -607,6 +685,7 @@ p {
     object-fit: cover;
     border-radius: 50%;
 }
+
 /*notatnik*/
 .note-card {
     background-color: var(--sitecolumns);
@@ -623,6 +702,7 @@ p {
     cursor: pointer;
     border-radius: 8px 8px 0 0;
 }
+
 .dropdown-toggle-clean {
     background-color: var(--sitecolumns);
     border: none;
@@ -641,6 +721,7 @@ p {
         box-shadow: none;
         outline: none;
     }
+
 .dropdown-menu {
     background-color: var(--third-green);
     color: var(--textcolor);
