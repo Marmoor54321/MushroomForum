@@ -7,9 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MushroomForum.Data; // lub inny namespace z ApplicationDbContext
-using MushroomForum.Models; // lub inny namespace z UserFriend
+using MushroomForum.Data;
+using MushroomForum.Models;
 using MushroomForum.Services;
+using System;
 
 namespace MushroomForum.Areas.Identity.Pages.Account.Manage
 {
@@ -27,6 +28,39 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
             _friendService = friendService;
         }
 
+        public class FriendViewModel
+        {
+            public string Id { get; set; }
+            public string UserName { get; set; }
+            public string AvatarIcon { get; set; }
+        }
+
+        public class FriendRequestViewModel
+        {
+            public int RequestId { get; set; }       // Id samego zaproszenia
+            public string UserId { get; set; }       // Id u¿ytkownika (SenderId lub ReceiverId)
+            public string UserName { get; set; }
+            public string AvatarIcon { get; set; }
+        }
+
+        public List<FriendViewModel> FriendsWithIcons { get; set; } = new();
+
+        // Nowe listy z avatarami dla zaproszeñ
+        public List<FriendRequestViewModel> IncomingRequestsWithIcons { get; set; } = new();
+        public List<FriendRequestViewModel> SentRequestsWithIcons { get; set; } = new();
+
+
+        public List<IdentityUser> Friends { get; set; } = new();
+
+        public List<FriendRequest> SentRequests { get; set; } = new();
+        public List<FriendRequest> IncomingRequests { get; set; } = new();
+
+        [BindProperty]
+        public string NewFriendUsername { get; set; }
+
+        [TempData]
+        public string? StatusMessage { get; set; }
+
         public async Task<IActionResult> OnPostRemoveFriendAsync(string friendId)
         {
             if (string.IsNullOrEmpty(friendId))
@@ -37,7 +71,6 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
 
             var currentUser = await _userManager.GetUserAsync(User);
 
-            // ZnajdŸ rekord znajomoœci (UserFriend)
             var friendship = await _context.UserFriends
                 .FirstOrDefaultAsync(f =>
                     (f.UserId == currentUser.Id && f.FriendId == friendId) ||
@@ -51,7 +84,6 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
 
             _context.UserFriends.Remove(friendship);
 
-            // ZnajdŸ powi¹zany rekord FriendRequest, który jest zaakceptowany i ³¹czy tych samych u¿ytkowników
             var friendRequest = await _context.FriendRequests
                 .FirstOrDefaultAsync(fr =>
                     ((fr.SenderId == currentUser.Id && fr.ReceiverId == friendId) ||
@@ -69,41 +101,74 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
             return RedirectToPage();
         }
 
-
-
-
-        public List<IdentityUser> Friends { get; set; } = new();
-
         public async Task OnGetAsync()
         {
             var currentUser = await _userManager.GetUserAsync(User);
+            var currentUserId = currentUser.Id;
 
             var friendIds = await _context.UserFriends
-                .Where(f => f.UserId == currentUser.Id || f.FriendId == currentUser.Id)
-                .Select(f => f.UserId == currentUser.Id ? f.FriendId : f.UserId)
+                .Where(f => f.UserId == currentUserId || f.FriendId == currentUserId)
+                .Select(f => f.UserId == currentUserId ? f.FriendId : f.UserId)
                 .ToListAsync();
 
-            Friends = await _context.Users
+            var friends = await _context.Users
                 .Where(u => friendIds.Contains(u.Id))
                 .ToListAsync();
 
-            IncomingRequests = await _context.FriendRequests
-             .Where(fr => fr.ReceiverId == currentUser.Id && !fr.IsAccepted)
-             .Include(fr => fr.Sender)
-             .ToListAsync();
+            var friendProfiles = await _context.UserProfiles
+                .Where(up => friendIds.Contains(up.UserId))
+                .ToListAsync();
 
-            SentRequests = await _context.FriendRequests
-                .Where(fr => fr.SenderId == currentUser.Id && !fr.IsAccepted)
+            FriendsWithIcons = friends.Select(f =>
+            {
+                var profile = friendProfiles.FirstOrDefault(p => p.UserId == f.Id);
+                return new FriendViewModel
+                {
+                    Id = f.Id,
+                    UserName = f.UserName,
+                    AvatarIcon = profile?.AvatarIcon ?? "default.png"
+                };
+            }).ToList();
+
+            // Przychodz¹ce zaproszenia
+            var incomingRequests = await _context.FriendRequests
+                .Where(fr => fr.ReceiverId == currentUserId && !fr.IsAccepted)
+                .Include(fr => fr.Sender)
+                .ToListAsync();
+
+            var incomingSenderIds = incomingRequests.Select(fr => fr.SenderId).ToList();
+            var incomingSenderProfiles = await _context.UserProfiles
+                .Where(up => incomingSenderIds.Contains(up.UserId))
+                .ToListAsync();
+
+            IncomingRequestsWithIcons = incomingRequests.Select(fr => new FriendRequestViewModel
+            {
+                RequestId = fr.Id,
+                UserId = fr.SenderId,
+                UserName = fr.Sender.UserName,
+                AvatarIcon = incomingSenderProfiles.FirstOrDefault(p => p.UserId == fr.SenderId)?.AvatarIcon ?? "default.png"
+            }).ToList();
+
+            // Wys³ane zaproszenia
+            var sentRequests = await _context.FriendRequests
+                .Where(fr => fr.SenderId == currentUserId && !fr.IsAccepted)
                 .Include(fr => fr.Receiver)
                 .ToListAsync();
 
+            var sentReceiverIds = sentRequests.Select(fr => fr.ReceiverId).ToList();
+            var sentReceiverProfiles = await _context.UserProfiles
+                .Where(up => sentReceiverIds.Contains(up.UserId))
+                .ToListAsync();
+
+            SentRequestsWithIcons = sentRequests.Select(fr => new FriendRequestViewModel
+            {
+                RequestId = fr.Id,
+                UserId = fr.ReceiverId,
+                UserName = fr.Receiver.UserName,
+                AvatarIcon = sentReceiverProfiles.FirstOrDefault(p => p.UserId == fr.ReceiverId)?.AvatarIcon ?? "default.png"
+            }).ToList();
         }
 
-        [BindProperty]
-        public string NewFriendUsername { get; set; }
-
-        [TempData]
-        public string? StatusMessage { get; set; }
 
         public async Task<IActionResult> OnPostSendRequestAsync()
         {
@@ -128,7 +193,6 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
                 return RedirectToPage();
             }
 
-            // --- Sprawdzenie blokad ---
             bool isBlocked = await _context.UserBlocks.AnyAsync(b =>
                 (b.BlockerId == currentUser.Id && b.BlockedId == targetUser.Id) ||
                 (b.BlockerId == targetUser.Id && b.BlockedId == currentUser.Id));
@@ -139,7 +203,6 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
                 return RedirectToPage();
             }
 
-            // Czy zaproszenie ju¿ istnieje?
             bool alreadyExists = await _context.FriendRequests.AnyAsync(fr =>
                 (fr.SenderId == currentUser.Id && fr.ReceiverId == targetUser.Id) ||
                 (fr.SenderId == targetUser.Id && fr.ReceiverId == currentUser.Id));
@@ -162,10 +225,6 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
             StatusMessage = "Zaproszenie wys³ane.";
             return RedirectToPage();
         }
-
-
-        public List<FriendRequest> SentRequests { get; set; } = new();
-        public List<FriendRequest> IncomingRequests { get; set; } = new();
 
         public async Task<IActionResult> OnPostAcceptRequestAsync(int requestId)
         {
@@ -196,6 +255,7 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostCancelRequestAsync(int requestId)
         {
+
             var request = await _context.FriendRequests.FindAsync(requestId);
             var currentUser = await _userManager.GetUserAsync(User);
 
@@ -205,13 +265,15 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
                 return RedirectToPage();
             }
 
+            
             _context.FriendRequests.Remove(request);
             await _context.SaveChangesAsync();
 
             StatusMessage = "Zaproszenie zosta³o cofniête.";
             return RedirectToPage();
-        }
 
+
+        }
 
         public async Task<IActionResult> OnPostRejectRequestAsync(int requestId)
         {
@@ -246,7 +308,6 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            // SprawdŸ czy u¿ytkownik ju¿ jest zablokowany
             var existingBlock = await _context.UserBlocks
                 .FirstOrDefaultAsync(b => b.BlockerId == currentUser.Id && b.BlockedId == userId);
 
@@ -256,7 +317,6 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            // Dodaj blokadê
             var userToBlock = await _userManager.FindByIdAsync(userId);
             if (userToBlock == null)
             {
@@ -273,7 +333,6 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
 
             _context.UserBlocks.Add(block);
 
-            // Usuñ znajomoœæ jeœli istnieje (tutaj wa¿ne: UserFriends, a nie Friends)
             var friendRelation = await _context.UserFriends
                 .FirstOrDefaultAsync(f =>
                     (f.UserId == currentUser.Id && f.FriendId == userId) ||
@@ -284,7 +343,6 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
                 _context.UserFriends.Remove(friendRelation);
             }
 
-            // Usuñ zaproszenia (przychodz¹ce i wys³ane)
             var friendRequests = await _context.FriendRequests
                 .Where(r => (r.SenderId == currentUser.Id && r.ReceiverId == userId) ||
                             (r.SenderId == userId && r.ReceiverId == currentUser.Id))
@@ -300,15 +358,5 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
             StatusMessage = $"Zablokowano u¿ytkownika {userToBlock.UserName}.";
             return RedirectToPage();
         }
-
-
-
-
-
-
-
     }
-
-
-
 }
