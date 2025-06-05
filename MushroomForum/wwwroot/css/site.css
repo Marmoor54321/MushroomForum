@@ -593,3 +593,11 @@ canvas {
     border: 2px solid #333;
     background-color: #a3d9a5;
 }
+
+/*profilowe*/
+.avatar-icon {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 50%;
+}

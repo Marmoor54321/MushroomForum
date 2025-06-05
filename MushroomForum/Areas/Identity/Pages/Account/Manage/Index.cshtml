@@ -7,24 +7,91 @@
 
 <h3>@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
+
+
+
+
 <div class="row">
     <div class="col-md-6">
         <form id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
             <div class="form-floating mb-3">
                 <input asp-for="Username" class="form-control" placeholder="Zmień nazwę użytkownika."/>
                 <label asp-for="Username" class="form-label"></label>
             </div>
-            @*<div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
+
+            @* Odkomentuj, jeśli chcesz dodać numer telefonu
+            <div class="form-floating mb-3">
+                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Wpisz numer telefonu."/>
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div> nie potrzebne ale może się przydać?*@
-            <button id="update-profile-button" type="submit" class="button-green">Save</button>
+            </div>
+            *@
+
+            <div class="form-group mb-3">
+                <label for="SelectedIcon">Wybierz ikonę profilową</label>
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    @foreach (var icon in Model.AvailableIcons)
+                    {
+                        <label class="text-center">
+                            <input type="radio" asp-for="Input.SelectedIcon" value="@icon.Value" hidden />
+                            <img src="@icon.Url"
+                                 alt="Avatar"
+                                 width="64"
+                                 height="64"
+                                 class="avatar-option @(Model.SelectedIcon == icon.Value ? "selected-avatar" : "")"
+                                 onclick="selectAvatar(this, '@icon.Value')" />
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <button id="update-profile-button" type="submit" class="btn btn-primary mt-3">Zapisz</button>
         </form>
+    </div>
+
+    <div class="col-md-6 text-center">
+        <label>Aktualny avatar:</label><br />
+        <img src="@(Model.AvailableIcons.FirstOrDefault(i => i.Value == Model.SelectedIcon)?.Url ?? "/icons/default.png")"
+             alt="Avatar podgląd"
+             width="128"
+             height="128"
+             class="rounded-circle border mt-2" />
+
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        function selectAvatar(img, value) {
+            // odznacz wszystkie
+            document.querySelectorAll('.avatar-option').forEach(e => e.classList.remove('selected-avatar'));
+
+            // zaznacz wybrany
+            img.classList.add('selected-avatar');
+
+            // ustaw wartość w ukrytym radiu
+            document.querySelectorAll('input[name="Input.SelectedIcon"]').forEach(input => {
+                input.checked = input.value === value;
+            });
+        }
+    </script>
+    <style>
+        .avatar-option {
+            border: 2px solid transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: border 0.2s ease;
+        }
+
+            .avatar-option:hover {
+                border-color: #aaa;
+            }
+
+        .selected-avatar {
+            border-color: #007bff !important;
+        }
+    </style>
 }
