@@ -1,6 +1,7 @@
 ﻿:root {
-    --primary-green: #303030;
-    --secondary-green: #505050;
+    --primary-green: #282828;
+    --secondary-green: #404040;
+    --third-green: #686868;
 }
 
 html {
@@ -575,7 +576,7 @@ body {
 }
 /*Listy rozwijane navbara*/
 .navbar-custom .dropdown-menu {
-    background-color: #4CAF50;
+    background-color: var(--third-green);
 }
 
     .navbar-custom .dropdown-menu .dropdown-item {
@@ -584,7 +585,7 @@ body {
 
         .navbar-custom .dropdown-menu .dropdown-item:hover,
         .navbar-custom .dropdown-menu .dropdown-item:focus {
-            background-color: #3e8e41;
+            background-color: var(--third-green);
             color: #000;
         }
 /*Gra*/

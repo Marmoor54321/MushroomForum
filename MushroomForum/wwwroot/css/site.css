@@ -1,6 +1,7 @@
 ﻿:root {
     --primary-green: #1dbb1d;
     --secondary-green: #1ad813;
+    --third-green: #3e8e41
 }
 
 html {
@@ -569,7 +570,7 @@ body {
 }
 /*Listy rozwijane navbara*/
 .navbar-custom .dropdown-menu {
-    background-color: #4CAF50;
+    background-color: var(--third-green);
 }
 
     .navbar-custom .dropdown-menu .dropdown-item {
@@ -578,7 +579,7 @@ body {
 
         .navbar-custom .dropdown-menu .dropdown-item:hover,
         .navbar-custom .dropdown-menu .dropdown-item:focus {
-            background-color: #3e8e41;
+            background-color: var(--third-green);
             color: #000;
         }
 /*Gra*/
