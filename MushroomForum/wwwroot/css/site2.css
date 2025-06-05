@@ -198,7 +198,8 @@ input.form-control {
 .nav-greeting {
     color: var(--textcolor);
     font-weight: normal;
-    padding-left: 0.5rem;
+    margin: 2px;
+    transition: text-shadow 0.3s ease, transform 0.2s ease;
 }
 
 .navbar-nav .nav-link,
