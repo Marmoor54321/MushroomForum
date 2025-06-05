@@ -600,3 +600,20 @@ canvas {
     object-fit: cover;
     border-radius: 50%;
 }
+
+.input-group .form-control {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.input-group .btn {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+}
+
+    .input-group .btn:hover {
+        background-color: var(--secondary-green);
+    }

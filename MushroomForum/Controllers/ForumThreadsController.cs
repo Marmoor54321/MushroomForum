@@ -21,7 +21,7 @@ namespace MushroomForum.Controllers
         }
 
         // GET: ForumThreads
-        public async Task<IActionResult> Index(int? pageNumber, string sortOrder, int? categoryId, int? pageSize)
+        public async Task<IActionResult> Index(int? pageNumber, string sortOrder, int? categoryId, int? pageSize, string searchTerm)
         {
             int currentPage = pageNumber ?? 1;
             int currentPageSize = pageSize ?? 10;
@@ -35,6 +35,14 @@ namespace MushroomForum.Controllers
             if (categoryId.HasValue && categoryId > 0)
             {
                 threadsQuery = threadsQuery.Where(t => t.CategoryId == categoryId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                threadsQuery = threadsQuery.Where(t =>
+                    t.Title.Contains(searchTerm) ||
+                    (t.User != null && t.User.UserName.Contains(searchTerm))
+                );
             }
 
             threadsQuery = sortOrder switch
@@ -61,7 +69,8 @@ namespace MushroomForum.Controllers
                 PageNumber = currentPage,
                 PageSize = currentPageSize,
                 TotalPages = totalPages,
-                TotalThreads = totalThreads
+                TotalThreads = totalThreads,
+                SearchTerm = searchTerm
             };
 
             return View(viewModel);
