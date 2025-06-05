@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
+using MushroomForum.Services.Service;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -117,6 +118,7 @@ namespace MushroomForum.Controllers
         }
 
         // POST: Posts/Like
+        // POST: Posts/Like
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -131,12 +133,41 @@ namespace MushroomForum.Controllers
 
             if (existingLike == null)
             {
-                _context.PostLikes.Add(new PostLike { IdentityUserId = userId, PostId = postId });
+                // Dodaj nowy PostLike (obecny stan)
+                _context.PostLikes.Add(new PostLike
+                {
+                    IdentityUserId = userId,
+                    PostId = postId
+                });
+
+                // Sprawdź, czy już kiedyś był lajk – jeśli nie, to przyznaj exp
+                bool hasLikedBefore = await _context.LikeHistories
+                    .AnyAsync(lh => lh.LikerId == userId && lh.PostId == postId);
+
+                if (!hasLikedBefore)
+                {
+                    // Dodaj wpis do LikeHistory
+                    _context.LikeHistories.Add(new LikeHistory
+                    {
+                        LikerId = userId,
+                        PostId = postId,
+                        LikedAt = DateTime.UtcNow
+                    });
+
+                    // Przyznaj 10 exp autorowi posta
+                    if (!string.IsNullOrEmpty(post.IdentityUserId))
+                    {
+                        var levelUpService = HttpContext.RequestServices.GetRequiredService<LevelUpService>();
+                        await levelUpService.GiveExperienceAsync(post.IdentityUserId, 10);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
             }
 
             return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
         }
+
 
         // POST: Posts/Unlike
         [HttpPost]
@@ -157,8 +188,11 @@ namespace MushroomForum.Controllers
                 await _context.SaveChangesAsync();
             }
 
+            // LikeHistory NIE jest ruszany – zostaje jako dowód, że exp był przyznany
+
             return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
         }
+
 
         // GET: Posts/Reply/5
         public IActionResult Reply(int postId)

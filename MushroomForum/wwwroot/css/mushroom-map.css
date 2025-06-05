@@ -1,0 +1,41 @@
+﻿#map {
+    height: 80vh;
+    width: 100%;
+}
+
+#map-container {
+    width: 600px;
+    height: 300px;
+    position: center;
+}
+
+.leaflet-popup-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.star-rating {
+    direction: rtl;
+    display: flex;
+    justify-content: start;
+}
+
+    .star-rating input {
+        display: none;
+    }
+
+    .star-rating label {
+        font-size: 1.5em;
+        color: #ccc;
+        cursor: pointer;
+        padding: 0 2px;
+    }
+
+    .star-rating input:checked ~ label {
+        color: gold;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: gold;
+    }

@@ -5,60 +5,7 @@
 }
 
 @section Styles {
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-
-        /* Zakładamy, że navbar zajmuje około 100px */
-        .note-container {
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 100px);
-            padding: 1rem 2rem;
-            box-sizing: border-box;
-        }
-
-        .note-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .note-content {
-            flex-grow: 1;
-            resize: none;
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
-            min-height: 150px;
-            max-height: 180px; /* krótsze pole tekstowe */
-        }
-
-        .note-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 0.5rem;
-        }
-
-        .left-actions label {
-            margin-bottom: 0;
-        }
-
-        .custom-file-input {
-            display: none;
-        }
-
-        .right-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        /* Zapobiega przesuwaniu */
-        form {
-            overflow: hidden;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/note-form.css" />
 }
 
 <form asp-action="Edit" enctype="multipart/form-data" class="note-container" method="post">
@@ -94,10 +41,5 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
-    <script>
-        // Kliknięcie etykiety otwiera input file
-        document.querySelector('label[for="fileInput"]')?.addEventListener('click', function () {
-            document.getElementById('fileInput')?.click();
-        });
-    </script>
+    <script src="~/js/note-form.js"></script>
 }

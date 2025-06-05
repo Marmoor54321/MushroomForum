@@ -1,11 +1,15 @@
 ﻿:root {
-    --primary-green: #1dbb1d;
-    --secondary-green: #1ad813;
+    --primary-green: #181818;
+    --secondary-green: #303030;
+    --third-green: #202020;
+    --sitebackround: #282828;
+    --sitecolumns: #383838;
+    --textcolor: white;
+    --headertextcolor: white;
 }
 
 html {
     font-size: 14px;
-    color-scheme: dark;
 }
 
 @media (min-width: 768px) {
@@ -25,20 +29,103 @@ html {
 
 body {
     margin-bottom: 60px;
-    background-color: #121212;
-    color: #ddd;
+    background-color: var(--sitebackround);
+    color: var(--textcolor);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.small-header {
-    font-size: 7px;
+p {
+    color: var(--textcolor);
 }
 
+a {
+    color: var(--textcolor);
+    text-decoration: underline;
+}
+
+    a:hover,
+    a:focus {
+        color: var(--textcolor);
+        text-decoration: underline;
+    }
+
+.link-default {
+    color: var(--textcolor);
+    text-decoration: none;
+    transition: text-decoration 0.2s ease;
+}
+
+    .link-default:hover {
+        text-decoration: underline;
+    }
+
+.textcolor {
+    color: var(--textcolor);
+}
+.table, .table td, .table th {
+    color: var(--textcolor);
+}
+.form-floating {
+    margin-bottom: 1.5rem;
+    background-color: var(--sitecolumns);
+    padding: 0.5rem;
+    border-radius: 6px;
+}
+
+    .form-floating .form-control {
+        border: 2px solid var(--sitecolumns);
+        background-color: var(--sitecolumns);
+        color: var(--textcolor);
+    }
+
+        .form-floating .form-control:focus {
+            border-color: var(--sitecolumns);
+            box-shadow: 0 0 5px var(--sitecolumns);
+            outline: none;
+        }
+
+    .form-floating label {
+        color: var(--textcolor) !important;
+    }
+.form-label {
+    color: var(--textcolor) !important;
+}
+input.form-control {
+    border: 2px solid var(--sitecolumns);
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+    input.form-control:focus {
+        border-color: var(--sitecolumns);
+        box-shadow: 0 0 5px var(--sitecolumns);
+        outline: none;
+    }
+.form-check-input {
+    background-color: var(--sitecolumns);
+    border: 1px solid var(--textcolor);
+}
+
+    .form-check-input:checked {
+        background-color: var(--primary-green);
+        border-color: var(--primary-green);
+    }
+
+.form-check-label {
+    color: var(--textcolor);
+}
+
+/*headery*/
+.small-header {
+    font-size: 20px;
+}
+/* Przyciski na stronie */
 .button-green {
     color: #FFFFFF !important;
-    background-color: var(--primary-green);
     border-radius: 4px;
     padding: 8px 16px;
+    text-decoration: none;
+    background-color: var(--primary-green);
     margin: 2px;
     border: none;
     outline: none;
@@ -46,13 +133,17 @@ body {
     transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
-    .button-green:hover {
-        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
-        transform: scale(1.05);
-    }
+.button-green:hover {
+    color: #FFFFFF !important;
+    text-decoration: none;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+}
+
+
 
 .nav-pills .nav-link {
-    color: #ddd;
+    color: black;
 }
 
 .nav-pills .nav-link-white {
@@ -63,7 +154,7 @@ body {
     background-color: var(--primary-green);
     color: white;
 }
-
+/* Navbar modyfikacje */
 .nav-link-white {
     color: white !important;
     font-weight: bold;
@@ -73,37 +164,63 @@ body {
 }
 
     .nav-link-white:hover {
+        color: #FFFFFF !important;
+        text-decoration: none;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         transform: scale(1.05);
     }
 
 .navbar-custom {
-    background-color: #1a1a1a;
+    background-color: var(--primary-green);
     border-bottom: 2px solid var(--primary-green);
     border-top: 2px solid var(--primary-green);
 }
 
 .nav-button-green {
-    background-color: var(--secondary-green);
     color: #FFFFFF !important;
+    border-radius: 4px;
+    padding: 8px 16px;
+    text-decoration: none;
+    background-color: var(--secondary-green);
+    margin: 2px;
+    outline: none;
+    border: none;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
     .nav-button-green:hover {
-        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+        color: #FFFFFF !important;
+        text-decoration: none;
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
         transform: scale(1.05);
     }
 
-.nav-greeting,
+.nav-greeting {
+    color: var(--textcolor);
+    font-weight: normal;
+    padding-left: 0.5rem;
+}
+
 .navbar-nav .nav-link,
 .navbar-nav .nav-greeting {
     color: white !important;
 }
 
-.navbar-brand {
+.navbar-brand { /*żeby MushroomForum się nie przesuwało*/
     white-space: nowrap;
     flex-shrink: 0;
 }
 
+.navbar .navbar-brand {
+    white-space: nowrap;
+    color: white !important;
+    flex-shrink: 0;
+    margin-right: 1rem;
+}
+
+
+
+/* Strona główna */
 .content-container {
     display: flex;
     justify-content: space-between;
@@ -112,59 +229,523 @@ body {
 }
 
 .left-column {
-    background-color: #1e1e1e;
-    color: #ddd;
+    flex: 1;
+    padding-right: 20px;
+    background-color: var(--sitecolumns);
+    padding: 10px;
+    border-radius: 8px;
+    margin-right: 10px;
 }
 
 .right-column {
-    background-color: #2a2a2a;
-    color: #ddd;
+    flex: 1;
+    background-color: var(--sitecolumns);
+    padding: 10px;
+    border-radius: 8px;
+    margin-left: 10px;
 }
 
-.welcome-card,
-.welcome-card.valid,
-.feature-card,
-.forum-threads-container,
-.thread-list-header,
-.thread-list-item,
-.thread-details-container,
-.thread-info,
-.post-item,
-.create-thread-container,
-.filter-form {
-    background-color: #1e1e1e;
-    color: #ddd;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-}
-
-.thread-column-title a {
-    color: #ccc;
-}
-
-    .thread-column-title a:hover {
-        color: var(--primary-green);
+    .right-column img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
     }
+
+.welcome-card {
+    background-color: var(--sitecolumns);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+    .welcome-card.valid {
+        background-color: var(--sitecolumns);
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .welcome-card h1 {
+        color: var(--headertextcolor);
+        margin-top: 0;
+        font-size: 2.5rem;
+    }
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.feature-card {
+    background-color: var(--sitecolumns);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 300px;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+    .feature-card:hover {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+    }
+
+    .feature-card h3 {
+        color: var(--headertextcolor);
+        margin-top: 0;
+    }
+
+    .feature-card p {
+        flex: 1;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card a.button-green {
+        margin-top: 0.75rem;
+        align-self: center;
+    }
+
+.forum-threads-container {
+    background-color: var(--sitecolumns);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+
+.forum-title {
+    color: var(--headertextcolor);
+    margin-bottom: 1.5rem;
+}
+
+.thread-list {
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.thread-list-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    background-color: var(--sitecolumns);
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    min-width: 600px;
+}
+
+.thread-list-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    background-color: var(--sitecolumns);
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    align-items: center;
+    min-width: 600px;
+}
+
+    .thread-list-item:hover {
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transform: translateY(-3px);
+    }
+
+.thread-column-title {
+    font-size: 1.1rem;
+    padding-right: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+    .thread-column-title a {
+        color: var(--textcolor);
+        text-decoration: none;
+    }
+
+        .thread-column-title a:hover {
+            color: var(--headertextcolor);
+            text-decoration: underline;
+        }
 
 .thread-column-author,
 .thread-column-category,
 .thread-column-date {
-    color: #bbb;
+    font-size: 0.9rem;
+    padding-right: 0.5rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--textcolor);
+}
+
+.filter-form {
+    background-color: var(--sitecolumns);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .pagination .page-link {
-    color: var(--primary-green);
+    color: var(--headertextcolor);
+    border-radius: 4px;
+    margin: 0 2px;
 }
 
 .pagination .page-item.active .page-link {
-    background-color: var(--primary-green);
-    border-color: var(--primary-green);
+    background-color: var(--sitecolumns);
+    border-color: var(--headertextcolor);
     color: white;
 }
 
 .pagination .page-item.disabled .page-link {
-    color: #555;
+    color: var(--primary-green);
 }
 
+.thread-details-container {
+    background-color: var(--sitecolumns);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+
+.thread-info {
+    background-color: var(--sitecolumns);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.post-list {
+    margin-bottom: 2rem;
+}
+
+.post-item {
+    background-color: var(--sitecolumns);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+    .post-item:hover {
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transform: translateY(-3px);
+    }
+
+.post-content {
+    margin-bottom: 0.5rem;
+}
+
+    .post-content p {
+        margin: 0 0 0.5rem 0;
+    }
+
+.post-media {
+    margin-top: 0.5rem;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+    .post-media img,
+    .post-media video {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+    }
+
 .post-meta {
-    color: #999;
+    font-size: 0.9rem;
+    color: var(--textcolor);
+    text-align: right;
+}
+
+.create-thread-container {
+    background-color: var(--sitecolumns);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+    .forum-threads-container,
+    .thread-details-container,
+    .create-thread-container {
+        padding: 1rem;
+    }
+
+    .thread-list-header,
+    .thread-list-item {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        padding: 0.5rem;
+        min-width: 500px;
+    }
+
+    .thread-column-title {
+        font-size: 0.95rem;
+    }
+
+    .thread-column-author,
+    .thread-column-category,
+    .thread-column-date {
+        font-size: 0.8rem;
+        color: var(--textcolor);
+    }
+
+    .post-item {
+        padding: 0.75rem;
+    }
+
+    .post-meta {
+        font-size: 0.8rem;
+    }
+
+    .filter-form {
+        padding: 0.75rem;
+    }
+
+    .welcome-card h1 {
+        font-size: 1.8rem;
+    }
+
+    .content-container {
+        flex-direction: column;
+        padding: 6px 12px;
+    }
+
+    .left-column,
+    .right-column {
+        margin: 0 0 15px 0;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-card {
+        min-height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .forum-threads-container,
+    .thread-details-container,
+    .create-thread-container {
+        padding: 0.75rem;
+    }
+
+    .thread-list-header,
+    .thread-list-item {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        padding: 0.4rem;
+        min-width: 400px;
+    }
+
+    .thread-column-title {
+        font-size: 0.9rem;
+    }
+
+    .thread-column-author,
+    .thread-column-category,
+    .thread-column-date {
+        font-size: 0.75rem;
+        color: var(--textcolor);
+    }
+
+    .post-item {
+        padding: 0.5rem;
+    }
+
+    .post-meta {
+        font-size: 0.75rem;
+    }
+
+    .filter-form .col-md-4 {
+        margin-bottom: 0.75rem;
+    }
+
+    .feature-card {
+        padding: 1rem;
+        min-height: 200px;
+    }
+
+    .welcome-card {
+        padding: 1rem;
+    }
+
+    .content-container {
+        padding: 10px;
+    }
+}
+
+.banner {
+    width: 100%;
+    height: 2.5cm;
+    background-color: var(--primary-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+    .banner img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-height: 100%;
+        min-width: 100%;
+        object-fit: cover;
+    }
+
+.banner-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 2.5vw;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    white-space: nowrap;
+}
+
+/*lista rozwijana*/
+.note-item {
+    max-width: 100% !important;
+}
+
+    .note-item .card-body {
+        width: 100%;
+        background: var(--third-green);
+        padding: 0.5rem 1rem;
+    }
+
+    .note-item .card-title {
+        flex-grow: 1;
+        margin-bottom: 0;
+    }
+
+    .note-item .dropdown-toggle {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        width: 30px;
+        height: 30px;
+        font-size: 24px;
+        line-height: 1;
+        color: var(--textcolor)
+    }
+
+.dropdown-toggle::after {
+    display: none !important;
+}
+/*Listy rozwijane navbara*/
+.navbar-custom .dropdown-menu {
+    background-color: var(--third-green);
+}
+
+    .navbar-custom .dropdown-menu .dropdown-item {
+        color: #FFFFFF;
+    }
+
+        .navbar-custom .dropdown-menu .dropdown-item:hover,
+        .navbar-custom .dropdown-menu .dropdown-item:focus {
+            background-color: var(--third-green);
+            color: var(--textcolor)
+        }
+
+/*profilowe*/
+.avatar-icon {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/*notatnik*/
+.note-card {
+    background-color: var(--sitecolumns);
+    max-width: 100%;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.note-header {
+    width: 100%;
+    background-color: var(--sitecolumns);
+    color: var(--textcolor);
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+}
+
+.dropdown-toggle-clean {
+    background-color: var(--sitecolumns);
+    border: none;
+    box-shadow: none;
+    font-size: 24px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    line-height: 1;
+}
+
+    .dropdown-toggle-clean:focus,
+    .dropdown-toggle-clean:active,
+    .dropdown-toggle-clean.show {
+        background-color: var(--sitecolumns) !important;
+        box-shadow: none;
+        outline: none;
+    }
+
+.dropdown-menu {
+    background-color: var(--third-green);
+    color: var(--textcolor);
+}
+
+    .dropdown-menu .dropdown-item {
+        color: var(--textxolor);
+    }
+
+        .dropdown-menu .dropdown-item:hover,
+        .dropdown-menu .dropdown-item:focus {
+            background-color: var(--secondary-green);
+            color: var(--textcolor);
+        }
+
+.modal-content {
+    background-color: var(--sitecolumns);
+    color: var(--textcolor);
+}
+
+.modal-header, .modal-footer {
+    border-color: rgba(0,0,0,0.1);
+}
+
+.btn-close {
+    filter: invert(0);
 }

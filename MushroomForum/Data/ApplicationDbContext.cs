@@ -29,6 +29,9 @@ namespace MushroomForum.Data
         public DbSet<UserFriend> UserFriends { get; set; }
         public DbSet<UserBlock> UserBlocks { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<AchievementType> AchievementTypes { get; set; }
+        public DbSet<UserAchievement> UserAchievements { get; set; }
+        public DbSet<LikeHistory> LikeHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -6,7 +6,9 @@
     @foreach (var quiz in Model)
     {
         <li>
-            <a asp-controller="Quiz" asp-action="Take" asp-route-id="@quiz.Id">@quiz.Tytul</a>
+            <a asp-controller="Quiz" asp-action="Take" asp-route-id="@quiz.Id" class="nav-link nav-button-green">
+                @quiz.Tytul
+            </a>
         </li>
     }
 </ul>

@@ -15,7 +15,7 @@
 <body>
     <header>
         <div class="banner">
-            <img src="/images/baner.png" alt="Baner forum z napisem MushroomForum" />
+            <img src="/images/baner-light.png" alt="Baner forum" />
             <div class="banner-text">
                 MushroomForum
             </div>
@@ -105,33 +105,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site-theme.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-<script>
-    var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
-    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
-        return new bootstrap.Dropdown(dropdownToggleEl)
-        function toggleTheme() {
-            const link = document.getElementById('themeStylesheet');
-            const currentHref = link.getAttribute('href');
-
-            if (currentHref.includes('site.css')) {
-                link.setAttribute('href', '/css/site2.css');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                link.setAttribute('href', '/css/site.css');
-                localStorage.setItem('theme', 'light');
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            const link = document.getElementById('themeStylesheet');
-
-            if (savedTheme === 'dark') {
-                link.setAttribute('href', '/css/site2.css');
-            }
-    });
-</script>
-
 </html>

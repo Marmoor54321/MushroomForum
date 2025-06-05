@@ -17,6 +17,7 @@ namespace MushroomForum.Models
 
         public int Level { get; set; } = 1;
         public int Experience { get; set; } = 0;
+        public int ExperienceToNextLevel => 10 * Level + (5 * (Level - 1));
 
         public string AvatarIcon { get; set; } = "default.png"; // np. nazwa pliku ikony
     }
