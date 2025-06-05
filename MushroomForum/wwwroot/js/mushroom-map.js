@@ -276,21 +276,35 @@ document.getElementById('filter').addEventListener('input', e => {
 
 renderList();
 function exportMapToPDF() {
-    domtoimage.toPng(document.getElementById("map"))
+    const mapElement = document.getElementById("map");
+    const pdfWidth = 842;  // A4 landscape width in points (72 dpi)
+    const pdfHeight = 595; // A4 landscape height in points
+
+    domtoimage.toPng(mapElement, { width: mapElement.scrollWidth, height: mapElement.scrollHeight })
         .then(function (dataUrl) {
             const pdf = new jspdf.jsPDF({
                 orientation: "landscape",
-                unit: "px",
-                format: [document.getElementById("map").offsetWidth, document.getElementById("map").offsetHeight]
+                unit: "pt", 
+                format: [pdfWidth, pdfHeight]
             });
 
-            pdf.addImage(dataUrl, 'PNG', 0, 0);
-            pdf.save("mapa.pdf");
+            const img = new Image();
+            img.onload = () => {
+                const imgWidth = pdfWidth;
+                const imgHeight = img.height * (pdfWidth / img.width);
+
+                const yOffset = (pdfHeight - imgHeight) / 2;
+
+                pdf.addImage(dataUrl, 'PNG', 0, yOffset, imgWidth, imgHeight);
+                pdf.save("mapa.pdf");
+            };
+            img.src = dataUrl;
         })
         .catch(function (error) {
             console.error("Błąd eksportu mapy:", error);
         });
 }
+
 
 document.getElementById("filter").addEventListener("input", () => {
     fetch(`/MushroomSpots/GetAll?ts=${Date.now()}`)
