@@ -84,6 +84,10 @@
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
 
     <script>
         const map = L.map('map').setView([52.0, 19.0], 6);
@@ -363,30 +367,23 @@
             });
 
             renderList();
-        function exportMapToPDF() {
-            setTimeout(() => {
-            html2canvas(document.getElementById("map-container"), { useCORS: true })
-                .then(canvas => {
-                const base64image = canvas.toDataURL("image/png");
+            function exportMapToPDF() {
+                domtoimage.toPng(document.getElementById("map"))
+                    .then(function (dataUrl) {
+                        const pdf = new jspdf.jsPDF({
+                            orientation: "landscape",
+                            unit: "px",
+                            format: [document.getElementById("map").offsetWidth, document.getElementById("map").offsetHeight]
+                        });
 
-                fetch("/MushroomSpots/ExportToPdf", {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ base64Image: base64image })
-                })
-                    .then(response => response.blob())
-                    .then(blob => {
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = "mapa.pdf";
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
+                        pdf.addImage(dataUrl, 'PNG', 0, 0);
+                        pdf.save("mapa.pdf");
+                    })
+                    .catch(function (error) {
+                        console.error("Błąd eksportu mapy:", error);
                     });
-            });
-            }, 50);
-        }
+            }
+
             document.getElementById("filter").addEventListener("input", () => {
                 fetch(`/MushroomSpots/GetAll?ts=${Date.now()}`)
                     .then(res => res.json())
