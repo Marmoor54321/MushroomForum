@@ -6,10 +6,6 @@
     <title>@ViewData["Title"] - MushroomForum</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <script>
-        const savedTheme = localStorage.getItem('theme');
-        document.write('<link id="themeStylesheet" rel="stylesheet" href="' + (savedTheme === 'dark' ? '/css/site2.css' : '/css/site.css') + '" asp-append-version="true" />');
-    </script>
     <link rel="stylesheet" href="~/MushroomForum.styles.css" asp-append-version="true" />
     @RenderSection("Styles", required: false)
 </head>
@@ -18,7 +14,7 @@
 <body>
     <header>
         <div class="banner">
-            <img src="/images/baner-light.png" alt="Baner forum" />
+            <img id="bannerImage" alt="Baner forum" />
             <div class="banner-text">
                 MushroomForum
             </div>

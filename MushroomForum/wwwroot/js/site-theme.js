@@ -3,7 +3,20 @@ var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-tog
 var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
     return new bootstrap.Dropdown(dropdownToggleEl);
 });
+(function () {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const stylesheetHref = savedTheme === 'dark' ? '/css/site2.css' : '/css/site.css';
+    const bannerSrc = savedTheme === 'dark' ? '/images/baner-dark.png' : '/images/baner-light.png';
 
+    document.write('<link id="themeStylesheet" rel="stylesheet" href="' + stylesheetHref + '" asp-append-version="true" />');
+    window.__bannerSrc = bannerSrc;
+})();
+document.addEventListener('DOMContentLoaded', () => {
+    const banner = document.getElementById('bannerImage');
+    if (banner && window.__bannerSrc) {
+        banner.src = window.__bannerSrc;
+    }
+});
 // Funkcja zmieniająca motyw
 function toggleTheme() {
     const link = document.getElementById('themeStylesheet');
@@ -42,4 +55,3 @@ function applySavedTheme() {
         }
     }
 }
-applySavedTheme();
