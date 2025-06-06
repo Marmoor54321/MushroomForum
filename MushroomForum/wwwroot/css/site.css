@@ -764,3 +764,57 @@ input.form-control {
     .input-group .btn:hover {
         background-color: var(--secondary-green);
     }
+
+.harvest-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.harvest-card {
+    background: var(--sitecolumns);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: calc(25% - 1.5rem);
+    min-width: 220px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.harvest-photo img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+.harvest-info {
+    padding: 1rem;
+    flex: 1;
+}
+
+.harvest-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1rem 1rem 1rem;
+}
+
+@media (max-width: 1200px) {
+    .mushroom-harvest .harvest-card {
+        width: calc(33.333% - 1.5rem);
+    }
+}
+
+@media (max-width: 900px) {
+    .mushroom-harvest .harvest-card {
+        width: calc(50% - 1.5rem);
+    }
+}
+
+@media (max-width: 600px) {
+    .mushroom-harvest .harvest-card {
+        width: 100%;
+    }
+}

@@ -32,6 +32,7 @@ namespace MushroomForum.Data
         public DbSet<AchievementType> AchievementTypes { get; set; }
         public DbSet<UserAchievement> UserAchievements { get; set; }
         public DbSet<LikeHistory> LikeHistories { get; set; }
+        public DbSet<MushroomHarvestEntry> MushroomHarvestEntries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
