@@ -7,8 +7,8 @@ var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
 // Funkcja zmieniająca motyw
 function toggleTheme() {
     const link = document.getElementById('themeStylesheet');
-    const currentHref = link.getAttribute('href');
     const bannerImg = document.querySelector('.banner img');
+    const currentHref = link.getAttribute('href');
 
     if (currentHref.includes('site.css') && !currentHref.includes('site2.css')) {
         link.setAttribute('href', '/css/site2.css');
@@ -24,3 +24,22 @@ function toggleTheme() {
         }
     }
 }
+// Funkcja ustawiająca motyw przy starcie strony
+function applySavedTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const link = document.getElementById('themeStylesheet');
+    const bannerImg = document.querySelector('.banner img');
+
+    if (savedTheme === 'dark') {
+        link.setAttribute('href', '/css/site2.css');
+        if (bannerImg) {
+            bannerImg.src = '/images/baner-dark.png';
+        }
+    } else {
+        link.setAttribute('href', '/css/site.css');
+        if (bannerImg) {
+            bannerImg.src = '/images/baner-light.png';
+        }
+    }
+}
+applySavedTheme();
