@@ -8,6 +8,7 @@ using QuestPDF.Infrastructure;
 using System.IO;
 using System;
 using QuestPDF.Helpers;
+using Microsoft.AspNetCore.Identity;
 
 namespace MushroomForum.Controllers
 {
@@ -15,15 +16,20 @@ namespace MushroomForum.Controllers
     public class MushroomSpotsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public MushroomSpotsController(ApplicationDbContext context)
+        public MushroomSpotsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
         {
-            var spots = await _context.MushroomSpots.ToListAsync();
+            var userId = _userManager.GetUserId(User);
+            var spots = await _context.MushroomSpots
+                .Where(s => s.UserId == userId)
+                .ToListAsync();
             return View(spots);
         }
 
@@ -32,6 +38,7 @@ namespace MushroomForum.Controllers
         {
             if (ModelState.IsValid)
             {
+                spot.UserId = _userManager.GetUserId(User);
                 _context.MushroomSpots.Add(spot);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -40,9 +47,12 @@ namespace MushroomForum.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetAll()
         {
+            var userId = _userManager.GetUserId(User);
             var spots = _context.MushroomSpots
+                .Where(s => s.UserId == userId)
                 .Select(s => new {
                     s.Id,
                     s.Name,
@@ -63,7 +73,9 @@ namespace MushroomForum.Controllers
             var spot = await _context.MushroomSpots.FindAsync(updatedSpot.Id);
             if (spot == null)
                 return NotFound();
-
+            var userId = _userManager.GetUserId(User);
+            if (spot.UserId != userId)
+                return Forbid();
             spot.Name = updatedSpot.Name;
             spot.Description = updatedSpot.Description;
             spot.Rating = updatedSpot.Rating;
@@ -79,7 +91,9 @@ namespace MushroomForum.Controllers
             var spot = await _context.MushroomSpots.FindAsync(id);
             if (spot == null)
                 return NotFound();
-
+            var userId = _userManager.GetUserId(User);
+            if (spot.UserId != userId)
+                return Forbid();
             _context.MushroomSpots.Remove(spot);
             await _context.SaveChangesAsync();
             return Ok();

@@ -14,9 +14,11 @@ using QuestPDF.Infrastructure;
 using QuestPDF.Drawing;
 using MushroomForum.Migrations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MushroomForum.Controllers
 {
+    [Authorize]
     public class MushroomNotesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -34,8 +36,14 @@ namespace MushroomForum.Controllers
         // GET: MushroomNotes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.MushroomNotes.ToListAsync());
+            var userId = _userManager.GetUserId(User);
+            var userNotes = await _context.MushroomNotes
+                .Where(n => n.UserId == userId)
+                .ToListAsync();
+
+            return View(userNotes);
         }
+
 
         // GET: MushroomNotes/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -45,8 +53,9 @@ namespace MushroomForum.Controllers
                 return NotFound();
             }
 
+            var userId = _userManager.GetUserId(User);
             var mushroomNotes = await _context.MushroomNotes
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
             if (mushroomNotes == null)
             {
                 return NotFound();
@@ -89,6 +98,7 @@ namespace MushroomForum.Controllers
 
                     mushroomNotes.PhotoUrl = "/uploads/" + fileName;
                 }
+                mushroomNotes.UserId = _userManager.GetUserId(User);
 
                 _context.Add(mushroomNotes);
                 await _context.SaveChangesAsync();
@@ -97,9 +107,7 @@ namespace MushroomForum.Controllers
 
             return View(mushroomNotes);
         }
-
-
-
+        
         // GET: MushroomNotes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -108,7 +116,9 @@ namespace MushroomForum.Controllers
                 return NotFound();
             }
 
-            var mushroomNotes = await _context.MushroomNotes.FindAsync(id);
+            var userId = _userManager.GetUserId(User);
+            var mushroomNotes = await _context.MushroomNotes
+                .FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
             if (mushroomNotes == null)
             {
                 return NotFound();
@@ -126,7 +136,13 @@ namespace MushroomForum.Controllers
             if (!ModelState.IsValid)
                 return View(updatedNote);
 
-            var existingNote = await _context.MushroomNotes.FindAsync(id);
+            var userId = _userManager.GetUserId(User);
+            var existingNote = await _context.MushroomNotes
+                .FirstOrDefaultAsync(n => n.Id == id && n.UserId == userId);
+
+            if (existingNote == null)
+                return NotFound();
+
             if (existingNote == null)
                 return NotFound();
 
@@ -173,8 +189,9 @@ namespace MushroomForum.Controllers
                 return NotFound();
             }
 
+            var userId = _userManager.GetUserId(User);
             var mushroomNotes = await _context.MushroomNotes
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
             if (mushroomNotes == null)
             {
                 return NotFound();
@@ -188,7 +205,13 @@ namespace MushroomForum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var mushroomNotes = await _context.MushroomNotes.FindAsync(id);
+            var userId = _userManager.GetUserId(User);
+            var mushroomNotes = await _context.MushroomNotes
+                .FirstOrDefaultAsync(n => n.Id == id && n.UserId == userId);
+
+            if (mushroomNotes == null)
+                return NotFound();
+
             if (mushroomNotes != null)
             {
                 _context.MushroomNotes.Remove(mushroomNotes);
@@ -204,7 +227,13 @@ namespace MushroomForum.Controllers
         }
         public IActionResult DownloadPdf(int id)
         {
-            var note = _context.MushroomNotes.FirstOrDefault(n => n.Id == id);
+            var userId = _userManager.GetUserId(User);
+            var note = _context.MushroomNotes
+                .FirstOrDefault(n => n.Id == id && n.UserId == userId);
+
+            if (note == null)
+                return NotFound();
+
             if (note == null) return NotFound();
 
             var document = Document.Create(container =>
@@ -231,19 +260,6 @@ namespace MushroomForum.Controllers
 
             var pdf = document.GeneratePdf();
             return File(pdf, "application/pdf", "notatka.pdf");
-        }
-        public async Task<IActionResult> Test()
-        {
-            var note = new MushroomNotes
-            {
-                Title = "Testowa",
-                Content = "Z kontrolera",
-                CreateDate = DateTime.Now
-            };
-
-            _context.Add(note);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
         }
 
     }

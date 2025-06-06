@@ -10,7 +10,8 @@ namespace MushroomForum.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string? UserId { get; set; }
-        public IdentityUser User { get; set; }
+        [ForeignKey("UserId")]
+        public IdentityUser? User { get; set; }
 
         [Required]
         public string Title { get; set; }

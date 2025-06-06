@@ -46,7 +46,7 @@ namespace MushroomForum.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AchievementTypes");
+                    b.ToTable("AchievementTypes", (string)null);
 
                     b.HasData(
                         new
@@ -109,7 +109,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("FriendRequests");
+                    b.ToTable("FriendRequests", (string)null);
                 });
 
             modelBuilder.Entity("LikeHistory", b =>
@@ -136,7 +136,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("LikeHistories");
+                    b.ToTable("LikeHistories", (string)null);
                 });
 
             modelBuilder.Entity("Media", b =>
@@ -164,7 +164,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Media");
+                    b.ToTable("Media", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -391,7 +391,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Answers");
+                    b.ToTable("Answers", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.Category", b =>
@@ -408,7 +408,7 @@ namespace MushroomForum.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.Ciekawostka", b =>
@@ -429,7 +429,7 @@ namespace MushroomForum.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ciekawostki");
+                    b.ToTable("Ciekawostki", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.ForumThread", b =>
@@ -465,7 +465,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("IdentityUserId");
 
-                    b.ToTable("ForumThreads");
+                    b.ToTable("ForumThreads", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.MushroomHarvestEntry", b =>
@@ -500,7 +500,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("MushroomHarvestEntries");
+                    b.ToTable("MushroomHarvestEntries", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.MushroomNotes", b =>
@@ -532,7 +532,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("MushroomNotes");
+                    b.ToTable("MushroomNotes", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.MushroomSpot", b =>
@@ -572,7 +572,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("MushroomSpots");
+                    b.ToTable("MushroomSpots", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.Post", b =>
@@ -608,7 +608,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("ParentPostId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.PostLike", b =>
@@ -633,7 +633,7 @@ namespace MushroomForum.Migrations
                     b.HasIndex("IdentityUserId", "PostId")
                         .IsUnique();
 
-                    b.ToTable("PostLikes");
+                    b.ToTable("PostLikes", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.Question", b =>
@@ -655,7 +655,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.Quiz", b =>
@@ -672,7 +672,7 @@ namespace MushroomForum.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Quizzes");
+                    b.ToTable("Quizzes", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.ThreadLike", b =>
@@ -697,7 +697,7 @@ namespace MushroomForum.Migrations
                     b.HasIndex("IdentityUserId", "ForumThreadId")
                         .IsUnique();
 
-                    b.ToTable("ThreadLikes");
+                    b.ToTable("ThreadLikes", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.UserExperience", b =>
@@ -719,7 +719,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserExperiences");
+                    b.ToTable("UserExperiences", (string)null);
                 });
 
             modelBuilder.Entity("MushroomForum.Models.UserProfile", b =>
@@ -748,7 +748,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserProfiles");
+                    b.ToTable("UserProfiles", (string)null);
                 });
 
             modelBuilder.Entity("UserAchievement", b =>
@@ -775,7 +775,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserAchievements");
+                    b.ToTable("UserAchievements", (string)null);
                 });
 
             modelBuilder.Entity("UserBlock", b =>
@@ -803,7 +803,7 @@ namespace MushroomForum.Migrations
 
                     b.HasIndex("BlockerId");
 
-                    b.ToTable("UserBlocks");
+                    b.ToTable("UserBlocks", (string)null);
                 });
 
             modelBuilder.Entity("UserFriend", b =>
@@ -827,7 +827,7 @@ namespace MushroomForum.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserFriends");
+                    b.ToTable("UserFriends", (string)null);
                 });
 
             modelBuilder.Entity("FriendRequest", b =>
