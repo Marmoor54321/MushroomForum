@@ -105,7 +105,44 @@ namespace MushroomForum.Data
                 .WithMany()
                 .HasForeignKey(ub => ub.BlockedId)
                 .OnDelete(DeleteBehavior.Restrict);
-   
+
+            modelBuilder.Entity<AchievementType>().HasData(
+                new AchievementType
+                {
+                    Id = 1,
+                    Name = "FirstPost",
+                    Description = "Dodaj pierwszy post na forum",
+                    ExperienceReward = 10,
+                    UnlocksAvatarIcon = null
+                },
+                new AchievementType
+                {
+                    Id = 2,
+                    Name = "FirstLikeReceived",
+                    Description = "Otrzymaj pierwsze polubienie pod swoim postem",
+                    ExperienceReward = 10,
+                    UnlocksAvatarIcon = null
+                },
+                new AchievementType
+                {
+                    Id = 3,
+                    Name = "Quiz5Points",
+                    Description = "Zdobądź 5 punktów w quizie",
+                    ExperienceReward = 40,
+                    UnlocksAvatarIcon = "Quiz5Points.png"
+                },
+                new AchievementType
+                {
+                    Id = 4,
+                    Name = "FirstFriend",
+                    Description = "Dodaj pierwszego znajomego",
+                    ExperienceReward = 40,
+                    UnlocksAvatarIcon = "FirstFriend.png"
+                }
+
+            );
+
+
         }
         public static void Seed(ApplicationDbContext context)
         {

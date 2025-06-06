@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
+using MushroomForum.Services;
 using MushroomForum.Services.Service;
 using System.Linq;
 using System.Security.Claims;
@@ -16,12 +17,15 @@ namespace MushroomForum.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly AchievementService _achievementService;
 
-        public PostsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public PostsController(ApplicationDbContext context, UserManager<IdentityUser> userManager, AchievementService achievementService)
         {
             _context = context;
-            _userManager = userManager; //na razie nie używane
+            _userManager = userManager;
+            _achievementService = achievementService;
         }
+
 
         // GET: Posts
         public async Task<IActionResult> Index()
@@ -111,6 +115,9 @@ namespace MushroomForum.Controllers
                     Type = mediaFile.ContentType.StartsWith("image") ? "image" : "video"
                 });
             }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            await _achievementService.GrantAchievementIfNotExistsAsync(userId, "FirstPost");
 
             _context.Add(post);
             await _context.SaveChangesAsync();
@@ -124,6 +131,7 @@ namespace MushroomForum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Like(int postId)
         {
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var post = await _context.Posts.FirstOrDefaultAsync(p => p.PostId == postId);
             if (post == null) return NotFound();
