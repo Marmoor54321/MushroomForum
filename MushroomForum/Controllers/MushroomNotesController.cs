@@ -13,6 +13,7 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using QuestPDF.Drawing;
 using MushroomForum.Migrations;
+using Microsoft.AspNetCore.Identity;
 
 namespace MushroomForum.Controllers
 {
@@ -20,12 +21,14 @@ namespace MushroomForum.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<IdentityUser> _userManager;
 
 
-        public MushroomNotesController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public MushroomNotesController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
 
         // GET: MushroomNotes
