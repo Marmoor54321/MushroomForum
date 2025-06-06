@@ -4,11 +4,10 @@
 
 @{
     var greetings = new[] { "niezły z Ciebie fungi ;D", "pora na grzybobranie!", "dobrze, że jesteś <3", "wiesz co u Agatki?",
-    "uważaj na czarcie kręgi!!!", "kanie zarezerwowane?", "co na słuchawkach? Kanie?", "uważaj na cordycepsy D:", 
+    "uważaj na czarcie kręgi!!!", "kanie zarezerwowane?", "uważaj na cordycepsy D:", 
     "wykręcasz, czy obcinasz?", "Żwirek kręci z Muchomorkiem!", "jedz grzyby będziesz wielki", "idziemy na grzyby?",
     "jesteś zagrzybisty :P", "tutaj żdnych nie ma...", "lepszy rydz niż nic ;)",
-    "potrzebny Ci power-up?", "zaczyna się sezon", "gdzie jeden grzyb, tam i drugi", "im dalej w las, tym więcej grzybów",
-    "nigdy nie zdradzaj swoich miejscówek"};
+    "potrzebny Ci power-up?", "zaczyna się sezon"};
     var random = new Random();
     var selectedGreeting = greetings[random.Next(greetings.Length)];
 }
@@ -23,9 +22,10 @@
 
     @if (user != null)
     {
-        <span class="nav-greeting">
-            Witaj, <strong>@user.UserName</strong>! @selectedGreeting
-        </span>
+        <li class="nav-item nav-greeting">
+            <div class="nav-link">Witaj, <strong>@user.UserName</strong>! @selectedGreeting</div>
+        </li>
+
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button type="submit" class="nav-link nav-button-green">Wyloguj się</button>

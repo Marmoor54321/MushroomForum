@@ -13,25 +13,41 @@
         </div>
     }
     <form asp-action="Index" method="get" class="filter-form mb-3">
-        <div class="row">
-            <div class="col-md-4">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label for="searchTerm" class="form-label">Szukaj</label>
+                <div class="input-group">
+                    <input type="text" id="searchTerm" name="searchTerm" value="@Model.SearchTerm"
+                           placeholder="Nazwa wątku lub użytkownik"
+                           class="form-control" />
+                    <button type="submit" class="btn btn-outline-secondary">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-3">
                 <label for="sortOrder" class="form-label">Sortuj według daty</label>
                 <select name="sortOrder" id="sortOrder" class="form-select" onchange="this.form.submit()">
                     <option value="newest" selected="@(Model.SortOrder == "newest")">Najnowsze</option>
                     <option value="oldest" selected="@(Model.SortOrder == "oldest")">Najstarsze</option>
                 </select>
             </div>
-            <div class="col-md-4">
+
+            <div class="col-md-3">
                 <label for="categoryId" class="form-label">Kategoria</label>
                 <select name="categoryId" id="categoryId" class="form-select" onchange="this.form.submit()">
                     <option value="">Wszystkie kategorie</option>
                     @foreach (var category in Model.Categories)
                     {
-                        <option value="@category.CategoryId" selected="@(Model.SelectedCategoryId == category.CategoryId)">@category.Name</option>
+                        <option value="@category.CategoryId" selected="@(Model.SelectedCategoryId == category.CategoryId)">
+                            @category.Name
+                        </option>
                     }
                 </select>
             </div>
-            <div class="col-md-4">
+
+            <div class="col-md-3">
                 <label for="pageSize" class="form-label">Wątków na stronę</label>
                 <select name="pageSize" id="pageSize" class="form-select" onchange="this.form.submit()">
                     <option value="5" selected="@(Model.PageSize == 5)">5</option>
@@ -40,7 +56,6 @@
                 </select>
             </div>
         </div>
-        <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
     </form>
 
     @if (Model.Threads.Any())
@@ -68,16 +83,34 @@
         <nav aria-label="Paginacja wątków">
             <ul class="pagination justify-content-center">
                 <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-sortOrder="@Model.SortOrder" asp-route-categoryId="@Model.SelectedCategoryId" asp-route-pageSize="@Model.PageSize">Poprzednia</a>
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(Model.PageNumber - 1)"
+                       asp-route-sortOrder="@Model.SortOrder"
+                       asp-route-categoryId="@Model.SelectedCategoryId"
+                       asp-route-pageSize="@Model.PageSize"
+                       asp-route-searchTerm="@Model.SearchTerm">Poprzednia</a>
                 </li>
                 @for (int i = 1; i <= Model.TotalPages; i++)
                 {
                     <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-sortOrder="@Model.SortOrder" asp-route-categoryId="@Model.SelectedCategoryId" asp-route-pageSize="@Model.PageSize">@i</a>
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pageNumber="@i"
+                           asp-route-sortOrder="@Model.SortOrder"
+                           asp-route-categoryId="@Model.SelectedCategoryId"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-route-searchTerm="@Model.SearchTerm">@i</a>
                     </li>
                 }
                 <li class="page-item @(Model.PageNumber >= Model.TotalPages ? "disabled" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-sortOrder="@Model.SortOrder" asp-route-categoryId="@Model.SelectedCategoryId" asp-route-pageSize="@Model.PageSize">Następna</a>
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(Model.PageNumber + 1)"
+                       asp-route-sortOrder="@Model.SortOrder"
+                       asp-route-categoryId="@Model.SelectedCategoryId"
+                       asp-route-pageSize="@Model.PageSize"
+                       asp-route-searchTerm="@Model.SearchTerm">Następna</a>
                 </li>
             </ul>
         </nav>

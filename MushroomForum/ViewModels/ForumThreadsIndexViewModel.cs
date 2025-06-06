@@ -12,5 +12,6 @@ namespace MushroomForum.ViewModels
         public int PageSize { get; set; }
         public int TotalPages { get; set; }
         public int TotalThreads { get; set; }
+        public string SearchTerm { get; set; }
     }
 }
