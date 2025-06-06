@@ -20,12 +20,14 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly FriendService _friendService;
+        private readonly AchievementService _achievementService;
 
-        public FriendsModel(UserManager<IdentityUser> userManager, ApplicationDbContext context, FriendService friendService)
+        public FriendsModel(UserManager<IdentityUser> userManager, ApplicationDbContext context, FriendService friendService, AchievementService achievementService)
         {
             _userManager = userManager;
             _context = context;
             _friendService = friendService;
+            _achievementService = achievementService;
         }
 
         public class FriendViewModel
@@ -129,6 +131,10 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
                     AvatarIcon = profile?.AvatarIcon ?? "default.png"
                 };
             }).ToList();
+            if (friendIds.Count > 0)
+            {
+                await _achievementService.GrantAchievementIfNotExistsAsync(currentUser.Id, "FirstFriend");
+            }
 
             // Przychodz¹ce zaproszenia
             var incomingRequests = await _context.FriendRequests
@@ -246,7 +252,8 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
                 UserId = request.SenderId,
                 FriendId = request.ReceiverId
             });
-
+            await _achievementService.GrantAchievementIfNotExistsAsync(currentUser.Id, "FirstFriend");
+            await _achievementService.GrantAchievementIfNotExistsAsync(request.SenderId, "FirstFriend");
             await _context.SaveChangesAsync();
 
             StatusMessage = "Dodano znajomego!";

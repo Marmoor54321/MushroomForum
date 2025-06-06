@@ -38,8 +38,9 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
             _context = context;
         }
 
-
+        
         public List<IconItem> AvailableIcons { get; set; } = new();
+        public List<IconItem> AchievementIcons { get; set; } = new();
         public string SelectedIcon { get; set; }
 
         /// <summary>
@@ -124,10 +125,27 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
 
             AvailableIcons = new List<IconItem>
             {
+                new IconItem { Value = "default.png", Url = "/icons/default.png" },
                 new IconItem { Value = "icon1.png", Url = "/icons/icon1.png" },
                 new IconItem { Value = "icon2.png", Url = "/icons/icon2.png" },
-                new IconItem { Value = "icon3.png", Url = "/icons/icon3.png" }
+                new IconItem { Value = "icon3.png", Url = "/icons/icon3.png" },
+                new IconItem { Value = "icon4.png", Url = "/icons/icon4.png" }
             };
+
+            if (profile.Level >= 5)
+            {
+                AvailableIcons.Add(new IconItem { Value = "icon5.png", Url = "/icons/icon5.png" });
+            }
+            var achievementIcons = await _context.UserAchievements
+            .Where(ua => ua.UserId == user.Id && ua.AchievementType.UnlocksAvatarIcon != null && ua.AchievementType.UnlocksAvatarIcon != "")
+            .Select(ua => new IconItem
+            {
+                Value = ua.AchievementType.UnlocksAvatarIcon, // np. "achievement_like.png" — używasz pole AvatarIconUrl
+                Url = "/icons/" + ua.AchievementType.UnlocksAvatarIcon
+            })
+            .ToListAsync();
+
+            AvailableIcons.AddRange(achievementIcons);
 
             await LoadAsync(user);
 

@@ -17,7 +17,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MushroomForum.Data;
+using MushroomForum.Models;
 
 namespace MushroomForum.Areas.Identity.Pages.Account
 {
@@ -29,13 +32,15 @@ namespace MushroomForum.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext context) 
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -43,7 +48,9 @@ namespace MushroomForum.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -128,6 +135,13 @@ namespace MushroomForum.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
+                    var profile = await _context.UserProfiles.FirstOrDefaultAsync(p => p.UserId == userId);
+                    if (profile == null)
+                    {
+                        profile = new UserProfile { UserId = userId };
+                        _context.UserProfiles.Add(profile);
+                        await _context.SaveChangesAsync();
+                    }
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
