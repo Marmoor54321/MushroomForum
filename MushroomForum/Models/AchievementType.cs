@@ -6,11 +6,11 @@ public class AchievementType
     public int Id { get; set; }
 
     [Required]
-    public string Name { get; set; } // np. "Pierwszy post"
+    public string Name { get; set; } 
 
     public string Description { get; set; }
 
     public int ExperienceReward { get; set; } = 0;
 
-    public string? UnlocksAvatarIcon { get; set; } // np. "mushroom_hat.png"
+    public string? UnlocksAvatarIcon { get; set; } 
 }
