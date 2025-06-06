@@ -24,13 +24,3 @@ function toggleTheme() {
         }
     }
 }
-
-// Po załadowaniu strony ustawiamy zapamiętany motyw
-window.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    const link = document.getElementById('themeStylesheet');
-
-    if (savedTheme === 'dark') {
-        link.setAttribute('href', '/css/site2.css');
-    }
-});
