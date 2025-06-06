@@ -107,6 +107,19 @@ namespace MushroomForum.Data
                 .HasForeignKey(ub => ub.BlockedId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<MushroomNotes>()
+                .HasOne(m => m.User)
+                .WithMany() 
+                .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MushroomSpot>()
+                .HasOne(ms => ms.User)
+                .WithMany()
+                .HasForeignKey(ms => ms.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
             modelBuilder.Entity<AchievementType>().HasData(
                 new AchievementType
                 {
