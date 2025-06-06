@@ -66,10 +66,10 @@ a {
     color: var(--textcolor);
 }
 .form-floating {
-    margin-bottom: 1.5rem;
-    background-color: var(--sitecolumns);
-    padding: 0.5rem;
-    border-radius: 6px;
+    background-color: var(--sitecolumns) !important;
+    border: 2px solid var(--sitebackround) !important;
+    color: var(--textcolor) !important;
+    box-shadow: none !important;
 }
 
     .form-floating .form-control {
@@ -79,9 +79,10 @@ a {
     }
 
         .form-floating .form-control:focus {
-            border-color: var(--sitecolumns);
-            box-shadow: 0 0 5px var(--sitecolumns);
-            outline: none;
+            background-color: var(--sitecolumns) !important;
+            border-color: var(--sitebackround) !important;
+            box-shadow: 0 0 4px var(--sitebackround) !important;
+            outline: none !important;
         }
 
     .form-floating label {
@@ -94,19 +95,23 @@ a {
 input.form-control,
 select.form-select,
 textarea.form-control {
-    background-color: var(--sitebackround);
-    border: 2px solid var(--sitecolumns);
-    color: var(--textcolor);
+    background-color: var(--sitecolumns) !important;
+    color: var(--textcolor) !important;
+    border: 2px solid var(--sitebackround) !important;
     border-radius: 4px;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
     input.form-control:focus,
     select.form-select:focus,
     textarea.form-control:focus {
-        border-color: var(--third-green);
-        box-shadow: 0 0 5px var(--third-green);
-        outline: none;
+        border-color: var(--sitebackround) !important;
+        background-color: var(--sitecolumns) !important;
+        color: var(--textcolor) !important;
+        box-shadow: 0 0 4px var(--sitebackround) !important;
+        outline: none !important;
     }
 .form-check-input {
     background-color: var(--sitecolumns);

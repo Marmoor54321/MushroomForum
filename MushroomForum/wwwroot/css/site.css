@@ -33,9 +33,11 @@ body {
     color: var(--textcolor);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
 p {
     color: var(--textcolor);
 }
+
 a {
     color: var(--textcolor);
     text-decoration: underline;
@@ -46,8 +48,9 @@ a {
         color: var(--textcolor);
         text-decoration: underline;
     }
+
 .link-default {
-    color: var(--textcolor); 
+    color: var(--textcolor);
     text-decoration: none;
     transition: text-decoration 0.2s ease;
 }
@@ -55,17 +58,20 @@ a {
     .link-default:hover {
         text-decoration: underline;
     }
+
 .textcolor {
-    color: var(--textcolor); 
+    color: var(--textcolor);
 }
+
 .table, .table td, .table th {
     color: var(--textcolor);
 }
+
 .form-floating {
-    margin-bottom: 1.5rem;
-    background-color: var(--sitecolumns);
-    padding: 0.5rem;
-    border-radius: 6px;
+    background-color: var(--sitecolumns) !important;
+    border: 2px solid var(--sitebackround) !important;
+    color: var(--textcolor) !important;
+    box-shadow: none !important;
 }
 
     .form-floating .form-control {
@@ -75,9 +81,10 @@ a {
     }
 
         .form-floating .form-control:focus {
-            border-color: var(--sitecolumns);
-            box-shadow: 0 0 5px var(--sitecolumns);
-            outline: none;
+            background-color: var(--sitecolumns) !important;
+            border-color: var(--sitebackround) !important;
+            box-shadow: 0 0 4px var(--sitebackround) !important;
+            outline: none !important;
         }
 
     .form-floating label {
@@ -91,20 +98,25 @@ a {
 input.form-control,
 select.form-select,
 textarea.form-control {
-    background-color: var(--sitebackround);
-    border: 2px solid var(--sitecolumns);
-    color: var(--textcolor);
+    background-color: var(--sitecolumns) !important;
+    color: var(--textcolor) !important;
+    border: 2px solid var(--sitebackround) !important;
     border-radius: 4px;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
     input.form-control:focus,
     select.form-select:focus,
     textarea.form-control:focus {
-        border-color: var(--third-green);
-        box-shadow: 0 0 5px var(--third-green);
-        outline: none;
+        border-color: var(--sitebackround) !important;
+        background-color: var(--sitecolumns) !important;
+        color: var(--textcolor) !important;
+        box-shadow: 0 0 4px var(--sitebackround) !important;
+        outline: none !important;
     }
+
 .form-check-input {
     background-color: var(--sitecolumns);
     border: 1px solid var(--textcolor);
@@ -118,12 +130,11 @@ textarea.form-control {
 .form-check-label {
     color: var(--textcolor);
 }
+
 /*headery*/
-
 .small-header {
-    font-size: 7px;
+    font-size: 20px;
 }
-
 /* Przyciski na stronie */
 .button-green {
     color: #FFFFFF !important;
@@ -150,6 +161,7 @@ textarea.form-control {
 .nav-pills .nav-link {
     color: black;
 }
+
 .nav-pills .nav-link-white {
     color: white !important;
 }
@@ -198,6 +210,7 @@ textarea.form-control {
         box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
         transform: scale(1.05);
     }
+
 .nav-greeting {
     color: var(--textcolor);
     font-weight: normal;
@@ -210,13 +223,14 @@ textarea.form-control {
     color: white !important;
 }
 
-.navbar-brand {/*żeby MushroomForum się nie przesuwało*/
-    white-space: nowrap; 
-    flex-shrink: 0; 
+.navbar-brand { /*żeby MushroomForum się nie przesuwało*/
+    white-space: nowrap;
+    flex-shrink: 0;
 }
+
 .navbar .navbar-brand {
     white-space: nowrap;
-    color: white !important; 
+    color: white !important;
     flex-shrink: 0;
     margin-right: 1rem;
 }
@@ -419,6 +433,7 @@ textarea.form-control {
 .pagination .page-item.disabled .page-link {
     color: var(--textcolor);
 }
+
 .pagination .page-item:not(.disabled) .page-link {
     color: var(--textcolor);
     background-color: var(--sitecolumns);
@@ -427,12 +442,13 @@ textarea.form-control {
 
 
 .pagination .page-item.disabled .page-link {
-    color: var(--textcolor);
+    color: vvar(--textcolor);
     background-color: transparent;
     border-color: var(--headertextcolor);
     cursor: not-allowed;
     opacity: 0.6;
 }
+
 .thread-details-container {
     background-color: var(--sitecolumns);
     border-radius: 8px;
@@ -625,6 +641,7 @@ textarea.form-control {
     overflow: hidden;
     position: relative;
 }
+
     .banner img {
         position: absolute;
         top: 50%;
@@ -654,7 +671,7 @@ textarea.form-control {
 
     .note-item .card-body {
         width: 100%;
-        background: var(--third-green));
+        background: var(--third-green);
         padding: 0.5rem 1rem;
     }
 
@@ -674,6 +691,7 @@ textarea.form-control {
         line-height: 1;
         color: var(--textcolor)
     }
+
 .dropdown-toggle::after {
     display: none !important;
 }
@@ -763,24 +781,6 @@ textarea.form-control {
 .btn-close {
     filter: invert(0);
 }
-}
-
-.input-group .form-control {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-}
-
-.input-group .btn {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    background-color: var(--primary-green);
-    color: white;
-    border: none;
-}
-
-    .input-group .btn:hover {
-        background-color: var(--secondary-green);
-    }
 
 .harvest-grid {
     display: flex;
@@ -819,7 +819,7 @@ textarea.form-control {
 }
 
 @media (max-width: 1200px) {
-    .mushroom-harvest .harvest-card 
+    .mushroom-harvest .harvest-card {
         width: calc(33.333% - 1.5rem);
     }
 }
