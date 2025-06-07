@@ -1,22 +1,20 @@
-using System;
-using System.IO;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
 using MushroomForum.ViewModels;
+using QuestPDF.Helpers;
 
 namespace MushroomForum.Controllers
 {
-    public class MushroomHarvestController : Controller
+    public class MushroomWikiController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _env;
 
-        public MushroomHarvestController(ApplicationDbContext context, IWebHostEnvironment env)
+        public MushroomWikiController(ApplicationDbContext context, IWebHostEnvironment env)
         {
             _context = context;
             _env = env;
@@ -28,8 +26,7 @@ namespace MushroomForum.Controllers
             int currentPage = pageNumber ?? 1;
             int currentPageSize = pageSize ?? 8;
 
-            var query = _context.MushroomHarvestEntries
-                .Where(e => e.UserId == userId)
+            var query = _context.MushroomWikiEntries
                 .OrderByDescending(e => e.Date);
 
             int totalEntries = await query.CountAsync();
@@ -40,7 +37,7 @@ namespace MushroomForum.Controllers
                 .Take(currentPageSize)
                 .ToListAsync();
 
-            var vm = new MushroomHarvestIndexViewModel
+            var vm = new MushroomWikiIndexViewModel
             {
                 Entries = entries,
                 PageNumber = currentPage,
@@ -48,18 +45,19 @@ namespace MushroomForum.Controllers
                 TotalPages = totalPages,
                 TotalEntries = totalEntries
             };
+
             return View(vm);
         }
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Create()
         {
-            return View(new MushroomHarvestEntry());
+            return View(new MushroomWikiEntry());
         }
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MushroomHarvestEntry entry, IFormFile? photo)
+        public async Task<IActionResult> Create(MushroomWikiEntry entry, IFormFile? photo)
         {
             if (ModelState.IsValid)
             {
@@ -79,43 +77,45 @@ namespace MushroomForum.Controllers
                 }
                 else
                 {
-                    entry.PhotoUrl = "/images/default-mushroom.jpg";
+                    entry.PhotoUrl = "/images/default-wiki-mushroom.jpg";
                 }
 
-                _context.MushroomHarvestEntries.Add(entry);
+                _context.MushroomWikiEntries.Add(entry);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(entry);
         }
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var entry = await _context.MushroomHarvestEntries.FindAsync(id);
+            var entry = await _context.MushroomWikiEntries.FindAsync(id);
             if (entry == null || entry.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
                 return NotFound();
             return View(entry);
         }
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(MushroomHarvestEntry entry, IFormFile? photo)
+        public async Task<IActionResult> Edit(MushroomWikiEntry entry, IFormFile? photo)
         {
-            var dbEntry = await _context.MushroomHarvestEntries.FindAsync(entry.Id);
+            var dbEntry = await _context.MushroomWikiEntries.FindAsync(entry.Id);
             if (dbEntry == null || dbEntry.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
                 return NotFound();
 
             if (ModelState.IsValid)
             {
-                dbEntry.MushroomType = entry.MushroomType;
-                dbEntry.Quantity = entry.Quantity;
+                dbEntry.Name = entry.Name;
+                dbEntry.LatinName = entry.LatinName;
+                dbEntry.Description = entry.Description;
+                dbEntry.Type = entry.Type;
                 dbEntry.Date = entry.Date;
-                dbEntry.Place = entry.Place;
+                
 
                 if (photo != null && photo.Length > 0)
                 {
-                    if (!string.IsNullOrEmpty(dbEntry.PhotoUrl) && dbEntry.PhotoUrl != "/images/default-mushroom.jpg")
+                    if (!string.IsNullOrEmpty(dbEntry.PhotoUrl) && dbEntry.PhotoUrl != "/images/default-wiki-mushroom.jpg")
                     {
                         var oldPath = Path.Combine(_env.WebRootPath, dbEntry.PhotoUrl.TrimStart('/'));
                         if (System.IO.File.Exists(oldPath))
@@ -139,16 +139,17 @@ namespace MushroomForum.Controllers
             }
             return View(entry);
         }
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> Delete(int id)
         {
-            var entry = await _context.MushroomHarvestEntries.FindAsync(id);
+            var entry = await _context.MushroomWikiEntries.FindAsync(id);
             if (entry == null || entry.UserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
                 return NotFound();
 
-            if (!string.IsNullOrEmpty(entry.PhotoUrl) && entry.PhotoUrl != "/images/default-mushroom.jpg")
+            if (!string.IsNullOrEmpty(entry.PhotoUrl) && entry.PhotoUrl != "/images/default-wiki-mushroom.jpg")
             {
                 var filePath = Path.Combine(_env.WebRootPath, entry.PhotoUrl.TrimStart('/'));
                 if (System.IO.File.Exists(filePath))
@@ -157,7 +158,7 @@ namespace MushroomForum.Controllers
                 }
             }
 
-            _context.MushroomHarvestEntries.Remove(entry);
+            _context.MushroomWikiEntries.Remove(entry);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

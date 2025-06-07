@@ -830,3 +830,10 @@ textarea.form-control {
         width: 100%;
     }
 }
+
+.text-wrap {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    max-width: 100%;
+}

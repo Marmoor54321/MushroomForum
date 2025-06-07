@@ -133,9 +133,19 @@ async Task SeedDataAsync(ApplicationDbContext dbContext, UserManager<IdentityUse
             throw new Exception("Nie udało się utworzyć użytkownika testowego: " + string.Join(", ", result.Errors.Select(e => e.Description)));
         }
     }
+    
 
     var testUser = await userManager.FindByNameAsync(userName);
 
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
+    }
+
+    if (!await userManager.IsInRoleAsync(testUser, "Admin"))
+    {
+        await userManager.AddToRoleAsync(testUser, "Admin");
+    }
     if (!dbContext.ForumThreads.Any())
     {
         var edibleCategory = await dbContext.Categories.FirstOrDefaultAsync(c => c.Name == "Jadalne");

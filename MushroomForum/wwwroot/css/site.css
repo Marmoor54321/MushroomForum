@@ -859,3 +859,10 @@ textarea.form-control {
         border-color: #ccc;
         opacity: 0.6;
     }
+
+.text-wrap {
+    overflow-wrap: break-word;
+    word-break: break-word; 
+    white-space: normal; 
+    max-width: 100%; 
+}

@@ -1,12 +1,15 @@
-﻿@model MushroomForum.ViewModels.MushroomHarvestIndexViewModel
+﻿@model MushroomForum.ViewModels.MushroomWikiIndexViewModel
 @{
-    ViewData["Title"] = "Zbiory grzybów";
+    ViewData["Title"] = "Wikipedia grzybów";
 }
 
-<h1>Zbiory grzybów</h1>
-<div class="mb-3">
-    <a asp-action="Create" class="button-green">Dodaj wpis</a>
-</div>
+<h1>Wikipedia grzybów</h1>
+@if (User.IsInRole("Admin"))
+{
+    <div class="mb-3">
+        <a asp-action="Create" class="button-green">Dodaj wpis</a>
+    </div>
+}
 
 @if (!Model.Entries.Any())
 {
@@ -22,17 +25,20 @@ else
                     <img src="@entry.PhotoUrl" alt="Zdjęcie grzybów" />
                 </div>
                 <div class="harvest-info">
-                    <div class="text-wrap"><strong>Typ:</strong> @entry.MushroomType</div>
-                    <div class="text-wrap"><strong>Ilość:</strong> @entry.Quantity</div>
+                    <div class="text-wrap"><strong>Nazwa:</strong> @entry.Name</div>
+                    <div class="text-wrap"><strong>Opis:</strong> @entry.Description</div>
+                    <div class="text-wrap"><strong>Typ:</strong> @entry.Type</div>
                     <div class="text-wrap"><strong>Data:</strong> @entry.Date.ToString("yyyy-MM-dd")</div>
-                    <div class="text-wrap"><strong>Miejsce:</strong> @entry.Place</div>
                 </div>
-                <div class="harvest-actions">
-                    <a asp-action="Edit" asp-route-id="@entry.Id" class="btn btn-outline-primary btn-sm">Edytuj</a>
-                    <form asp-action="Delete" asp-route-id="@entry.Id" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Na pewno usunąć wpis?');">Usuń</button>
-                    </form>
-                </div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="harvest-actions">
+                        <a asp-action="Edit" asp-route-id="@entry.Id" class="btn btn-outline-primary btn-sm">Edytuj</a>
+                        <form asp-action="Delete" asp-route-id="@entry.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Na pewno usunąć wpis?');">Usuń</button>
+                        </form>
+                    </div>
+                }
             </div>
         }
     </div>

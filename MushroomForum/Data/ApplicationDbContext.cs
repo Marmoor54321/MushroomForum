@@ -33,10 +33,16 @@ namespace MushroomForum.Data
         public DbSet<UserAchievement> UserAchievements { get; set; }
         public DbSet<LikeHistory> LikeHistories { get; set; }
         public DbSet<MushroomHarvestEntry> MushroomHarvestEntries { get; set; }
-
+        public DbSet<MushroomWikiEntry> MushroomWikiEntries { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<MushroomWikiEntry>()
+                .HasOne(we => we.User)
+                .WithMany()
+                .HasForeignKey(we => we.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<ForumThread>()
                 .HasOne(ft => ft.User)

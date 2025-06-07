@@ -1,6 +1,6 @@
-﻿@model MushroomForum.Models.MushroomHarvestEntry
+﻿@model MushroomForum.Models.MushroomWikiEntry
 @{
-    ViewData["Title"] = Model.Id == 0 ? "Dodaj zbiór" : "Edytuj zbiór";
+    ViewData["Title"] = Model.Id == 0 ? "Dodaj wpis" : "Edytuj wpis";
 }
 <form asp-action="@(Model.Id == 0 ? "Create" : "Edit")" enctype="multipart/form-data" method="post" class="note-container">
     @if (Model.Id != 0)
@@ -8,25 +8,31 @@
         <input type="hidden" asp-for="Id" />
     }
     <div class="mb-2">
-        <label asp-for="MushroomType" class="form-label">Typ grzyba</label>
-        <input asp-for="MushroomType" class="form-control" required />
-        <span asp-validation-for="MushroomType" class="text-danger"></span>
+        <label asp-for="Name" class="form-label">Nazwa</label>
+        <input asp-for="Name" class="form-control" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="mb-2">
-        <label asp-for="Quantity" class="form-label">Ilość</label>
-        <input asp-for="Quantity" class="form-control" type="number" min="1" required />
-        <span asp-validation-for="Quantity" class="text-danger"></span>
+        <label asp-for="LatinName" class="form-label">Nazwa Łacińska</label>
+        <input asp-for="LatinName" class="form-control" required />
+        <span asp-validation-for="LatinName" class="text-danger"></span>
+    </div>
+    <div class="mb-2">
+        <label asp-for="Description" class="form-label">Opis</label>
+        <input asp-for="Description" class="form-control" required />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="mb-2">
+        <label asp-for="Type" class="form-label">Typ</label>
+        <input asp-for="Type" class="form-control" required />
+        <span asp-validation-for="Type" class="text-danger"></span>
     </div>
     <div class="mb-2">
         <label asp-for="Date" class="form-label">Data</label>
         <input asp-for="Date" class="form-control" type="date" required />
         <span asp-validation-for="Date" class="text-danger"></span>
     </div>
-    <div class="mb-2">
-        <label asp-for="Place" class="form-label">Miejsce</label>
-        <input asp-for="Place" class="form-control" required />
-        <span asp-validation-for="Place" class="text-danger"></span>
-    </div>
+   
     <div class="mb-2">
         <label for="photo" class="form-label">Zdjęcie</label>
         <input type="file" name="photo" class="form-control" accept="image/*" />

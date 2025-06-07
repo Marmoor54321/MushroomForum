@@ -62,9 +62,9 @@
 						}
 					</div>
 					<div class="post-meta">
-						<p><strong>Autor:</strong> @(post.User?.UserName ?? "Anonim")</p>
-						<p><strong>Data:</strong> @post.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
-						<p><strong>Polubienia:</strong> @(Model.PostLikeCounts.TryGetValue(post.PostId, out var count) ? count : 0)</p>
+						<p class="text-wrap"><strong>Autor:</strong> @(post.User?.UserName ?? "Anonim")</p>
+						<p class="text-wrap"><strong>Data:</strong> @post.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+						<p class="text-wrap"><strong>Polubienia:</strong> @(Model.PostLikeCounts.TryGetValue(post.PostId, out var count) ? count : 0)</p>
 						@if (User.Identity.IsAuthenticated)
 						{
 							<form asp-action="Reply" asp-controller="Posts" method="get" style="display:inline;">
@@ -91,8 +91,8 @@
 										<p>@reply.Description</p>
 									</div>
 									<div class="post-meta">
-										<p><strong>Autor:</strong> @(reply.User?.UserName ?? "Anonim")</p>
-										<p><strong>Data:</strong> @reply.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+										<p class="text-wrap"><strong>Autor:</strong> @(reply.User?.UserName ?? "Anonim")</p>
+										<p class="text-wrap"><strong>Data:</strong> @reply.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
 									</div>
 								</div>
 							}
