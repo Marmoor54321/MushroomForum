@@ -58,25 +58,17 @@
 }
 
 <h2>Miejsca grzybobrania</h2>
-<button  class="nav-link nav-button-green" onclick="exportMapToPDF()" style="position: absolute; top: 10px; left: 10px; z-index: 1000;">
-    Zapisz mapę jako PDF
-</button>
 <div style="display: flex; height: 100vh;">
-    <div style="width: 30%; padding: 10px; overflow-y: auto;">
+    <div style="width: 30%; padding: 10px; overflow-y: auto; display: flex; flex-direction: column;">
+        <button class="nav-link nav-button-green" onclick="exportMapToPDF()" style="margin-bottom: 10px;">
+            Zapisz mapę jako PDF
+        </button>
         <input type="text" id="filter" placeholder="Filtruj po opisie lub ocenie" />
         <ul id="placeList"></ul>
     </div>
-<div id="map-container" style="position: relative;">
-    <div id="map"></div>
-    @*<div id="legend" style="position: absolute; bottom: 20px; left: 10px; background: white; padding: 10px; z-index: 1000; border-radius: 5px;">
-        <b>Legenda:</b>
-        <ul style="margin: 0; padding-left: 20px;">
-            <li>★ - Ocena miejsca</li>
-            <li>🔵 - Trasa do punktu</li>
-            <li>📍 - Miejsce grzybobrania</li>
-        </ul>
-    </div>*@
-
+    <div id="map-container" style="width: 70%; position: relative;">
+        <div id="map"></div>
+    </div>
 </div>
 
 @section Scripts {

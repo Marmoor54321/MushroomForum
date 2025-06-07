@@ -18,10 +18,9 @@
     <span asp-validation-for="Content" class="text-danger"></span>
 
     <div class="note-actions">
-        <!-- Lewa strona: przycisk załącznika -->
         <div class="left-actions">
             <label for="fileInput" class="nav-link nav-button-green">📁 Załącznik</label>
-            <input type="file" id="fileInput" name="PhotoUrl" class="custom-file-input" />
+            <input type="file" id="fileInput" name="PhotoUrl" class="custom-file-input" accept="image/*,video/*" />
         </div>
 
         <!-- Prawa strona: akcje -->
@@ -36,5 +35,4 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
-    <script src="~/js/note-form.js"></script>
 }

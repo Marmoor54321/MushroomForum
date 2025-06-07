@@ -32,6 +32,7 @@ namespace MushroomForum.Data
         public DbSet<AchievementType> AchievementTypes { get; set; }
         public DbSet<UserAchievement> UserAchievements { get; set; }
         public DbSet<LikeHistory> LikeHistories { get; set; }
+        public DbSet<MushroomHarvestEntry> MushroomHarvestEntries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -105,6 +106,19 @@ namespace MushroomForum.Data
                 .WithMany()
                 .HasForeignKey(ub => ub.BlockedId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<MushroomNotes>()
+                .HasOne(m => m.User)
+                .WithMany() 
+                .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MushroomSpot>()
+                .HasOne(ms => ms.User)
+                .WithMany()
+                .HasForeignKey(ms => ms.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             modelBuilder.Entity<AchievementType>().HasData(
                 new AchievementType

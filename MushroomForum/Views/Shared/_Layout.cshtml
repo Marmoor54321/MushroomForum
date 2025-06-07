@@ -6,7 +6,6 @@
     <title>@ViewData["Title"] - MushroomForum</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link id="themeStylesheet" rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MushroomForum.styles.css" asp-append-version="true" />
     @RenderSection("Styles", required: false)
 </head>
@@ -15,7 +14,7 @@
 <body>
     <header>
         <div class="banner">
-            <img src="/images/baner-light.png" alt="Baner forum" />
+            <img id="bannerImage" alt="Baner forum" />
             <div class="banner-text">
                 MushroomForum
             </div>
@@ -50,6 +49,9 @@
                                     </li>
                                     <li>
                                         <a class="dropdown-item" asp-controller="MushroomNotes" asp-action="Index">Notatnik</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="MushroomHarvest" asp-action="Index">Zbiory</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item" asp-controller="MushroomId" asp-action="Index">Identyfikowanie grzybów</a>
