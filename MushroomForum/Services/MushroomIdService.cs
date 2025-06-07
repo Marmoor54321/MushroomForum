@@ -10,7 +10,7 @@ namespace MushroomForum.Services
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<MushroomIdService> _logger;
-        private const string ApiKey = "KLUCZ API"; //Później zaimplementuje korzystanie z API nie ujawniając klucza
+        private const string ApiKey = ""; //Później zaimplementuje korzystanie z API nie ujawniając klucza
         private const string ApiUrl = "https://mushroom.kindwise.com/api/v1/identification";
 
         public MushroomIdService(IHttpClientFactory httpClientFactory, ILogger<MushroomIdService> logger)
@@ -44,6 +44,10 @@ namespace MushroomForum.Services
                     base64Image = $"data:{image.ContentType};base64,{Convert.ToBase64String(imageBytes)}";
                 }
 
+                // Tworzenie URL z parametrami szczegółów
+                var detailsParams = "?details=common_names,url,description,edibility,psychoactive&language=pl";
+                var fullUrl = ApiUrl + detailsParams;
+
                 // Tworzenie JSON
                 var requestData = new
                 {
@@ -56,7 +60,7 @@ namespace MushroomForum.Services
                 // Dodanie nagłówka Api-Key
                 client.DefaultRequestHeaders.Add("Api-Key", ApiKey);
 
-                var response = await client.PostAsync(ApiUrl, content);
+                var response = await client.PostAsync(fullUrl, content);
                 if (!response.IsSuccessStatusCode)
                 {
                     result.Success = false;
@@ -93,24 +97,115 @@ namespace MushroomForum.Services
 
                 foreach (var suggestion in suggestions.EnumerateArray())
                 {
-                    result.Suggestions.Add(new MushroomSuggestion
+                    var mushroomSuggestion = new MushroomSuggestion
                     {
                         Id = suggestion.TryGetProperty("id", out var id) ? id.GetString() : null,
                         Name = suggestion.GetProperty("name").GetString(),
-                        Probability = suggestion.GetProperty("probability").GetDouble(),
-                        Description = suggestion.TryGetProperty("details", out var details) &&
-                                      details.TryGetProperty("language", out var lang) &&
-                                      lang.GetString() == "en" ? "English description available" : null
-                        // Możesz dodać obsługę similar_images, jeśli potrzebna
-                    });
+                        Probability = suggestion.GetProperty("probability").GetDouble()
+                    };
+
+                    // Parsowanie szczegółów (details)
+                    if (suggestion.TryGetProperty("details", out var details))
+                    {
+                        _logger.LogInformation("Details section found: {Details}", details.ToString());
+
+                        // Common names
+                        if (details.TryGetProperty("common_names", out var commonNames))
+                        {
+                            if (commonNames.ValueKind == JsonValueKind.Array)
+                            {
+                                foreach (var name in commonNames.EnumerateArray())
+                                {
+                                    if (name.ValueKind == JsonValueKind.String)
+                                    {
+                                        mushroomSuggestion.CommonNames.Add(name.GetString());
+                                    }
+                                }
+                            }
+                            else if (commonNames.ValueKind == JsonValueKind.Null)
+                            {
+                                _logger.LogInformation("common_names is null");
+                            }
+                            else
+                            {
+                                _logger.LogWarning("common_names has unexpected type: {Type}", commonNames.ValueKind);
+                            }
+                        }
+
+                        // URL
+                        SafeGetStringProperty(details, "url", value => mushroomSuggestion.Url = value, _logger);
+
+                        // Description (po polsku)
+                        SafeGetStringProperty(details, "description", value => mushroomSuggestion.Description = value, _logger);
+
+                        // Edibility
+                        SafeGetStringProperty(details, "edibility", value => mushroomSuggestion.Edibility = value, _logger);
+
+                        // Psychoactive
+                        if (details.TryGetProperty("psychoactive", out var psychoactive))
+                        {
+                            if (psychoactive.ValueKind == JsonValueKind.True || psychoactive.ValueKind == JsonValueKind.False)
+                            {
+                                mushroomSuggestion.Psychoactive = psychoactive.GetBoolean();
+                            }
+                            else if (psychoactive.ValueKind == JsonValueKind.Null)
+                            {
+                                _logger.LogInformation("psychoactive is null");
+                            }
+                            else
+                            {
+                                _logger.LogWarning("psychoactive has unexpected type: {Type}", psychoactive.ValueKind);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogInformation("No details section found in suggestion");
+                    }
+
+                    // Parsowanie similar_images
+                    if (suggestion.TryGetProperty("similar_images", out var similarImages) &&
+                        similarImages.ValueKind == JsonValueKind.Array)
+                    {
+                        foreach (var imageElement in similarImages.EnumerateArray())
+                        {
+                            var similarImage = new SimilarImage();
+
+                            SafeGetStringProperty(imageElement, "id", value => similarImage.Id = value, _logger);
+                            SafeGetStringProperty(imageElement, "url", value => similarImage.Url = value, _logger);
+                            SafeGetStringProperty(imageElement, "url_small", value => similarImage.UrlSmall = value, _logger);
+                            SafeGetStringProperty(imageElement, "license_name", value => similarImage.LicenseName = value, _logger);
+                            SafeGetStringProperty(imageElement, "license_url", value => similarImage.LicenseUrl = value, _logger);
+                            SafeGetStringProperty(imageElement, "citation", value => similarImage.Citation = value, _logger);
+
+                            if (imageElement.TryGetProperty("similarity", out var similarity) &&
+                                similarity.ValueKind == JsonValueKind.Number)
+                            {
+                                similarImage.Similarity = similarity.GetDouble();
+                            }
+
+                            mushroomSuggestion.SimilarImages.Add(similarImage);
+                        }
+                    }
+
+                    result.Suggestions.Add(mushroomSuggestion);
                 }
 
                 // Opcjonalnie: Parsowanie is_mushroom
                 if (doc.RootElement.TryGetProperty("result", out var resultElem) &&
                     resultElem.TryGetProperty("is_mushroom", out var isMushroom))
                 {
-                    result.IsMushroom = isMushroom.GetProperty("binary").GetBoolean();
-                    result.MushroomProbability = isMushroom.GetProperty("probability").GetDouble();
+                    if (isMushroom.TryGetProperty("binary", out var binary) &&
+                        (binary.ValueKind == JsonValueKind.True || binary.ValueKind == JsonValueKind.False))
+                    {
+                        result.IsMushroom = binary.GetBoolean();
+                    }
+
+                    if (isMushroom.TryGetProperty("probability", out var probability) &&
+                        probability.ValueKind == JsonValueKind.Number)
+                    {
+                        result.MushroomProbability = probability.GetDouble();
+                    }
                 }
 
                 result.Success = true;
@@ -123,6 +218,25 @@ namespace MushroomForum.Services
                     ex.Message, ex.InnerException?.Message ?? "No InnerException");
             }
             return result;
+        }
+
+        private static void SafeGetStringProperty(JsonElement element, string propertyName, Action<string> setValue, ILogger logger)
+        {
+            if (element.TryGetProperty(propertyName, out var property))
+            {
+                if (property.ValueKind == JsonValueKind.String)
+                {
+                    setValue(property.GetString());
+                }
+                else if (property.ValueKind == JsonValueKind.Null)
+                {
+                    logger.LogInformation("{PropertyName} is null", propertyName);
+                }
+                else
+                {
+                    logger.LogWarning("{PropertyName} has unexpected type: {Type}", propertyName, property.ValueKind);
+                }
+            }
         }
     }
 }

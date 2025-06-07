@@ -1,4 +1,5 @@
 ﻿@using System.Linq
+@using System.Collections.Generic
 @{
     ViewData["Title"] = "Identify Mushroom";
 }
@@ -10,7 +11,7 @@
         <label for="image" class="form-label">Select mushroom photo:</label>
         <input type="file" name="image" id="image" class="form-control" accept="image/*" required />
     </div>
-    <button type="submit" class="nav-link nav-button-green">Zidentyfikuj</button>
+    <button type="submit" class="btn btn-success">Zidentyfikuj</button>
 </form>
 
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
@@ -20,17 +21,127 @@
 
 @if (Model.Success)
 {
-    <h4 class="mt-4">Results:</h4>
-    <ul>
+    <h4 class="mt-4">Wyniki identyfikacji:</h4>
+
+    @if (Model.IsMushroom != null)
+    {
+        <div class="alert @(Model.IsMushroom ? "alert-success" : "alert-warning") mb-3">
+            <strong>Czy to grzyb?</strong> @(Model.IsMushroom ? "Tak" : "Nie")
+            @if (Model.MushroomProbability > 0)
+            {
+                <text>(@($"{Model.MushroomProbability:P1}"))</text>
+            }
+        </div>
+    }
+
+    <div class="row">
         @foreach (var suggestion in Model.Suggestions)
         {
-            <li>
-                <strong>@suggestion.Name</strong> - @($"{suggestion.Probability:P0}")
-                @if (!string.IsNullOrWhiteSpace(suggestion.Description))
-                {
-                    <div>@suggestion.Description</div>
-                }
-            </li>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <strong>@suggestion.Name</strong>
+                            <span class="badge bg-primary float-end">@($"{suggestion.Probability:P0}")</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="@(suggestion.SimilarImages != null && suggestion.SimilarImages.Count > 0 ? "col-md-8" : "col-md-12")">
+                                @if (suggestion.CommonNames != null && suggestion.CommonNames.Count > 0)
+                                {
+                                    <p class="card-text">
+                                        <strong>Nazwy popularne:</strong> @string.Join(", ", suggestion.CommonNames)
+                                    </p>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(suggestion.Edibility))
+                                {
+                                    <p class="card-text">
+                                        <strong>Jadalność:</strong>
+                                        <span class="badge @GetEdibilityBadgeClass(suggestion.Edibility)">
+                                            @GetEdibilityTranslation(suggestion.Edibility)
+                                        </span>
+                                    </p>
+                                }
+
+                                @if (suggestion.Psychoactive != null && suggestion.Psychoactive)
+                                {
+                                    <p class="card-text">
+                                        <strong>Psychoaktywny:</strong>
+                                        <span class="badge @(suggestion.Psychoactive ? "bg-danger" : "bg-success")">
+                                            @(suggestion.Psychoactive ? "Tak" : "Nie")
+                                        </span>
+                                    </p>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(suggestion.Url))
+                                {
+                                    <a href="@suggestion.Url" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        Więcej informacji
+                                    </a>
+                                }
+                            </div>
+
+                            @if (suggestion.SimilarImages != null && suggestion.SimilarImages.Count > 0)
+                            {
+                                var firstImage = suggestion.SimilarImages[0];
+                                <div class="col-md-4">
+                                    <div class="text-center">
+                                        <img src="@(firstImage.UrlSmall ?? firstImage.Url)"
+                                             alt="Podobne zdjęcie"
+                                             class="img-fluid rounded"
+                                             style="max-height: 150px; object-fit: cover;" />
+                                        <small class="text-muted d-block mt-1">
+                                            Podobieństwo: @($"{firstImage.Similarity:P0}")
+                                        </small>
+                                        @if (!string.IsNullOrWhiteSpace(firstImage.Citation))
+                                        {
+                                            <small class="text-muted d-block">
+                                                Źródło: @firstImage.Citation
+                                            </small>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-    </ul>
+    </div>
+}
+
+@functions {
+    string GetEdibilityBadgeClass(string edibility)
+    {
+        return edibility?.ToLower() switch
+        {
+            "choice" => "bg-success",
+            "edible" => "bg-success",
+            "inedible" => "bg-warning",
+            "edible_but_not_recommended" => "bg-warning",
+            "not_edible" => "bg-secondary",
+            "psychoactive" => "bg-warning",
+            "poisonous" => "bg-danger",
+            "deadly" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    string GetEdibilityTranslation(string edibility)
+    {
+        return edibility?.ToLower() switch
+        {
+            "choice" => "Wyborowy",
+            "edible" => "Jadalny",
+            "inedible" => "Niejadalny",
+            "edible_but_not_recommended" => "Jadalny, ale niezalecany",
+            "not_edible" => "Niejadalny",
+            "psychoactive" => "Psychoaktywny",
+            "poisonous" => "Trujący",
+            "deadly" => "Śmiertelnie trujący",
+            _ => edibility ?? "Nieznane"
+        };
+    }
 }
