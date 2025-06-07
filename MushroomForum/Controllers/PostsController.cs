@@ -169,6 +169,7 @@ namespace MushroomForum.Controllers
                         await levelUpService.GiveExperienceAsync(post.IdentityUserId, 10);
                     }
                 }
+                await _achievementService.GrantAchievementIfNotExistsAsync(userId, "FirstLikeReceived");
 
                 await _context.SaveChangesAsync();
             }

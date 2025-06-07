@@ -38,8 +38,12 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
             _context = context;
         }
 
+        public int UserLevel { get; set; }
+        public int UserExperience { get; set; }
+        public int ExperienceToNextLevel { get; set; }
 
         public List<IconItem> AvailableIcons { get; set; } = new();
+        public List<IconItem> AchievementIcons { get; set; } = new();
         public string SelectedIcon { get; set; }
 
         /// <summary>
@@ -122,17 +126,43 @@ namespace MushroomForum.Areas.Identity.Pages.Account.Manage
                 await _context.SaveChangesAsync();
             }
 
+            UserLevel = profile.Level;
+            UserExperience = profile.Experience;
+            ExperienceToNextLevel = profile.ExperienceToNextLevel;
+
             AvailableIcons = new List<IconItem>
+    {
+        new IconItem { Value = "default.png", Url = "/icons/default.png" },
+        new IconItem { Value = "icon1.png", Url = "/icons/icon1.png" },
+        new IconItem { Value = "icon2.png", Url = "/icons/icon2.png" },
+        new IconItem { Value = "icon3.png", Url = "/icons/icon3.png" },
+        new IconItem { Value = "icon4.png", Url = "/icons/icon4.png" }
+    };
+
+            if (profile.Level >= 5)
             {
-                new IconItem { Value = "icon1.png", Url = "/icons/icon1.png" },
-                new IconItem { Value = "icon2.png", Url = "/icons/icon2.png" },
-                new IconItem { Value = "icon3.png", Url = "/icons/icon3.png" }
-            };
+                AvailableIcons.Add(new IconItem { Value = "icon5.png", Url = "/icons/icon5.png" });
+            }
+            if (profile.Level >= 10)
+            {
+                AvailableIcons.Add(new IconItem { Value = "icon10.png", Url = "/icons/icon10.png" });
+            }
+            var achievementIcons = await _context.UserAchievements
+                .Where(ua => ua.UserId == user.Id && !string.IsNullOrEmpty(ua.AchievementType.UnlocksAvatarIcon))
+                .Select(ua => new IconItem
+                {
+                    Value = ua.AchievementType.UnlocksAvatarIcon,
+                    Url = "/icons/" + ua.AchievementType.UnlocksAvatarIcon
+                })
+                .ToListAsync();
+
+            AvailableIcons.AddRange(achievementIcons);
 
             await LoadAsync(user);
 
             return Page();
         }
+
 
 
         public async Task<IActionResult> OnPostAsync()

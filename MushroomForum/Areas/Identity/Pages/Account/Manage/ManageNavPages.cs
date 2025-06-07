@@ -68,6 +68,9 @@ namespace  MushroomForum.Areas.Identity.Pages.Account.Manage
         /// 
 
         public static string Friends => "Friends";
+        public static string Achievements => "Achievements";
+
+        public static string AchievementsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Achievements);
 
         public static string FriendsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Friends);
 

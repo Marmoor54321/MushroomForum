@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MushroomForum.Data;
 using MushroomForum.Models;
+using MushroomForum.Services;
 using MushroomForum.ViewModels;
 using System.Linq;
 using System.Security.Claims;
@@ -16,11 +17,12 @@ namespace MushroomForum.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
-
-        public QuizController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        private readonly AchievementService _achievementService;
+        public QuizController(ApplicationDbContext context, UserManager<IdentityUser> userManager, AchievementService achievementService)
         {
             _context = context;
             _userManager = userManager;
+            _achievementService = achievementService;
         }
         public async Task<IActionResult> Index()
         {
@@ -83,7 +85,11 @@ namespace MushroomForum.Controllers
             ViewBag.TotalQuestions = quiz.Questions.Count;
             ViewBag.QuizId = quiz.Id;
             ViewBag.CurrentPoints = userExp.Doswiadczenie;  // <-- dodaj tę linię!
+            if (score >= 5)
+            {
+                await _achievementService.GrantAchievementIfNotExistsAsync(userId, "Quiz5Points");
 
+            }
             return View("Result");
         }
 
@@ -105,10 +111,11 @@ namespace MushroomForum.Controllers
             }
 
             ViewBag.Score = score;
+
             ViewBag.TotalQuestions = totalQuestions;
             ViewBag.QuizId = quizId;
             ViewBag.CurrentPoints = currentPoints;
-
+            
             return View("Result");
         }
         public async Task<IActionResult> Ranking()
