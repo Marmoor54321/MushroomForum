@@ -8,16 +8,13 @@
 <h3>@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
 
-
-
-
 <div class="row">
     <div class="col-md-6">
         <form id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
             <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Zmień nazwę użytkownika."/>
+                <input asp-for="Username" class="form-control" placeholder="Zmień nazwę użytkownika." />
                 <label asp-for="Username" class="form-label"></label>
             </div>
 
@@ -58,7 +55,15 @@
              width="128"
              height="128"
              class="rounded-circle border mt-2" />
-
+        <div class="mt-3">
+            <div class="exp-bar" style="max-width: 250px; margin: 0 auto;">
+                <div class="exp-fill" style="width: @(Model.ExperienceToNextLevel > 0 ? (Model.UserExperience * 100 / (double)Model.ExperienceToNextLevel) : 0)%"></div>
+                <div class="exp-text">@Model.UserExperience / @Model.ExperienceToNextLevel XP</div>
+            </div>
+            <div class="text-center mt-2" style="font-weight: 600; font-size: 1.2rem;">
+                @Model.UserLevel Level
+            </div>
+        </div>
     </div>
 </div>
 
@@ -66,18 +71,15 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         function selectAvatar(img, value) {
-            // odznacz wszystkie
             document.querySelectorAll('.avatar-option').forEach(e => e.classList.remove('selected-avatar'));
-
-            // zaznacz wybrany
             img.classList.add('selected-avatar');
 
-            // ustaw wartość w ukrytym radiu
             document.querySelectorAll('input[name="Input.SelectedIcon"]').forEach(input => {
                 input.checked = input.value === value;
             });
         }
     </script>
+
     <style>
         .avatar-option {
             border: 2px solid transparent;
@@ -92,6 +94,35 @@
 
         .selected-avatar {
             border-color: #007bff !important;
+        }
+
+        .exp-bar {
+            position: relative;
+            width: 100%;
+            height: 25px;
+            background-color: #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .exp-fill {
+            height: 100%;
+            background-color: #007bff;
+            transition: width 0.5s ease;
+        }
+
+        .exp-text {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            color: black;
+            font-weight: bold;
+            pointer-events: none;
         }
     </style>
 }
