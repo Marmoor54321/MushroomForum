@@ -11,7 +11,7 @@
         <label for="image" class="form-label">Select mushroom photo:</label>
         <input type="file" name="image" id="image" class="form-control" accept="image/*" required />
     </div>
-    <button type="submit" class="btn btn-success">Zidentyfikuj</button>
+    <button type="submit" class="btn btn-sitecolumns">Zidentyfikuj</button>
 </form>
 
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
@@ -25,7 +25,7 @@
 
     @if (Model.IsMushroom != null)
     {
-        <div class="alert @(Model.IsMushroom ? "alert-success" : "alert-warning") mb-3">
+        <div class="alert alert-sitecolumns mb-3"> @*<div class="alert @(Model.IsMushroom ? "alert-success" : "alert-warning") mb-3">*@
             <strong>Czy to grzyb?</strong> @(Model.IsMushroom ? "Tak" : "Nie")
             @if (Model.MushroomProbability > 0)
             {
@@ -38,26 +38,26 @@
         @foreach (var suggestion in Model.Suggestions)
         {
             <div class="col-md-6 mb-4">
-                <div class="card">
+                <div class="card card-sitecolumns">
                     <div class="card-header">
                         <h5 class="card-title mb-0">
                             <strong>@suggestion.Name</strong>
                             <span class="badge bg-primary float-end">@($"{suggestion.Probability:P0}")</span>
                         </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body card-body-sitecolumns">
                         <div class="row">
                             <div class="@(suggestion.SimilarImages != null && suggestion.SimilarImages.Count > 0 ? "col-md-8" : "col-md-12")">
                                 @if (suggestion.CommonNames != null && suggestion.CommonNames.Count > 0)
                                 {
-                                    <p class="card-text">
+                                    <p class="card-text card-text-sitecolumns">
                                         <strong>Nazwy popularne:</strong> @string.Join(", ", suggestion.CommonNames)
                                     </p>
                                 }
 
                                 @if (!string.IsNullOrWhiteSpace(suggestion.Edibility))
                                 {
-                                    <p class="card-text">
+                                    <p class="card-text card-text-sitecolumns">
                                         <strong>Jadalność:</strong>
                                         <span class="badge @GetEdibilityBadgeClass(suggestion.Edibility)">
                                             @GetEdibilityTranslation(suggestion.Edibility)
@@ -67,7 +67,7 @@
 
                                 @if (suggestion.Psychoactive != null && suggestion.Psychoactive)
                                 {
-                                    <p class="card-text">
+                                    <p class="card-text card-text-sitecolumns">
                                         <strong>Psychoaktywny:</strong>
                                         <span class="badge @(suggestion.Psychoactive ? "bg-danger" : "bg-success")">
                                             @(suggestion.Psychoactive ? "Tak" : "Nie")

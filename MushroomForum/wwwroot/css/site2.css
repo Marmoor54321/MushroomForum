@@ -327,6 +327,7 @@ textarea.form-control {
         margin-top: 0.75rem;
         align-self: center;
     }
+/*forum*/
 
 .forum-threads-container {
     background-color: var(--sitecolumns);
@@ -438,7 +439,7 @@ textarea.form-control {
 
 
 .pagination .page-item.disabled .page-link {
-    color: vvar(--textcolor);
+    color: var(--textcolor);
     background-color: transparent;
     border-color: var(--headertextcolor);
     cursor: not-allowed;
@@ -837,3 +838,41 @@ textarea.form-control {
     white-space: normal;
     max-width: 100%;
 }
+/*identyfikacja grzybów*/
+.alert-sitecolumns {
+    background-color: var(--sitecolumns) !important;
+    color: var(--textcolor) !important;
+    border: 1px solid var(--sitebackround);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.card-sitecolumns {
+    background-color: var(--sitecolumns) !important;
+    color: var(--textcolor) !important;
+    border: 1px solid var(--sitebackround);
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.card-body-sitecolumns {
+    background-color: transparent;
+    color: var(--textcolor) !important;
+}
+
+.card-text-sitecolumns {
+    color: var(--textcolor) !important;
+}
+.btn-sitecolumns {
+    background-color: var(--sitecolumns);
+    color: var(--textcolor);
+    border: 1px solid var(--sitebackround);
+    border-radius: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+    .btn-sitecolumns:hover {
+        color: var(--textcolor);
+    }
