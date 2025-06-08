@@ -16,11 +16,11 @@
 
     <div class="row">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
+            <div class="card card-sitecolumns">
+                <div class="card-header card-header-sitecolumns">
                     <h5 class="card-title mb-0">Opcje eksportu</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body card-body-sitecolumns">
                     <form method="post" id="exportForm">
                         @Html.AntiForgeryToken()
 
@@ -48,13 +48,13 @@
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                            <button type="submit" class="btn btn-success" formaction="@Url.Action("ExportJson")">
+                            <button type="submit" class="button-green" formaction="@Url.Action("ExportJson")">
                                 <i class="fas fa-download"></i> Pobierz plik JSON
                             </button>
-                            <button type="submit" class="btn btn-info" formaction="@Url.Action("ViewJson")">
+                            <button type="submit" class="button-green" formaction="@Url.Action("ViewJson")">
                                 <i class="fas fa-eye"></i> Podgląd JSON
                             </button>
-                            <a asp-action="Index" class="btn btn-secondary">Powrót</a>
+                            <a asp-action="Index" class="button-green">Powrót</a>
                         </div>
                     </form>
                 </div>
@@ -62,11 +62,11 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
+            <div class="card card-sitecolumns">
+                <div class="card-header card-header-sitecolumns">
                     <h6 class="card-title mb-0">Informacje o eksporcie</h6>
                 </div>
-                <div class="card-body">
+                <div class="card-body card-body-sitecolumns">
                     <h6>Format danych JSON:</h6>
                     <ul class="list-unstyled small">
                         <li><strong>exportInfo</strong> - informacje o eksporcie</li>
@@ -93,27 +93,27 @@
                     </ul>
                 </div>
             </div>
-
-            <div class="card mt-3">
-                <div class="card-header">
+            <div class="card card-sitecolumns mt-3">
+                <div class="card-header card-header-sitecolumns">
                     <h6 class="card-title mb-0">API</h6>
                 </div>
-                <div class="card-body">
-                    <p class="small">Możesz również korzystać z API:</p>
-                    <div class="small">
+                <div class="card-body card-body-sitecolumns">
+                    <p class="small card-text-sitecolumns">Możesz również korzystać z API:</p>
+                    <div class="small card-text-sitecolumns">
                         <strong>Wszystkie zbiory:</strong><br>
                         <code>GET /api/MushroomHarvest</code>
                     </div>
-                    <div class="small mt-2">
+                    <div class="small mt-2 card-text-sitecolumns">
                         <strong>Zakres dat:</strong><br>
                         <code>GET /api/MushroomHarvest/daterange?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD</code>
                     </div>
-                    <div class="small mt-2">
+                    <div class="small mt-2 card-text-sitecolumns">
                         <strong>Statystyki:</strong><br>
                         <code>GET /api/MushroomHarvest/statistics</code>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
