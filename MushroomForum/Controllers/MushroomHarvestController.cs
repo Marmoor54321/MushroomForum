@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -160,6 +160,219 @@ namespace MushroomForum.Controllers
             _context.MushroomHarvestEntries.Remove(entry);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+        [Authorize]
+        [HttpGet]
+        public IActionResult Export()
+        {
+            return View();
+        }
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExportJson(DateTime? startDate, DateTime? endDate, bool includeStatistics = false)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            try
+            {
+                var query = _context.MushroomHarvestEntries
+                    .Where(e => e.UserId == userId);
+
+                if (startDate.HasValue)
+                {
+                    query = query.Where(e => e.Date >= startDate.Value);
+                }
+
+                if (endDate.HasValue)
+                {
+                    query = query.Where(e => e.Date <= endDate.Value);
+                }
+
+                var harvests = await query
+                    .OrderByDescending(e => e.Date)
+                    .Select(e => new
+                    {
+                        id = e.Id,
+                        mushroomType = e.MushroomType,
+                        quantity = e.Quantity,
+                        date = e.Date.ToString("yyyy-MM-dd"),
+                        place = e.Place,
+                        photoUrl = e.PhotoUrl
+                    })
+                    .ToListAsync();
+
+                var exportData = new Dictionary<string, object>
+                {
+                    ["exportInfo"] = new
+                    {
+                        exportDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        dateRange = new
+                        {
+                            startDate = startDate?.ToString("yyyy-MM-dd"),
+                            endDate = endDate?.ToString("yyyy-MM-dd")
+                        },
+                        totalEntries = harvests.Count
+                    },
+                    ["harvests"] = harvests
+                };
+
+                if (includeStatistics && harvests.Any())
+                {
+                    var statistics = new
+                    {
+                        totalHarvests = harvests.Count,
+                        totalQuantity = harvests.Sum(h => h.quantity),
+                        uniqueMushroomTypes = harvests.Select(h => h.mushroomType).Distinct().Count(),
+                        uniquePlaces = harvests.Select(h => h.place).Distinct().Count(),
+                        mushroomTypeBreakdown = harvests
+                            .GroupBy(h => h.mushroomType)
+                            .Select(g => new
+                            {
+                                mushroomType = g.Key,
+                                count = g.Count(),
+                                totalQuantity = g.Sum(h => h.quantity)
+                            })
+                            .OrderByDescending(x => x.totalQuantity)
+                            .ToList(),
+                        placeBreakdown = harvests
+                            .GroupBy(h => h.place)
+                            .Select(g => new
+                            {
+                                place = g.Key,
+                                count = g.Count(),
+                                totalQuantity = g.Sum(h => h.quantity)
+                            })
+                            .OrderByDescending(x => x.totalQuantity)
+                            .ToList()
+                    };
+
+                    exportData["statistics"] = statistics;
+                }
+
+                var json = System.Text.Json.JsonSerializer.Serialize(exportData, new System.Text.Json.JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+                });
+
+                var fileName = $"zbiory-grzybow-{DateTime.Now:yyyy-MM-dd-HHmmss}.json";
+                var contentType = "application/json";
+
+                return File(System.Text.Encoding.UTF8.GetBytes(json), contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Wystąpił błąd podczas eksportu danych: {ex.Message}";
+                return RedirectToAction(nameof(Export));
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ViewJson(DateTime? startDate, DateTime? endDate, bool includeStatistics = false)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            try
+            {
+                var query = _context.MushroomHarvestEntries
+                    .Where(e => e.UserId == userId);
+
+                if (startDate.HasValue)
+                {
+                    query = query.Where(e => e.Date >= startDate.Value);
+                }
+
+                if (endDate.HasValue)
+                {
+                    query = query.Where(e => e.Date <= endDate.Value);
+                }
+
+                var harvests = await query
+                    .OrderByDescending(e => e.Date)
+                    .Select(e => new
+                    {
+                        id = e.Id,
+                        mushroomType = e.MushroomType,
+                        quantity = e.Quantity,
+                        date = e.Date.ToString("yyyy-MM-dd"),
+                        place = e.Place,
+                        photoUrl = e.PhotoUrl
+                    })
+                    .ToListAsync();
+
+                var exportData = new Dictionary<string, object>
+                {
+                    ["exportInfo"] = new
+                    {
+                        exportDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        dateRange = new
+                        {
+                            startDate = startDate?.ToString("yyyy-MM-dd"),
+                            endDate = endDate?.ToString("yyyy-MM-dd")
+                        },
+                        totalEntries = harvests.Count
+                    },
+                    ["harvests"] = harvests
+                };
+
+                if (includeStatistics && harvests.Any())
+                {
+                    var statistics = new
+                    {
+                        totalHarvests = harvests.Count,
+                        totalQuantity = harvests.Sum(h => h.quantity),
+                        uniqueMushroomTypes = harvests.Select(h => h.mushroomType).Distinct().Count(),
+                        uniquePlaces = harvests.Select(h => h.place).Distinct().Count(),
+                        mushroomTypeBreakdown = harvests
+                            .GroupBy(h => h.mushroomType)
+                            .Select(g => new
+                            {
+                                mushroomType = g.Key,
+                                count = g.Count(),
+                                totalQuantity = g.Sum(h => h.quantity)
+                            })
+                            .OrderByDescending(x => x.totalQuantity)
+                            .ToList(),
+                        placeBreakdown = harvests
+                            .GroupBy(h => h.place)
+                            .Select(g => new
+                            {
+                                place = g.Key,
+                                count = g.Count(),
+                                totalQuantity = g.Sum(h => h.quantity)
+                            })
+                            .OrderByDescending(x => x.totalQuantity)
+                            .ToList()
+                    };
+
+                    exportData["statistics"] = statistics;
+                }
+
+                var json = System.Text.Json.JsonSerializer.Serialize(exportData, new System.Text.Json.JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase,
+                     Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                });
+
+                ViewBag.JsonData = json;
+                ViewBag.ExportParams = new
+                {
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    IncludeStatistics = includeStatistics
+                };
+
+                return View("ViewJson");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Wystąpił błąd podczas generowania danych: {ex.Message}";
+                return RedirectToAction(nameof(Export));
+            }
         }
     }
 }

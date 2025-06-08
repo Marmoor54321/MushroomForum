@@ -4,8 +4,11 @@
 }
 
 <h1>Zbiory grzybów</h1>
-<div class="mb-3">
+<div class="mb-3 d-flex gap-2">
     <a asp-action="Create" class="button-green">Dodaj wpis</a>
+    <a asp-action="Export" class="btn btn-outline-info">
+        <i class="fas fa-download"></i> Eksportuj dane
+    </a>
 </div>
 
 @if (!Model.Entries.Any())

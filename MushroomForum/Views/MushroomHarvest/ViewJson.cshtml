@@ -1,0 +1,119 @@
+﻿@{
+    ViewData["Title"] = "Podgląd danych JSON";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Podgląd danych JSON</h1>
+        <div>
+            <a href="@Url.Action("Export")" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Powrót
+            </a>
+            <button type="button" class="btn btn-primary" onclick="copyToClipboard()">
+                <i class="fas fa-copy"></i> Kopiuj
+            </button>
+            <button type="button" class="btn btn-success" onclick="downloadJson()">
+                <i class="fas fa-download"></i> Pobierz
+            </button>
+        </div>
+    </div>
+
+    @if (ViewBag.ExportParams != null)
+    {
+        <div class="alert alert-info">
+            <h6>Parametry eksportu:</h6>
+            <ul class="mb-0">
+                @if (ViewBag.ExportParams.StartDate != null)
+                {
+                    <li>Data początkowa: @ViewBag.ExportParams.StartDate</li>
+                }
+                @if (ViewBag.ExportParams.EndDate != null)
+                {
+                    <li>Data końcowa: @ViewBag.ExportParams.EndDate</li>
+                }
+                <li>Statystyki: @(ViewBag.ExportParams.IncludeStatistics ? "Tak" : "Nie")</li>
+            </ul>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Dane JSON</h5>
+            <div class="btn-group btn-group-sm" role="group">
+                <button type="button" class="btn btn-outline-secondary" onclick="formatJson()" id="formatBtn">
+                    <i class="fas fa-indent"></i> Formatuj
+                </button>
+                <button type="button" class="btn btn-outline-secondary" onclick="minifyJson()" id="minifyBtn">
+                    <i class="fas fa-compress"></i> Minimalizuj
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="position-relative">
+                <pre id="jsonContent" class="mb-0 p-3" style="background-color: #f8f9fa; border: none; border-radius: 0; max-height: 600px; overflow-y: auto;"><code class="language-json">@Html.Raw(ViewBag.JsonData)</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let jsonData = @Html.Raw(ViewBag.JsonData);
+    let isFormatted = true;
+
+    function copyToClipboard() {
+        const jsonContent = document.getElementById('jsonContent').textContent;
+        navigator.clipboard.writeText(jsonContent)
+    }
+
+    function downloadJson() {
+        const jsonContent = document.getElementById('jsonContent').textContent;
+        const blob = new Blob([jsonContent], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `zbiory-grzybow-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function formatJson() {
+        if (!isFormatted) {
+            const formatted = JSON.stringify(jsonData, null, 2);
+            document.getElementById('jsonContent').textContent = formatted;
+            isFormatted = true;
+            document.getElementById('formatBtn').classList.add('active');
+            document.getElementById('minifyBtn').classList.remove('active');
+        }
+    }
+
+    function minifyJson() {
+        if (isFormatted) {
+            const minified = JSON.stringify(jsonData);
+            document.getElementById('jsonContent').textContent = minified;
+            isFormatted = false;
+            document.getElementById('minifyBtn').classList.add('active');
+            document.getElementById('formatBtn').classList.remove('active');
+        }
+    }
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const code = document.querySelector('code.language-json');
+        if (code) {
+            let html = code.innerHTML;
+
+            html = html.replace(/"([^"]+)":/g, '<span style="color: #d73a49;">"$1"</span>:');
+
+            html = html.replace(/:\s*"([^"]*)"(?=\s*[,\n\r}])/g, ': <span style="color: #032f62;">"$1"</span>');
+
+            html = html.replace(/:\s*(\d+)(?=\s*[,\n\r}])/g, ': <span style="color: #005cc5;">$1</span>');
+
+            html = html.replace(/:\s*(true|false|null)(?=\s*[,\n\r}])/g, ': <span style="color: #d73a49;">$1</span>');
+
+            code.innerHTML = html;
+        }
+    });
+</script>

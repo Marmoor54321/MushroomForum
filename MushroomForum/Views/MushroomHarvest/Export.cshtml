@@ -1,0 +1,149 @@
+﻿@{
+    ViewData["Title"] = "Eksport danych o zbiorach";
+}
+
+<div class="container mt-4">
+    <h1>Eksport danych o zbiorach grzybów</h1>
+    <p class="text-muted">Wyeksportuj swoje dane o zbiorach grzybów w formacie JSON</p>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Opcje eksportu</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="exportForm">
+                        @Html.AntiForgeryToken()
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="startDate" class="form-label">Data początkowa (opcjonalna)</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate">
+                                <small class="form-text text-muted">Pozostaw puste aby eksportować wszystkie dane</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="endDate" class="form-label">Data końcowa (opcjonalna)</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate">
+                                <small class="form-text text-muted">Pozostaw puste aby eksportować do dziś</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="includeStatistics" name="includeStatistics" value="true">
+                                <label class="form-check-label" for="includeStatistics">
+                                    Dołącz statystyki
+                                </label>
+                                <small class="form-text text-muted d-block">Dodaj podsumowanie i analizę twoich zbiorów</small>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            <button type="submit" class="btn btn-success" formaction="@Url.Action("ExportJson")">
+                                <i class="fas fa-download"></i> Pobierz plik JSON
+                            </button>
+                            <button type="submit" class="btn btn-info" formaction="@Url.Action("ViewJson")">
+                                <i class="fas fa-eye"></i> Podgląd JSON
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">Powrót</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Informacje o eksporcie</h6>
+                </div>
+                <div class="card-body">
+                    <h6>Format danych JSON:</h6>
+                    <ul class="list-unstyled small">
+                        <li><strong>exportInfo</strong> - informacje o eksporcie</li>
+                        <li><strong>harvests</strong> - lista wszystkich zbiorów</li>
+                        <li><strong>statistics</strong> - statystyki (opcjonalnie)</li>
+                    </ul>
+
+                    <h6 class="mt-3">Każdy wpis zawiera:</h6>
+                    <ul class="list-unstyled small">
+                        <li>• ID wpisu</li>
+                        <li>• Typ grzyba</li>
+                        <li>• Ilość</li>
+                        <li>• Data zbioru</li>
+                        <li>• Miejsce zbioru</li>
+                        <li>• URL zdjęcia</li>
+                    </ul>
+
+                    <h6 class="mt-3">Statystyki obejmują:</h6>
+                    <ul class="list-unstyled small">
+                        <li>• Łączną liczbę zbiorów</li>
+                        <li>• Łączną ilość zebranych grzybów</li>
+                        <li>• Zestawienie według typów</li>
+                        <li>• Zestawienie według miejsc</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">API</h6>
+                </div>
+                <div class="card-body">
+                    <p class="small">Możesz również korzystać z API:</p>
+                    <div class="small">
+                        <strong>Wszystkie zbiory:</strong><br>
+                        <code>GET /api/MushroomHarvest</code>
+                    </div>
+                    <div class="small mt-2">
+                        <strong>Zakres dat:</strong><br>
+                        <code>GET /api/MushroomHarvest/daterange?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD</code>
+                    </div>
+                    <div class="small mt-2">
+                        <strong>Statystyki:</strong><br>
+                        <code>GET /api/MushroomHarvest/statistics</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('startDate').setAttribute('max', today);
+        document.getElementById('endDate').setAttribute('max', today);
+
+        document.getElementById('startDate').addEventListener('change', function() {
+            const startDate = this.value;
+            const endDateInput = document.getElementById('endDate');
+
+            if (startDate) {
+                endDateInput.setAttribute('min', startDate);
+            } else {
+                endDateInput.removeAttribute('min');
+            }
+        });
+
+        document.getElementById('endDate').addEventListener('change', function() {
+            const endDate = this.value;
+            const startDateInput = document.getElementById('startDate');
+
+            if (endDate) {
+                startDateInput.setAttribute('max', endDate);
+            } else {
+                startDateInput.setAttribute('max', today);
+            }
+        });
+    });
+</script>

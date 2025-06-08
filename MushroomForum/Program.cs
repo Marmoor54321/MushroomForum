@@ -36,7 +36,10 @@ builder.Services.AddScoped<AchievementService>();
 builder.Services.AddScoped<LevelUpService>();
 
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+});
 
 builder.Services.AddRazorPages();
 
@@ -98,10 +101,14 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "api",
+    pattern: "api/{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();
