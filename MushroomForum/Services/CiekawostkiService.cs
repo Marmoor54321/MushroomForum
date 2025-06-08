@@ -21,9 +21,8 @@ namespace MushroomForum.Services
         {
             int total = _ciekawostki.Count;
             var today = DateTime.Today;
-            var cal = System.Globalization.CultureInfo.CurrentCulture.Calendar;
-            int weekOfYear = cal.GetWeekOfYear(today, System.Globalization.CalendarWeekRule.FirstDay, DayOfWeek.Monday);
-            int index = weekOfYear % total;
+            int dayOfYear = today.DayOfYear; 
+            int index = dayOfYear % total;
             return _ciekawostki[index];
         }
     }
