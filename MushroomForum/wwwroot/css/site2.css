@@ -876,3 +876,21 @@ textarea.form-control {
     .btn-sitecolumns:hover {
         color: var(--textcolor);
     }
+
+/*zbiory*/
+.btn-harvest {
+    background-color: var(--sitecolumns);
+    color: var(--textcolor) !important;
+    border: 1px solid var(--sitebackround);
+    border-radius: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+    .btn-harvest:hover {
+        background-color: #4a4a4a;
+        color: var(--textcolor) !important;
+        text-decoration: none;
+    }

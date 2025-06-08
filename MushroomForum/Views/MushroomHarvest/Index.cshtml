@@ -5,8 +5,8 @@
 
 <h1>Zbiory grzybów</h1>
 <div class="mb-3 d-flex gap-2">
-    <a asp-action="Create" class="button-green">Dodaj wpis</a>
-    <a asp-action="Export" class="btn btn-outline-info">
+    <a asp-action="Create" class="btn-harvest">Dodaj wpis</a>
+    <a asp-action="Export" class="button-green">
         <i class="fas fa-download"></i> Eksportuj dane
     </a>
 </div>
@@ -31,9 +31,9 @@ else
                     <div class="text-wrap"><strong>Miejsce:</strong> @entry.Place</div>
                 </div>
                 <div class="harvest-actions">
-                    <a asp-action="Edit" asp-route-id="@entry.Id" class="btn btn-outline-primary btn-sm">Edytuj</a>
+                    <a asp-action="Edit" asp-route-id="@entry.Id" class="button-green">Edytuj</a>
                     <form asp-action="Delete" asp-route-id="@entry.Id" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Na pewno usunąć wpis?');">Usuń</button>
+                        <button type="submit" class="button-green" onclick="return confirm('Na pewno usunąć wpis?');">Usuń</button>
                     </form>
                 </div>
             </div>
