@@ -34,7 +34,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<FriendService>();
 builder.Services.AddScoped<AchievementService>();
 builder.Services.AddScoped<LevelUpService>();
-
+builder.Services.AddScoped<DailyQuestProgress>();
+builder.Services.AddScoped<DailyQuestService>();
 
 builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {

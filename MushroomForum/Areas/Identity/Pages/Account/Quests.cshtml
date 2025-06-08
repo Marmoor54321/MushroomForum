@@ -1,0 +1,30 @@
+﻿@page
+@model MushroomForum.Areas.Identity.Pages.Account.QuestsModel
+@{
+    ViewData["Title"] = "Twoje Daily Questy";
+    ViewData["ActivePage"] = "Quests";
+}
+
+<h3>@ViewData["Title"]</h3>
+<p>Dzisiaj: @DateTime.UtcNow.ToString("dddd", new System.Globalization.CultureInfo("pl-PL"))</p>
+
+
+@if (Model.TodayQuests.Count == 0)
+{
+    <p>Brak questów na dzisiaj.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var questView in Model.TodayQuests)
+        {
+            <li class="list-group-item">
+                <strong>@questView.QuestType.Description</strong> <br />
+                Nagroda: <span class="badge bg-success">50 XP</span> <br />
+                Progres: @(questView.Progress?.Progress ?? 0)/@questView.QuestType.Target
+            </li>
+
+        }
+    </ul>
+
+}

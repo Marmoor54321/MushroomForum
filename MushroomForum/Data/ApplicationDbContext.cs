@@ -34,6 +34,9 @@ namespace MushroomForum.Data
         public DbSet<LikeHistory> LikeHistories { get; set; }
         public DbSet<MushroomHarvestEntry> MushroomHarvestEntries { get; set; }
         public DbSet<MushroomWikiEntry> MushroomWikiEntries { get; set; }
+        public DbSet<DailyQuestType> DailyQuestTypes { get; set; }
+        public DbSet<DailyQuestProgress> DailyQuestProgresses { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -124,6 +127,20 @@ namespace MushroomForum.Data
                 .WithMany()
                 .HasForeignKey(ms => ms.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DailyQuestType>().HasData(
+            new DailyQuestType { Id = 1, QuestType = "LikePosts", Description = "Polub 3 posty", Target = 3, DayOfWeek = DayOfWeek.Monday },
+            new DailyQuestType { Id = 2, QuestType = "ReplyPosts", Description = "Odpowiedz na 3 posty", Target = 3, DayOfWeek = DayOfWeek.Tuesday },
+            new DailyQuestType { Id = 3, QuestType = "ViewPosts", Description = "Przeglądaj 5 postów", Target = 5, DayOfWeek = DayOfWeek.Wednesday },
+
+            new DailyQuestType { Id = 4, QuestType = "LikePosts", Description = "Polub 3 posty", Target = 3, DayOfWeek = DayOfWeek.Thursday },
+            new DailyQuestType { Id = 5, QuestType = "ReplyPosts", Description = "Odpowiedz na 3 posty", Target = 3, DayOfWeek = DayOfWeek.Friday },
+            new DailyQuestType { Id = 6, QuestType = "ViewPosts", Description = "Przeglądaj 5 postów", Target = 5, DayOfWeek = DayOfWeek.Saturday },
+
+            
+
+            new DailyQuestType { Id = 19, QuestType = "SolveQuiz", Description = "Rozwiąż quiz", Target = 1, DayOfWeek = DayOfWeek.Sunday }
+        );
 
 
             modelBuilder.Entity<AchievementType>().HasData(
