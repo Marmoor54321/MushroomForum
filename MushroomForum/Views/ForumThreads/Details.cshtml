@@ -17,11 +17,11 @@
 		{
 			<form asp-action="Like" asp-controller="ForumThreads" method="post" style="display:inline;">
 				<input type="hidden" name="threadId" value="@Model.Thread.ForumThreadId" />
-				<button type="submit" @(Model.ThreadLikedByCurrentUser ? "disabled" : null)>Polub wątek</button>
+				<button type="submit" class="button-green" @(Model.ThreadLikedByCurrentUser ? "disabled" : null)>Polub wątek</button>
 			</form>
 			<form asp-action="Unlike" asp-controller="ForumThreads" method="post" style="display:inline;">
 				<input type="hidden" name="threadId" value="@Model.Thread.ForumThreadId" />
-				<button type="submit" @(!Model.ThreadLikedByCurrentUser ? "disabled" : null)>Cofnij polubienie wątku</button>
+				<button type="submit" class="button-green" @(!Model.ThreadLikedByCurrentUser ? "disabled" : null)>Cofnij polubienie</button>
 			</form>
 		}
 	</div>
@@ -81,15 +81,15 @@
 						{
 							<form asp-action="Reply" asp-controller="Posts" method="get" style="display:inline;">
 								<input type="hidden" name="postId" value="@post.PostId" />
-								<button type="submit">Odpowiedz</button>
+								<button type="submit" class="button-green">Odpowiedz</button>
 							</form>
 							<form asp-action="Like" asp-controller="Posts" method="post" style="display:inline;">
 								<input type="hidden" name="postId" value="@post.PostId" />
-								<button type="submit" @(Model.LikedPostIds.Contains(post.PostId) ? "disabled" : null)>Polub</button>
+								<button type="submit" class="button-green" @(Model.LikedPostIds.Contains(post.PostId) ? "disabled" : null)>Polub</button>
 							</form>
 							<form asp-action="Unlike" asp-controller="Posts" method="post" style="display:inline;">
 								<input type="hidden" name="postId" value="@post.PostId" />
-								<button type="submit" @(!Model.LikedPostIds.Contains(post.PostId) ? "disabled" : null)>Cofnij polubienie</button>
+								<button type="submit" class="button-green" @(!Model.LikedPostIds.Contains(post.PostId) ? "disabled" : null)>Cofnij polubienie</button>
 							</form>
 						}
 					</div>

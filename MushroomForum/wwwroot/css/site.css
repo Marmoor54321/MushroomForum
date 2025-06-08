@@ -157,6 +157,15 @@ textarea.form-control {
         transform: scale(1.05);
     }
 
+    .button-green:disabled {
+        background-color: var(--third-green); 
+        color: #FFFFFF !important;
+        opacity: 0.6;
+        cursor: not-allowed;
+        box-shadow: none; 
+        transform: none; 
+    }
+
 
 
 .nav-pills .nav-link {
