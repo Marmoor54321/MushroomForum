@@ -20,7 +20,7 @@
                     <input type="text" id="searchTerm" name="searchTerm" value="@Model.SearchTerm"
                            placeholder="Nazwa wątku lub użytkownik"
                            class="form-control" />
-                    <button type="submit" class="btn btn-outline-secondary">
+                    <button type="submit" class="btn btn-outline-secondary" title="title">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
@@ -71,7 +71,16 @@
             {
                 <div class="thread-list-item">
                     <div class="thread-column-title">
-                        <a asp-action="Details" asp-route-id="@thread.ForumThreadId" class="thread-title">@thread.Title</a>
+                        <a asp-action="Details"
+                           asp-route-id="@thread.ForumThreadId"
+                           asp-route-pageNumber="@Model.PageNumber"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-route-sortOrder="@Model.SortOrder"
+                           asp-route-categoryId="@Model.SelectedCategoryId"
+                           asp-route-searchTerm="@Model.SearchTerm"
+                           class="thread-title">
+                            @thread.Title
+                        </a>
                     </div>
                     <div class="thread-column-author">@(thread.User?.UserName ?? "Anonim")</div>
                     <div class="thread-column-category">@(thread.Category?.Name ?? "Brak kategorii")</div>

@@ -151,6 +151,14 @@ textarea.form-control {
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
     transform: scale(1.05);
 }
+    .button-green:disabled {
+        background-color: var(--third-green);
+        color: #FFFFFF !important;
+        opacity: 0.6;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
 
 
 
@@ -340,6 +348,10 @@ textarea.form-control {
 .forum-title {
     color: var(--headertextcolor);
     margin-bottom: 1.5rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    max-width: 100%;
 }
 
 .thread-list {
@@ -422,7 +434,7 @@ textarea.form-control {
 }
 
 .pagination .page-item.active .page-link {
-    background-color: var(--sitecolumns);
+    background-color: var(--primary-green) !important;
     border-color: var(--headertextcolor);
     color: var(--textcolor);
 }
@@ -433,7 +445,7 @@ textarea.form-control {
 
 .pagination .page-item:not(.disabled) .page-link {
     color: var(--textcolor);
-    background-color: var(--sitecolumns);
+    background-color: var(--secondary-green);
     border-color: var(--headertextcolor);
 }
 
@@ -481,6 +493,10 @@ textarea.form-control {
 
 .post-content {
     margin-bottom: 0.5rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    max-width: 100%;
 }
 
     .post-content p {
@@ -505,6 +521,13 @@ textarea.form-control {
     font-size: 0.9rem;
     color: var(--textcolor);
     text-align: right;
+}
+
+.parent-post {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    max-width: 100%;
 }
 
 .create-thread-container {

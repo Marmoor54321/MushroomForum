@@ -24,17 +24,17 @@
 <div class="features">
     <div class="feature-card">
         <h3>Identyfikacja grzybów</h3>
-        <p>Masz wątpliwości co do zebranych grzybów? Zamieść zdjęcie, a doświadczeni grzybiarze pomogą Ci w identyfikacji.</p>
+        <p>Masz wątpliwości co do zebranych grzybów? Zamieść zdjęcie, a spróbujemy je zidetyfikować!</p>
         <a asp-controller="MushroomId" asp-action="Index" class="nav-link nav-button-green">Sprawdź dział identyfikacji</a>
     </div>
     <div class="feature-card">
-        <h3>Atlasy i przewodniki</h3>
-        <p>Skorzystaj z naszych atlasów grzybów, map miejsc grzybobrania i sezonowych przewodników.</p>
-        <a href="/atlas" class="nav-link nav-button-green">Przejdź do atlasów</a>
+        <h3>Encyklopedia</h3>
+        <p>Skorzystaj z naszej encyklopedii grzybów uzupełnianej przez doświadczonych grzybiarzy</p>
+        <a asp-controller="MushroomWiki" asp-action="Index" class="nav-link nav-button-green">Encyklopedia</a>
     </div>
     <div class="feature-card">
-        <h3>Spotkania i wyprawy</h3>
-        <p>Dołącz do organizowanych wypraw na grzyby i spotkaj pasjonatów z Twojej okolicy.</p>
-        <a href="/wyprawy" class="nav-link nav-button-green">Zobacz zaplanowane wyprawy</a>
+        <h3>Ranking użytkowników</h3>
+        <p>Rywalizuj ze swoimi znajomymi, aby zostać najlepszym grzybiarzem!</p>
+        <a asp-controller="Quiz" asp-action="YourRanking" class="nav-link nav-button-green">Ranking</a>
     </div>
 </div>

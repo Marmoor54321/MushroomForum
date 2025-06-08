@@ -17,21 +17,33 @@
 		{
 			<form asp-action="Like" asp-controller="ForumThreads" method="post" style="display:inline;">
 				<input type="hidden" name="threadId" value="@Model.Thread.ForumThreadId" />
-				<button type="submit" @(Model.ThreadLikedByCurrentUser ? "disabled" : null)>Polub wątek</button>
+				<button type="submit" class="button-green" @(Model.ThreadLikedByCurrentUser ? "disabled" : null)>Polub wątek</button>
 			</form>
 			<form asp-action="Unlike" asp-controller="ForumThreads" method="post" style="display:inline;">
 				<input type="hidden" name="threadId" value="@Model.Thread.ForumThreadId" />
-				<button type="submit" @(!Model.ThreadLikedByCurrentUser ? "disabled" : null)>Cofnij polubienie wątku</button>
+				<button type="submit" class="button-green" @(!Model.ThreadLikedByCurrentUser ? "disabled" : null)>Cofnij polubienie</button>
 			</form>
 		}
 	</div>
 
-	@if (User.Identity.IsAuthenticated)
-	{
+	
 		<div class="mb-3">
+			@if (User.Identity.IsAuthenticated)
+	{
 			<a asp-controller="Posts" asp-action="Create" asp-route-forumThreadId="@Model.Thread.ForumThreadId" class="button-green">Dodaj nowy post</a>
-		</div>
 	}
+		<a asp-action="Index"
+		   asp-controller="ForumThreads"
+		   asp-route-pageNumber="@ViewBag.PageNumber"
+		   asp-route-pageSize="@ViewBag.PageSize"
+		   asp-route-sortOrder="@ViewBag.SortOrder"
+		   asp-route-categoryId="@ViewBag.CategoryId"
+		   asp-route-searchTerm="@ViewBag.SearchTerm"
+		   class="button-green">
+			Powrót do listy wątków
+		</a>
+		</div>
+	
 
 	@if (Model.Posts.Any())
 	{
@@ -69,15 +81,15 @@
 						{
 							<form asp-action="Reply" asp-controller="Posts" method="get" style="display:inline;">
 								<input type="hidden" name="postId" value="@post.PostId" />
-								<button type="submit">Odpowiedz</button>
+								<button type="submit" class="button-green">Odpowiedz</button>
 							</form>
 							<form asp-action="Like" asp-controller="Posts" method="post" style="display:inline;">
 								<input type="hidden" name="postId" value="@post.PostId" />
-								<button type="submit" @(Model.LikedPostIds.Contains(post.PostId) ? "disabled" : null)>Polub</button>
+								<button type="submit" class="button-green" @(Model.LikedPostIds.Contains(post.PostId) ? "disabled" : null)>Polub</button>
 							</form>
 							<form asp-action="Unlike" asp-controller="Posts" method="post" style="display:inline;">
 								<input type="hidden" name="postId" value="@post.PostId" />
-								<button type="submit" @(!Model.LikedPostIds.Contains(post.PostId) ? "disabled" : null)>Cofnij polubienie</button>
+								<button type="submit" class="button-green" @(!Model.LikedPostIds.Contains(post.PostId) ? "disabled" : null)>Cofnij polubienie</button>
 							</form>
 						}
 					</div>
@@ -88,7 +100,7 @@
 							{
 								<div class="post-item reply">
 									<div class="post-content">
-										<p>@reply.Description</p>
+										<p class="text-wrap">@reply.Description</p>
 									</div>
 									<div class="post-meta">
 										<p class="text-wrap"><strong>Autor:</strong> @(reply.User?.UserName ?? "Anonim")</p>
