@@ -20,6 +20,6 @@
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
-    <button type="submit" class="nav-link nav-button-green">Dodaj odpowiedź</button>
-    <a asp-controller="ForumThreads" asp-action="Details" asp-route-id="@Model.ForumThreadId" class="nav-link nav-button-green">Anuluj</a>
+    <button type="submit" class="nav-link nav-button-green d-inline-block">Dodaj odpowiedź</button>
+    <a asp-controller="ForumThreads" asp-action="Details" asp-route-id="@Model.ForumThreadId" class="nav-link nav-button-green d-inline-block">Anuluj</a>
 </form>
