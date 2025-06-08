@@ -18,12 +18,17 @@ namespace MushroomForum.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AchievementService _achievementService;
-        public QuizController(ApplicationDbContext context, UserManager<IdentityUser> userManager, AchievementService achievementService)
+        private readonly DailyQuestService _dailyQuestService;
+
+        public QuizController(ApplicationDbContext context, UserManager<IdentityUser> userManager, AchievementService achievementService, DailyQuestService dailyQuestService)
         {
             _context = context;
             _userManager = userManager;
             _achievementService = achievementService;
+            _dailyQuestService = dailyQuestService;
         }
+
+
         public async Task<IActionResult> Index()
         {
             var quizzes = await _context.Quizzes.ToListAsync();
@@ -90,6 +95,8 @@ namespace MushroomForum.Controllers
                 await _achievementService.GrantAchievementIfNotExistsAsync(userId, "Quiz5Points");
 
             }
+            await _dailyQuestService.UpdateProgressAsync(userId, "SolveQuiz", 1);
+
             return View("Result");
         }
 
@@ -106,7 +113,7 @@ namespace MushroomForum.Controllers
 
                 if (userExp != null)
                 {
-                    currentPoints = userExp.Doswiadczenie;  // Użyj odpowiedniej właściwości
+                    currentPoints = userExp.Doswiadczenie; 
                 }
             }
 
