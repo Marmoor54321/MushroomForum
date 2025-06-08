@@ -26,12 +26,24 @@
 		}
 	</div>
 
-	@if (User.Identity.IsAuthenticated)
-	{
+	
 		<div class="mb-3">
+			@if (User.Identity.IsAuthenticated)
+	{
 			<a asp-controller="Posts" asp-action="Create" asp-route-forumThreadId="@Model.Thread.ForumThreadId" class="button-green">Dodaj nowy post</a>
-		</div>
 	}
+		<a asp-action="Index"
+		   asp-controller="ForumThreads"
+		   asp-route-pageNumber="@ViewBag.PageNumber"
+		   asp-route-pageSize="@ViewBag.PageSize"
+		   asp-route-sortOrder="@ViewBag.SortOrder"
+		   asp-route-categoryId="@ViewBag.CategoryId"
+		   asp-route-searchTerm="@ViewBag.SearchTerm"
+		   class="button-green">
+			Powrót do listy wątków
+		</a>
+		</div>
+	
 
 	@if (Model.Posts.Any())
 	{
@@ -88,7 +100,7 @@
 							{
 								<div class="post-item reply">
 									<div class="post-content">
-										<p>@reply.Description</p>
+										<p class="text-wrap">@reply.Description</p>
 									</div>
 									<div class="post-meta">
 										<p class="text-wrap"><strong>Autor:</strong> @(reply.User?.UserName ?? "Anonim")</p>

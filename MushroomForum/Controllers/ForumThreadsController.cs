@@ -77,7 +77,7 @@ namespace MushroomForum.Controllers
         }
 
         // GET: ForumThreads/Details/5
-        public async Task<IActionResult> Details(int? id, int pageNumber = 1)
+        public async Task<IActionResult> Details(int? id, int pageNumber = 1, int? pageSize = null, string sortOrder = "newest", int? categoryId = null, string searchTerm = null)
         {
             if (id == null) return NotFound();
 
@@ -88,7 +88,7 @@ namespace MushroomForum.Controllers
 
             if (thread == null) return NotFound();
 
-            int pageSize = 10;
+            int postPageSize = pageSize ?? 10;
             var posts = await _context.Posts
                 .Where(p => p.ForumThreadId == id && p.ParentPostId == null)
                 .Include(p => p.User)
@@ -96,12 +96,12 @@ namespace MushroomForum.Controllers
                 .Include(p => p.Replies)
                     .ThenInclude(r => r.User)
                 .OrderBy(p => p.CreatedAt)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((pageNumber - 1) * postPageSize)
+                .Take(postPageSize)
                 .ToListAsync();
 
             int totalPosts = await _context.Posts.CountAsync(p => p.ForumThreadId == id);
-            int totalPages = (int)Math.Ceiling(totalPosts / (double)pageSize);
+            int totalPages = (int)Math.Ceiling(totalPosts / (double)postPageSize);
             int threadLikeCount = await _context.ThreadLikes.CountAsync(tl => tl.ForumThreadId == id);
             var postIds = posts.Select(p => p.PostId).ToList();
             var postLikeCounts = await _context.PostLikes
@@ -125,7 +125,6 @@ namespace MushroomForum.Controllers
                     .ToHashSet();
             }
 
-
             var viewModel = new ThreadDetailsViewModel
             {
                 Thread = thread,
@@ -138,6 +137,12 @@ namespace MushroomForum.Controllers
                 LikedPostIds = likedPostIds,
                 ThreadLikedByCurrentUser = threadLikedByCurrentUser
             };
+
+            ViewBag.IndexPageNumber = 1;
+            ViewBag.PageSize = pageSize ?? 10;
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.CategoryId = categoryId;
+            ViewBag.SearchTerm = searchTerm;
 
             return View(viewModel);
         }

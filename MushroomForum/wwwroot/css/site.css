@@ -93,6 +93,7 @@ a {
 
 .form-label {
     color: var(--textcolor) !important;
+
 }
 
 input.form-control,
@@ -343,6 +344,10 @@ textarea.form-control {
 .forum-title {
     color: var(--headertextcolor);
     margin-bottom: 1.5rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    max-width: 100%;
 }
 
 .thread-list {
@@ -425,7 +430,7 @@ textarea.form-control {
 }
 
 .pagination .page-item.active .page-link {
-    background-color: var(--sitecolumns);
+    background-color: var(--primary-green) !important;
     border-color: var(--headertextcolor);
     color: var(--textcolor);
 }
@@ -436,7 +441,7 @@ textarea.form-control {
 
 .pagination .page-item:not(.disabled) .page-link {
     color: var(--textcolor);
-    background-color: var(--sitecolumns);
+    background-color: var(--secondary-green);
     border-color: var(--headertextcolor);
 }
 
@@ -475,16 +480,17 @@ textarea.form-control {
     padding: 1rem;
     margin-bottom: 1rem;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
     .post-item:hover {
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        transform: translateY(-3px);
     }
 
 .post-content {
     margin-bottom: 0.5rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    max-width: 100%;
 }
 
     .post-content p {
@@ -509,6 +515,12 @@ textarea.form-control {
     font-size: 0.9rem;
     color: var(--textcolor);
     text-align: right;
+}
+.parent-post {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    max-width: 100%;
 }
 
 .create-thread-container {
