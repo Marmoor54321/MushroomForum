@@ -169,9 +169,14 @@ namespace MushroomForum.Controllers
                         await levelUpService.GiveExperienceAsync(post.IdentityUserId, 10);
                     }
                 }
+
+                var dailyQuestService = HttpContext.RequestServices.GetRequiredService<DailyQuestService>();
+                await dailyQuestService.UpdateProgressAsync(userId, "LikePosts", 1);
+
                 await _achievementService.GrantAchievementIfNotExistsAsync(userId, "FirstLikeReceived");
 
                 await _context.SaveChangesAsync();
+
             }
 
             return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
@@ -197,7 +202,6 @@ namespace MushroomForum.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            // LikeHistory NIE jest ruszany – zostaje jako dowód, że exp był przyznany
 
             return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
         }
@@ -243,6 +247,12 @@ namespace MushroomForum.Controllers
 
             _context.Add(post);
             await _context.SaveChangesAsync();
+
+            var dailyQuestService = HttpContext.RequestServices.GetRequiredService<DailyQuestService>();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await dailyQuestService.UpdateProgressAsync(userId, "ReplyPosts", 1);
+
+
             return RedirectToAction("Details", "ForumThreads", new { id = post.ForumThreadId });
         }
     }
