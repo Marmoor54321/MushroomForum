@@ -6,6 +6,8 @@
     --sitecolumns: white;
     --textcolor: black;
     --headertextcolor: #1dbb1d;
+    --exp: #3e8e41;
+    --expback: white;
 }
 
 html {
@@ -208,10 +210,11 @@ textarea.form-control {
     padding: 8px 16px;
     text-decoration: none;
     background-color: var(--secondary-green);
-    margin: 2px;
     outline: none;
     border: none;
     transition: box-shadow 0.3s ease, transform 0.2s ease;
+    margin-bottom: 1px;
+    margin-top:1px;
 }
 
     .nav-button-green:hover {
@@ -220,7 +223,9 @@ textarea.form-control {
         box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
         transform: scale(1.05);
     }
-
+.nav.flex-column {
+    gap: 5px; 
+}
 .nav-greeting {
     color: var(--textcolor);
     font-weight: normal;
@@ -738,7 +743,14 @@ textarea.form-control {
     object-fit: cover;
     border-radius: 50%;
 }
-
+.selected-avatar {
+    border-color: var(--primary-green);
+}
+.exp-fill {
+    height: 100%;
+    background-color: var(--primary-green);
+    transition: width 0.5s ease;
+}
 /*notatnik*/
 .note-card {
     background-color: var(--sitecolumns);
@@ -949,3 +961,4 @@ textarea.form-control {
         color: var(--textcolor) !important;
         text-decoration: none;
     }
+/*ustawienia konta*/

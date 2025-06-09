@@ -2,24 +2,27 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
+<ul class="nav nav-pills flex-column gap-2">
+    <li class="nav nav-pills flex-column gap-2"><a class="nav-button-green @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profil</a></li>
+    <li class="nav nav-pills flex-column gap-2"><a class="nav-button-green @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
+    <li class="nav nav-pills flex-column gap-2"><a class="nav-button-green @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Hasło</a></li>
     @if (hasExternalLogins)
     {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
+        <li "nav nav-pills flex-column gap-2">
+            <a class="nav-button-green @ManageNavPages.ExternalLoginsNavClass(ViewContext)" id="external-login" asp-page="./ExternalLogins">
+                Loginy zewnętrzne
+            </a>
+        </li>
     }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
-    <li class="nav-item">
-        <a class="nav-link @ManageNavPages.FriendsNavClass(ViewContext)" id="friends" asp-page="./Friends">Znajomi</a>
+    <li class="nav nav-pills flex-column gap-2"><a class="nav-button-green @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Weryfikacja dwu-etapowa</a></li>
+    <li class="nav nav-pills flex-column gap-2"><a class="nav-button-green @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Dane osobowe</a></li>
+    <li class="nav nav-pills flex-column gap-2">
+        <a class="nav-button-green @ManageNavPages.FriendsNavClass(ViewContext)" id="friends" asp-page="./Friends">Znajomi</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link @ManageNavPages.BlockedUsersNavClass(ViewContext)" id="blocked-users" asp-page="./BlockedUsers">Zablokowani</a>
+    <li class="nav nav-pills flex-column gap-2">
+        <a class="nav-button-green @ManageNavPages.BlockedUsersNavClass(ViewContext)" id="blocked-users" asp-page="./BlockedUsers">Zablokowani</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link @ManageNavPages.AchievementsNavClass(ViewContext)" id="achievements" asp-page="./Achievements">Osiągnięcia</a>
+    <li class="nav nav-pills flex-column gap-2">
+        <a class="nav-button-green @ManageNavPages.AchievementsNavClass(ViewContext)" id="achievements" asp-page="./Achievements">Osiągnięcia</a>
     </li>
-
 </ul>

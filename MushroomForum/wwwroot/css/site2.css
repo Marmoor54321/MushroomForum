@@ -6,6 +6,8 @@
     --sitecolumns: #383838;
     --textcolor: white;
     --headertextcolor: white;
+    --exp: #181818;
+    --expback: #282828;
 }
 
 html {
@@ -195,17 +197,17 @@ textarea.form-control {
     border-bottom: 2px solid var(--primary-green);
     border-top: 2px solid var(--primary-green);
 }
-
 .nav-button-green {
     color: #FFFFFF !important;
     border-radius: 4px;
     padding: 8px 16px;
     text-decoration: none;
     background-color: var(--secondary-green);
-    margin: 2px;
     outline: none;
     border: none;
     transition: box-shadow 0.3s ease, transform 0.2s ease;
+    margin-bottom: 1px;
+    margin-top: 1px;
 }
 
     .nav-button-green:hover {
@@ -215,6 +217,9 @@ textarea.form-control {
         transform: scale(1.05);
     }
 
+.nav.flex-column {
+    gap: 5px;
+}
 .nav-greeting {
     color: var(--textcolor);
     font-weight: normal;

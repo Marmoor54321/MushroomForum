@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <button id="update-profile-button" type="submit" class="btn btn-primary mt-3">Zapisz</button>
+            <button id="update-profile-button" type="submit" class="nav-button-green">Zapisz</button>
         </form>
     </div>
 
@@ -89,18 +89,19 @@
         }
 
             .avatar-option:hover {
-                border-color: #aaa;
+                border-color: var(--primary-green) !important;
             }
 
         .selected-avatar {
-            border-color: #007bff !important;
+            border-color: var(--primary-green) !important;
         }
 
         .exp-bar {
             position: relative;
             width: 100%;
             height: 25px;
-            background-color: #ccc;
+            background-color: var(--expback) !important;
+            border-color: var(--exp) !important;
             border-radius: 5px;
             overflow: hidden;
             user-select: none;
@@ -108,7 +109,7 @@
 
         .exp-fill {
             height: 100%;
-            background-color: #007bff;
+            background-color: var(--exp) !important;
             transition: width 0.5s ease;
         }
 
@@ -120,7 +121,7 @@
             height: 25px;
             line-height: 25px;
             text-align: center;
-            color: black;
+            color: var(--textcolor);
             font-weight: bold;
             pointer-events: none;
         }

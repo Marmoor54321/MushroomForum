@@ -15,7 +15,7 @@
         <input asp-for="NewFriendUsername" class="form-control" placeholder="np. jan.kowalski" />
         <span asp-validation-for="NewFriendUsername" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary mt-2">Wyślij zaproszenie</button>
+    <button type="submit" class="nav-button-green">Wyślij zaproszenie</button>
 </form>
 
 @if (!string.IsNullOrEmpty(Model.StatusMessage))
