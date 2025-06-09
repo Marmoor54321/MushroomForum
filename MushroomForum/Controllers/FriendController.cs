@@ -16,7 +16,7 @@ namespace MushroomForum.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendRequest(string userId)
+        public virtual async Task<IActionResult> SendRequest(string userId)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUserId == null)
