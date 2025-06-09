@@ -58,6 +58,8 @@ builder.Services.AddLogging(logging =>
     logging.AddDebug();
     logging.SetMinimumLevel(LogLevel.Information); 
 });
+var ApiIdKey = builder.Configuration["ApiSettings:ApiIdKey"];
+
 
 
 

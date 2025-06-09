@@ -8,17 +8,20 @@ namespace MushroomForum.Services
 {
     public class MushroomIdService
     {
+        
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<MushroomIdService> _logger;
-        private const string ApiKey = ""; //Później zaimplementuje korzystanie z API nie ujawniając klucza
+        private readonly string _ApiIdKey;
         private const string ApiUrl = "https://mushroom.kindwise.com/api/v1/identification";
 
-        public MushroomIdService(IHttpClientFactory httpClientFactory, ILogger<MushroomIdService> logger)
+
+        public MushroomIdService(IHttpClientFactory httpClientFactory, ILogger<MushroomIdService> logger, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
+            _ApiIdKey = configuration["ApiSettings:ApiIdKey"] ?? throw new InvalidOperationException("API key not found in configuration");
         }
-
+        
         public async Task<MushroomIdResultViewModel> IdentifyAsync(IFormFile image)
         {
             var result = new MushroomIdResultViewModel();
@@ -58,7 +61,7 @@ namespace MushroomForum.Services
                 var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
 
                 // Dodanie nagłówka Api-Key
-                client.DefaultRequestHeaders.Add("Api-Key", ApiKey);
+                client.DefaultRequestHeaders.Add("Api-Key", _ApiIdKey);
 
                 var response = await client.PostAsync(fullUrl, content);
                 if (!response.IsSuccessStatusCode)
