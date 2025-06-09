@@ -12,15 +12,16 @@ namespace MushroomForum.Models
         public string Name { get; set; }
         [MaxLength(64)]
         public string LatinName { get; set; }
-        [MaxLength(64)]
+        [MaxLength(256)]
         public string Description { get; set; }
         [MaxLength(32)]
-        public string Type { get; set; } // 0 - edible, 1 - inedible, 2 - poisonous, 3 - hallucinogenic
+        public string Type { get; set; } 
         public DateTime Date { get; set; } = DateTime.Now;
         public string? PhotoUrl { get; set; }
 
         public string? UserId { get; set; }
 
         public IdentityUser? User { get; set; }
+        public string? WikiUrl { get; set; }
     }
 }

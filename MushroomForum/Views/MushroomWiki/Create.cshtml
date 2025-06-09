@@ -27,9 +27,12 @@
         <input asp-for="Type" class="form-control" required />
         <span asp-validation-for="Type" class="text-danger"></span>
     </div>
+    @{
+        var maxDate = DateTime.Now.ToString("yyyy-MM-dd");
+    }
     <div class="mb-2">
         <label asp-for="Date" class="form-label">Data</label>
-        <input asp-for="Date" class="form-control" type="date" required />
+        <input asp-for="Date" class="form-control" type="date" required max="@maxDate" />
         <span asp-validation-for="Date" class="text-danger"></span>
     </div>
    
