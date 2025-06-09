@@ -213,8 +213,7 @@ textarea.form-control {
     outline: none;
     border: none;
     transition: box-shadow 0.3s ease, transform 0.2s ease;
-    margin-bottom: 1px;
-    margin-top:1px;
+    margin: 2px;
 }
 
     .nav-button-green:hover {
