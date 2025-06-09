@@ -17,8 +17,8 @@
         </div>
         <input type="hidden" asp-for="ForumThreadId" value="@ViewData["ForumThreadId"]" />
         <div class="mb-3">
-            <button type="submit" class="nav-link nav-button-green">Zapisz</button>
-            <a asp-controller="ForumThreads" asp-action="Details" asp-route-id="@ViewData["ForumThreadId"]" class="nav-link nav-button-green">Anuluj</a>
+            <button type="submit" class="nav-link nav-button-green d-inline-block">Zapisz</button>
+            <a asp-controller="ForumThreads" asp-action="Details" asp-route-id="@ViewData["ForumThreadId"]" class="nav-link nav-button-green" style="display: inline-block;">Anuluj</a>
         </div>
     </form>
 </div>
