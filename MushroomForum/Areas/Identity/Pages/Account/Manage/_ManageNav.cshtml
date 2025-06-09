@@ -8,7 +8,7 @@
     <li class="nav nav-pills flex-column gap-2"><a class="nav-button-green @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Hasło</a></li>
     @if (hasExternalLogins)
     {
-        <li "nav nav-pills flex-column gap-2">
+        <li class="nav nav-pills flex-column gap-2">
             <a class="nav-button-green @ManageNavPages.ExternalLoginsNavClass(ViewContext)" id="external-login" asp-page="./ExternalLogins">
                 Loginy zewnętrzne
             </a>
@@ -26,3 +26,17 @@
         <a class="nav-button-green @ManageNavPages.AchievementsNavClass(ViewContext)" id="achievements" asp-page="./Achievements">Osiągnięcia</a>
     </li>
 </ul>
+<script>
+    // zapisywanie pozycji scrolla
+    window.addEventListener("beforeunload", function () {
+        sessionStorage.setItem("scrollPosition", window.scrollY);
+    });
+
+    window.addEventListener("load", function () {
+        const scrollY = sessionStorage.getItem("scrollPosition");
+        if (scrollY !== null) {
+            window.scrollTo(0, parseInt(scrollY));
+            sessionStorage.removeItem("scrollPosition");
+        }
+    });
+</script>
