@@ -19,6 +19,9 @@ cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
 CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
+//Obsługa Swaggera
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -75,7 +78,12 @@ using (var scope = app.Services.CreateScope())
     await SeedDataAsync(dbContext, userManager, roleManager);
 }
 
-
+// Włączanie middleware Swaggera 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(); // dostępne pod /swagger
+}
 
 //wywołanie quizu
 using (var scope = app.Services.CreateScope())
