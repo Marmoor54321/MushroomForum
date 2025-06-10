@@ -14,18 +14,23 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using MushroomForum.Data;
 
 namespace MushroomForum.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
+
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ApplicationDbContext _context; 
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, ApplicationDbContext context)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
         }
 
         /// <summary>
@@ -113,6 +118,19 @@ namespace MushroomForum.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    var user = await _signInManager.UserManager.FindByNameAsync(userName);
+
+                    try
+                    {
+                        await CleanupAndGenerateDailyQuestsAsync(user);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error during daily quest cleanup/generation.");
+                        
+                    }
+
+                    await CleanupAndGenerateDailyQuestsAsync(user);
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -133,5 +151,50 @@ namespace MushroomForum.Areas.Identity.Pages.Account
 
             return Page();
         }
+
+        private async Task CleanupAndGenerateDailyQuestsAsync(IdentityUser user)
+        {
+            var today = DateTime.UtcNow.Date;
+            var dayOfWeek = DateTime.UtcNow.DayOfWeek;
+
+            var allProgress = await _context.DailyQuestProgresses
+                .Where(p => p.UserId == user.Id)
+                .ToListAsync();
+
+            var outdatedProgress = allProgress.Where(p => p.Date.Date != today).ToList();
+            if (outdatedProgress.Any())
+            {
+                _context.DailyQuestProgresses.RemoveRange(outdatedProgress);
+                await _context.SaveChangesAsync();
+            }
+
+            var todayProgress = await _context.DailyQuestProgresses
+                .Where(p => p.UserId == user.Id && p.Date.Date == today)
+                .ToListAsync();
+
+            if (!todayProgress.Any())
+            {
+                var todayQuestTypes = await _context.DailyQuestTypes
+                    .Where(q => q.DayOfWeek == dayOfWeek)
+                    .ToListAsync();
+
+                foreach (var questType in todayQuestTypes)
+                {
+                    var progress = new DailyQuestProgress
+                    {
+                        UserId = user.Id,
+                        QuestType = questType.QuestType,
+                        Date = today,
+                        Progress = 0,
+                        Completed = false
+                    };
+
+                    _context.DailyQuestProgresses.Add(progress);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
     }
 }

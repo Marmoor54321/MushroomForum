@@ -6,7 +6,8 @@
 }
 
 <h3>@ViewData["Title"]</h3>
-<p>Dzisiaj: @DateTime.UtcNow.DayOfWeek</p>
+<p>Dzisiaj: @DateTime.UtcNow.ToString("dddd", new System.Globalization.CultureInfo("pl-PL"))</p>
+
 
 @if (Model.TodayQuests.Count == 0)
 {
@@ -15,12 +16,15 @@
 else
 {
     <ul class="list-group">
-        @foreach (var quest in Model.TodayQuests)
+        @foreach (var questView in Model.TodayQuests)
         {
             <li class="list-group-item">
-                <strong>@quest.Description</strong> <br />
-                Nagroda: <span class="badge bg-success">50 XP</span>
+                <strong>@questView.QuestType.Description</strong> <br />
+                Nagroda: <span class="badge bg-success">50 XP</span> <br />
+                Progres: @(questView.Progress?.Progress ?? 0)/@questView.QuestType.Target
             </li>
+
         }
     </ul>
+
 }

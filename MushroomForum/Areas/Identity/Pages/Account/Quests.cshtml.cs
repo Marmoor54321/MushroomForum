@@ -22,7 +22,13 @@ namespace MushroomForum.Areas.Identity.Pages.Account
             _context = context;
         }
 
-        public List<DailyQuestType> TodayQuests { get; set; } = new();
+        public class QuestViewModel
+        {
+            public DailyQuestType QuestType { get; set; }
+            public DailyQuestProgress Progress { get; set; }
+        }
+
+        public List<QuestViewModel> TodayQuests { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -34,10 +40,23 @@ namespace MushroomForum.Areas.Identity.Pages.Account
 
             var dayOfWeek = DateTime.UtcNow.DayOfWeek;
 
-            TodayQuests = await _context.DailyQuestTypes
-                .Where(q => q.DayOfWeek == dayOfWeek) 
+            var quests = await _context.DailyQuestTypes
+                .Where(q => q.DayOfWeek == dayOfWeek)
                 .ToListAsync();
 
+            foreach (var quest in quests)
+            {
+                var progress = await _context.DailyQuestProgresses
+                    .FirstOrDefaultAsync(p => p.UserId == user.Id
+                                           && p.QuestType == quest.QuestType
+                                           && p.Date.Date == DateTime.UtcNow.Date);
+
+                TodayQuests.Add(new QuestViewModel
+                {
+                    QuestType = quest,
+                    Progress = progress
+                });
+            }
 
             return Page();
         }
