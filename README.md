@@ -1,4 +1,6 @@
-# MushroomForum (WIP)
+# MushroomForum
+![image](https://github.com/user-attachments/assets/42da3421-727c-45ac-a41d-2a86ba0501e7)
+
 ## O projekcie  
 Forum internetowe dla miłośników grzybów. Zbudowane z użyciem ASP.NET Core MVC oraz Identity. Projekt jest na wczesnym etapie rozwoju
 ## Funkcjonalności
